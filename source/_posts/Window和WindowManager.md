@@ -6,7 +6,9 @@ tags: [Android]
 Window表示一个窗口的概念，在日常开发中直接接触WIndow的机会并不对，再试在某些特殊时候我们需要在桌面上显示一个类似悬浮窗的东西，那么这种效果就需要用到Window来实现。
 Window只是个抽象类，它的具体实现是PhoneWindow。创建一个Window是很简单的事，只需要通过WindowManager即可完成，WindowManager是外界访问Window的入口，Window的具体实现位于WindowMangerService中，WindowMnager和WindowManager的交互是一个IPC过程，Android中所有的视图都是通过Window来呈现的，不管是Activity、Dialog还是Toast，它们的视图实际上都是附加在Window上的，因此Window实际是View的直接管理者。
 <!--more-->
+### Window的内部机制
 Window是一个抽象的概念，每一个Window都对应着一个View和一个ViewRootImpl，Window和View通过ViewRootImpl来建立联系，因此Window并不是实际存在的，它是以View的形式存在，。这点从WindowManager的定义也可以看出，它提供的三个接口方法addView,updateViewLayout以及removeView都是针对View，这说明View才是Window存在的实体。在实际使用中无法直接访问Window，对Window的访问必须通过WindowManger。
+
 #### Window的添加过程
 Window的添加过程需要通过WindowManager的addView来实现，WindowManager是一个接口，它的真正实现是WindowManagerImpl类，在WindowManagerImpl中Window的三大操作实现如下：
 ```java
@@ -202,3 +204,5 @@ removeViewLocked是通过ViewRootImpl来完成删除操作的，在WindowManager
     }
 ```
 首先它需要更新View的LayoutParams并替换掉老的LayoutParams，接着再更新ViewRootImpl中的layoutParams，这一步是通过ViewRootImpl的setLayoutParams方法来实现的。在ViewRootImpl中会通过scheduleTraversals方法来对View重新布局，包括测量、布局、重绘这三个过程，除了View本身的重绘以外，ViewRootImpl还会通过WindowSession开更新Window的视图，这个过程最终是由WindowManagerService的relayoutWindow()来具体实现，它同样是一个IPC的过程。
+***
+以上
