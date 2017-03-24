@@ -328,3 +328,76 @@ Handler的工作需要Looper，没有Looper的线程就会报错，我们可以�
     }
  ```
  loop方法是一个死循环，唯一跳出循环的方式是MessageQueue的next方法返回了null，当Looper的quit方法被调用时，Looper就会通知消息队列退出，当消息队列被标记为退出状态时，它的next方法就会返回null，也就是说，Looper必须退出，否则loop方法就会无限循环下去，loop方法会调用MessageQueue的next方法来获取新消息，而next方法是一个阻塞操作，当没有消息时，next方法会一直阻塞在那里，这也导致loop方法一直阻塞在那里，如果MessageQueue的next方法返回了新消息，Looper就会处理这条消息，  msg.target.dispatchMessage(msg)，这里的  msg.target是发送这条消息的handler对象，这样Handler发送的消息最终又交个它的  dispatchMessage(msg);方法来处理了，但是这里不同的是，Handler的dispatchMessahe方法是在创建Handler时所使用的Looper中执行的，这样就成功的将代码逻辑切换到指定的线程中去执行了。
+ ### Handler的工作原理
+ Handler的工作主要包含消息的发送和接收过程。消息的发送可以通过post的一系列方法以及send的一系列方法来实现，post的一系列方法最终是通过send的一列方法来实现的。发送一条消息的典型过程如下：
+ ``` java
+  public final boolean sendMessage(Message msg)
+    {
+        return sendMessageDelayed(msg, 0);
+    }
+	public final boolean sendMessageDelayed(Message msg, long delayMillis)
+    {
+        if (delayMillis < 0) {
+            delayMillis = 0;
+        }
+        return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);
+    }
+	public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
+        MessageQueue queue = mQueue;
+        if (queue == null) {
+            RuntimeException e = new RuntimeException(
+                    this + " sendMessageAtTime() called with no mQueue");
+            Log.w("Looper", e.getMessage(), e);
+            return false;
+        }
+        return enqueueMessage(queue, msg, uptimeMillis);
+    }
+	private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
+        msg.target = this;
+        if (mAsynchronous) {
+            msg.setAsynchronous(true);
+        }
+        return queue.enqueueMessage(msg, uptimeMillis);
+    }
+ ```
+ 可以发现，Handler发送消息的过程仅仅是向消息队列中插入了一条消息，MessageQueue的next方法就会返回这条消息给Looper，Looper收到消息后就开始处理了，最终消息由Looper交由Handler处理，即Handler的dispatchMessage方法会被调用，这时Handler就是进入了处理消息的阶段。dispatchMessage的实现如下：
+ ``` java
+    public void dispatchMessage(Message msg) {
+        if (msg.callback != null) {
+            handleCallback(msg);
+        } else {
+            if (mCallback != null) {
+                if (mCallback.handleMessage(msg)) {
+                    return;
+                }
+            }
+            handleMessage(msg);
+        }
+    }
+ ```
+ Handler处理消息的过程如下：
+ 1. 检查Message的callback是否为null，不为null就通过handleCallback来处理消息，Message的callback是一个Runnable对象，实际上就是Handler的post方法所传递的Runnable参数。handleCallback的逻辑如下：
+ ``` java
+ private static void handleCallback(Message message) {
+        message.callback.run();
+    }
+ ```
+ 2. 其次，检查mCallback是否为null，不为null就调用没CallBack的HandlerMessage方法来处理消息，Callback是个接口，它的定义如下：
+ 
+ ``` java
+	/**
+     * Callback interface you can use when instantiating a Handler to avoid
+     * having to implement your own subclass of Handler.
+     *
+     * @param msg A {@link android.os.Message Message} object
+     * @return True if no further handling is desired
+     */
+    public interface Callback {
+        public boolean handleMessage(Message msg);
+    }
+``` 
+通过Callback可以采用如下方式来创建Handler对象：Handler handler = new Handler(callback)。
+
+3. 最后，调用Handler的handleMessahe方法来处理消息。
+***
+以上
