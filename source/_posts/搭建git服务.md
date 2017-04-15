@@ -24,7 +24,7 @@ tags: [git]
 可以先将秘钥文件上传到服务器，然后在服务器上操作文件，添加内容。
 5. 修改权限
 将 /home/git 所有者更改为git用户
-`chowm -R git:git /home/git`
+`chown -R git:git /home/git`
 用户home目录755权限
 `chmod 755 /home/git`
 .ssh目录700权限
