@@ -23,12 +23,12 @@ path.logs: /home/huangyuan/elk/elasticsearch/logs/*
 #
 # Set the bind address to a specific IP (IPv4 or IPv6):
 #
-network.host: 192.168.1.179
+network.host: 0.0.0.0
 #
 # Set a custom port for HTTP:
 #
 http.port: 9200
-discovery.zen.ping.unicast.hosts: ["192.168.1.179"]
+discovery.zen.ping.unicast.hosts: ["0.0.0.0"]
 http.cors.enabled: true
 http.cors.allow-origin: "*"
 ```
@@ -67,6 +67,9 @@ elasticsearch.url: "http://192.168.1.179:9200"
 ```
 ----
 启动的时候依次启动 es、logstash、kibana就可以了
-PS:在LogStash的配置文件`logstash.conf`中,`input`配置的就是logstash要监听的文件路径，启动之后，先在监听的文件夹中创建一个log文件并输入随意内容。
+PS:
+1.在LogStash的配置文件`logstash.conf`中,`input`配置的就是logstash要监听的文件路径，启动之后，先在监听的文件夹中创建一个log文件并输入随意内容。
+2. `elasticsearch`不能用`root`用户启动
+3. 启动es报错`max virtual memory areas vm.max_map_count [65530]is too low, increase to at least [262144]`:解决方法是修改`/etc/sysctl.conf`配置文件，添加`vm.max_map_count=262144`，重启机器才起作用.
 <hr>
 以上
