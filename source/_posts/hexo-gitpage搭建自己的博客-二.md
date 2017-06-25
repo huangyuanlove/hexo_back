@@ -8,7 +8,7 @@ tags: [hexo,gitpage,blog]
 ```shell
     hexo init <dir>
     cd <dir>
-    hexo install
+    npm install
 ```
 <!-- more -->
 ![hexo_install](/image/hexo/hexo_init.png )
