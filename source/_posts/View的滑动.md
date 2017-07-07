@@ -3,7 +3,7 @@ title: View的滑动
 date: 2017-03-15 11:01:46
 tags: [Android]
 ---
-View的位置主要由它的四个顶点来决定，分别对应于View的四个属性：top,left,right,bottom,其中top是左上角的纵坐标，left是左上角的横坐标，right是右下角的横坐标，bottom是右下角的纵坐标。需要注意的是，这些坐标都是相当于View的父容器来说的，因此它是一种相对坐标，View的坐标和父容器的关系如下所示：
+　　View的位置主要由它的四个顶点来决定，分别对应于View的四个属性：top,left,right,bottom,其中top是左上角的纵坐标，left是左上角的横坐标，right是右下角的横坐标，bottom是右下角的纵坐标。需要注意的是，这些坐标都是相当于View的父容器来说的，因此它是一种相对坐标，View的坐标和父容器的关系如下所示：
 ![相对位置关系](/image/location.png)
 > width = right - left
 height = bottom - top
@@ -82,7 +82,7 @@ bottom = getBottom()
         scrollTo(mScrollX + x, mScrollY + y);
     }
 ```
-从源码中可以看出，`scrollBy`实际上也是调用`scrollBy`的方法。需要注意的是在`View`的滑动过程中，`mScrollX`和`mScrollY`的改变规则：
+　　从源码中可以看出，`scrollBy`实际上也是调用`scrollBy`的方法。需要注意的是在`View`的滑动过程中，`mScrollX`和`mScrollY`的改变规则：
 在滑动过程中，`mScrollX`的值总是等于View左边缘和View内容左边缘在水平方向的距离，而mScrollY的值总是等于View上边缘和View内容上边缘在竖直方向的距离。其中`mScrollX`和`mScrollY`的单位是像素，并且当View左边缘在View内容左边缘的右边时，`mScrollX`为正值，反之为负值；当View上边缘在View内容上边缘的下边时，`mScrollY`为正值，反之为负值。换句话说：从左向右滑动，`mScrollX`为负值，反之为正值；如果从上往下滑动，`mScrollY`为负值，反之为正值。
 **意思就是说ScrollTo/ScrollBy只能滑动View的内容而不能滑动View本身，比如，只能滑动TextView的文字，而不能滑动TextView控件本身**
 #### 三 使用动画

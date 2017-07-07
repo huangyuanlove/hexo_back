@@ -40,7 +40,7 @@ authorized_keys 600权限
 改为 git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell
 
 回到本地，进行克隆
-git clone git@192.168.1.103:/home/git/code/test.git
+`git clone git@192.168.1.103:/home/git/code/test.git`
 或者
-git clone git@192.168.1.103:code/test.git
+`git clone git@192.168.1.103:code/test.git`
 如果ssh不是默认的22端口，则在ip后添加端口。

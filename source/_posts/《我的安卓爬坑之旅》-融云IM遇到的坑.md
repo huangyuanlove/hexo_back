@@ -11,7 +11,7 @@ tags: [Android爬坑之旅,Android,融云IM]
 1. 获取Token时可以在融云后台（登录自己帐号，控制台）可以设置Token有效期。
 2. 在初始情况下开发环境下最多只能有100个测试用户，当达到上限后可以点击添加用户的按钮，每次添加20人上限，生产环境没有上限。
 3. 开发环境和生产环境在融云后台是两套独立的环境，拥有不同的`App Key`和`App Secret`，当产品上线时不要忘记切换自己服务器和app的配置，另外，app的`App Key`和服务器端的`App Key`要一致。
-####前端 Android向
+#### 前端 Android向
 1. 由于集成融云的聊天界面个会话列表界面都是Fragment形式，在集成的过程中，包含该Fragment的Activity要继承自**FragmentActivity**，否则在开启聊天界面的时候会报如下异常：
 ```java
 Caused by: android.view.InflateException: Binary XML file line #6: Binary XML file line #6: Error inflating class fragment 
