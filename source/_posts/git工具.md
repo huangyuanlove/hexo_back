@@ -14,7 +14,7 @@ tags: [git,git工具]
 4. 配置codecompare为merge工具
 	`git config --global merge.tool codecompare`
 5. 配置codecompare的路径`path 后面是软件的安装路径`
-	`git config --global difftool.codecompare.path D://CodeCompare//CodeMerge.exe`
+	`git config --global mergetool.codecompare.path D://CodeCompare//CodeMerge.exe`
 	
 在比较本地修改后的文件与本地仓库中的文件差异时，执行 `git difftool <filename>`即可。
 ![codecompare实例](/image/git/git_diff_tool_codecompare.png)
