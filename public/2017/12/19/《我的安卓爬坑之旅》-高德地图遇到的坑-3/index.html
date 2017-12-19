@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://www.huangyuanlove.com">
   <title>《我的安卓爬坑之旅》-高德地图遇到的坑-3 | 放码过来</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。SDK版本号：com.amap.api:location:3.6.1、com.amap.api:map3d:4.1.3、com.amap.api:map3d-native:4.1.3、com.amap.api:search:5.5.0。过程如下：2017年12月5号接到用户反馈，定位位置准确，但是显示的中">
+  <meta name="description" content="这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。SDK版本号：com.amap.api:location:3.6.1、com.amap.api:map3d:4.1.3、com.amap.api:map3d-native:4.1.3、com.amap.api:search:5.5.0。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《我的安卓爬坑之旅》-高德地图遇到的坑-3">
 <meta property="og:url" content="http://www.huangyuanlove.com/2017/12/19/《我的安卓爬坑之旅》-高德地图遇到的坑-3/index.html">
 <meta property="og:site_name" content="放码过来">
-<meta property="og:description" content="这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。SDK版本号：com.amap.api:location:3.6.1、com.amap.api:map3d:4.1.3、com.amap.api:map3d-native:4.1.3、com.amap.api:search:5.5.0。过程如下：2017年12月5号接到用户反馈，定位位置准确，但是显示的中">
+<meta property="og:description" content="这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。SDK版本号：com.amap.api:location:3.6.1、com.amap.api:map3d:4.1.3、com.amap.api:map3d-native:4.1.3、com.amap.api:search:5.5.0。">
 <meta property="og:image" content="http://www.huangyuanlove.com/image/gaode/geocoderSearch_bug.png">
-<meta property="og:updated_time" content="2017-12-19T07:22:16.153Z">
+<meta property="og:updated_time" content="2017-12-19T07:25:36.344Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《我的安卓爬坑之旅》-高德地图遇到的坑-3">
-<meta name="twitter:description" content="这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。SDK版本号：com.amap.api:location:3.6.1、com.amap.api:map3d:4.1.3、com.amap.api:map3d-native:4.1.3、com.amap.api:search:5.5.0。过程如下：2017年12月5号接到用户反馈，定位位置准确，但是显示的中">
+<meta name="twitter:description" content="这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。SDK版本号：com.amap.api:location:3.6.1、com.amap.api:map3d:4.1.3、com.amap.api:map3d-native:4.1.3、com.amap.api:search:5.5.0。">
 <meta name="twitter:image" content="http://www.huangyuanlove.com/image/gaode/geocoderSearch_bug.png">
   
     <link rel="alternative" href="/atom.xml" title="放码过来" type="application/atom+xml">
@@ -205,7 +205,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。<br>SDK版本号：<code>com.amap.api:location:3.6.1</code>、<code>com.amap.api:map3d:4.1.3</code>、<code>com.amap.api:map3d-native:4.1.3</code>、<code>com.amap.api:search:5.5.0</code>。<br>过程如下：<br>2017年12月5号接到用户反馈，定位位置准确，但是显示的中文具体位置不准确，误差大概在千米级别。当时就麻爪了，这可不是误差，这是错误。</p>
+        <p>这次是逆地理位置编码出现的坑，在提交工单后，官方回复是badcase，已经收录，后续着手优化。<br>SDK版本号：<code>com.amap.api:location:3.6.1</code>、<code>com.amap.api:map3d:4.1.3</code>、<code>com.amap.api:map3d-native:4.1.3</code>、<code>com.amap.api:search:5.5.0</code>。<br><a id="more"></a><br>过程如下：<br>2017年12月5号接到用户反馈，定位位置准确，但是显示的中文具体位置不准确，误差大概在千米级别。当时就麻爪了，这可不是误差，这是错误。</p>
 <ol>
 <li>首先排除网络以及信号问题：<br>根据用户反馈，得知用户所在位置信号良好，周围不存在遮盖物，也不在地下室之类的信号差的地方，不存在定位偏差问题(app上显示的定位和手机位置一致)。<br>网络状况良好，浏览器可以打开网页、app可以进行其他操作。<br>先排除用户使用情况的原因是：接到过多次反馈，是因为用户没有看app提示，或者直接忽略掉提示导致的误报。</li>
 <li>排除代码问题</li>
@@ -464,7 +464,7 @@ geocoderSearch.getFromLocationAsyn(query);</code>)，得到的地理位置正确
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -472,11 +472,19 @@ geocoderSearch.getFromLocationAsyn(query);</code>)，得到的地理位置正确
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
+                <a href="javascript:void(0)" class="js-tag color1">tcp协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">tcp/ip协议族</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -492,18 +500,6 @@ geocoderSearch.getFromLocationAsyn(query);</code>)，得到的地理位置正确
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tcp协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">tcp/ip协议族</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elk</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
@@ -512,7 +508,7 @@ geocoderSearch.getFromLocationAsyn(query);</code>)，得到的地理位置正确
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">blog</a>
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -520,7 +516,11 @@ geocoderSearch.getFromLocationAsyn(query);</code>)，得到的地理位置正确
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">blog</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">elk</a>
               </li>
              
               <li class="article-tag-list-item">
