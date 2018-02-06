@@ -42,6 +42,6 @@ tags: [jenkins,运维,服务器]
 ![jenkins构建](/image/jenkins/jenkins_start_build_project.png)
 点击构建历史列表里面对应构建历史的小圆点，可以查看控制台输出
 ![jenkins构建历史](/image/jenkins/jenkins_build_history.png)
-![jenkins](/image/jenkins/jenkins_build_console_output)
+![jenkins](/image/jenkins/jenkins_build_console_output.png)
 ps：如果是普通用户启动的tomcat，使用git管理源码，则下载下来的工程源码在`/home/username/.jenkins/workspace`，如果是root用户，则在 `/root/.jenkins/workspace`下
 pps:据说`jenkins`的包不需要tomcat也可以，执行`java -jar ***.war`即可
