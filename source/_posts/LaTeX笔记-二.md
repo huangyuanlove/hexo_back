@@ -1,7 +1,7 @@
 ---
 title: LaTeX笔记(二)
 date: 2018-01-27 22:59:42
-tags: [LaTex]
+tags: [LaTeX]
 ---
 接上篇，写好的tex文件在这 https://github.com/huangyuanlove/latex_practice/blob/master/latex(1)/chapter_one.tex
 ##### 写个框架
