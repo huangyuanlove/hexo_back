@@ -81,3 +81,16 @@ print ''Hello,$name!\n''
 \end{verbatim}
 ```
 同样可以使用带星号的`verbatim*`环境输出可见空格。
+如果想在程序代码中增加语法高亮功能，可以使用**listings**宏包
+``` tex
+\begin{lstlisting}[language=java]
+class Test{
+	public static void main(String ... args){
+		System.out.println(''Hello Java'');
+	}
+}
+\end{lstlisting}
+```
+----
+
+以上
