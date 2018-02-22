@@ -80,10 +80,10 @@ slider:
 smart_menu:
   innerArchive: '所有文章'
   # tagcloud: '标签'
-  friends: '友链'
+  # friends: '友链'
   aboutme: '关于我'
 
 friends: 
-  快递查询: https://m.kuaidi100.com/
+ 
 
 aboutme: <a href="http://www.huangyuanlove.com">什么懂都点的Android攻城狮</a>
