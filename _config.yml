@@ -5,14 +5,14 @@
 # Site
 title: 放码过来
 subtitle: 技术宅 huangyuan@huangyuanlove.com
-description: huangyuan@huangyuanlove.com
+description: 锱铢必较间接性奋发图强，睚眦必报持续性混吃等死
 author: HuangYuan_xuan
 language: zh-CN
 email: huangyuan@huangyuanlove.com
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://www.huangyuanlove.com
+url: http://blog.huangyuanlove.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:

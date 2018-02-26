@@ -1,7 +1,7 @@
 # Header
 menu:
   主页: "http://www.huangyuanlove.com"
-#  简历: "http://7xiruh.com1.z0.glb.clouddn.com/%E9%BB%84%E6%B2%85android%E4%B8%89.pdf"
+  # 样式问题: "http://blog.huangyuanlove.com"
 
 # SubNav
 subnav:
@@ -30,9 +30,9 @@ excerpt_link: more
 # 文章卡片右下角常驻链接，不需要请设置为false
 show_all_link: '展开全文'
 # 数学公式
-mathjax: false
+mathjax: true
 # 是否在新窗口打开链接
-open_in_new: false
+open_in_new: true
 
 # 打赏
 # 请在需要打赏的文章的md文件头部，设置属性reward: true
