@@ -1,5 +1,5 @@
 ---
-title: LaTeX笔记(一)
+title: LaTeX笔记(一)(准备工作)
 date: 2018-01-18 21:21:41
 tags: [LaTeX]
 ---

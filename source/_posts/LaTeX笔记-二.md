@@ -1,5 +1,5 @@
 ---
-title: LaTeX笔记(二)
+title: LaTeX笔记(二)(开篇)
 date: 2018-01-27 22:59:42
 tags: [LaTeX]
 ---

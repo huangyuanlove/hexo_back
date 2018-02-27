@@ -1,5 +1,5 @@
 ---
-title: LaTeX笔记-五
+title: LaTeX笔记-五(自动化工具)
 date: 2018-02-27 11:09:28
 tags: [LaTeX]
 ---

@@ -1,5 +1,5 @@
 ---
-title: LaTeX笔记(三)
+title: LaTeX笔记(三)(杂)
 date: 2018-02-11 16:25:02
 tags: [LaTeX]
 ---
