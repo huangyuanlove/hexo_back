@@ -168,12 +168,14 @@ tools:ignore="contentDescription" />
 **Intended for:** *`DrawerLayout`*
 **Used by:** *Android Studio layout editor*
 设置`DrawerLayout`在预览窗口的打开位置
+
 |Constant|Value|Description|
 |:-------------:|:-------------:|:-----:|
 |end|800005|Push object to the end of its container, not changing its size. |
 |left|3|Push object to the left of its container, not changing its size.|
 |right|5|Push object to the right of its container, not changing its size.|
 |start|800003|Push object to the beginning of its container, not changing its size.|
+
 ``` xml
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
