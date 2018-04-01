@@ -4,13 +4,13 @@ date: 2018-04-01 12:36:16
 tags: [网站https,乱七八糟]
 ---
 昨天跟着酷壳网左耳朵耗子的文章把自己在亚马逊主机上的网站变成https的安全访问了，证书不是自签名的，也不是花钱购买的。据说https的网站在搜索引擎中的rank值会比http的更高一些。升级完成后的浏览器截图如下：
- ![浏览器](/image/https/https1.png])
+![浏览器](/image/https/https1.png)
 下面是这次升级的记录。
 <!--more-->
 为网站开启https安装证书非常简单，我用的是 [Let’s Encrypt ](https://letsencrypt.org/)这个免费的解决方案。
 1. 打开[https://certbot.eff.org/](https://certbot.eff.org/)这个网页
 2. 在Software 和 System选项里面选择你所使用的软件、系统，我用的nginx+ubuntu16.04
- ![网站截图](/image/https/https4.png])
+ ![网站截图](/image/https/https4.png)
 3. 然后会跳转到一个新的网页，照着做就是了。
 就以nginx+ubuntu16.04为例：
 ``` shell
@@ -22,9 +22,9 @@ $ sudo apt-get install python-certbot-nginx
 ```
 安装成功后执行 `$ sudo certbot --nginx`
 让你输入你的邮箱，然后是同意用户协议，然后是是否公开你的邮箱。
- ![邮箱、用户协议](/image/https/https2.png])
+ ![邮箱、用户协议](/image/https/https2.png)
 接着会列出来nginx下所有配置的服务名称，输入你想要开启https的服务名称所对应的编号，如果想为多个服务开启https，中间以空格分隔。然后nginx重新加载一个配置或者重启一下。
-![开启https的服务名称](/image/https/https3.png])
+![开启https的服务名称](/image/https/https3.png)
 我个人服务器上的nginx配置的`server_name`是`tomcat.huangyuanlove.com`,域名是在万网买的，然后在万网控制台添加一个A解析，把`tomcat.huangyuanlove.com`指向服务器的ip即可。
 但是 **Let’s Encrypt 的证书90天就过期了**。所以还需要加上自动更新，使用`crontab -e`命令假如如下的定时作业(每个月强制更新一下)
 ``` sehll
