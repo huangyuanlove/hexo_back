@@ -1,7 +1,7 @@
 ---
 title: Android中使用WebSocket-2
 date: 2017-12-26 16:37:37
-tags: [Andorid,WebSocket]
+tags: [Android,WebSocket]
 ---
 上一篇提到在Android中使用WebSocket和服务端进行通信。是直接在Activity里面进行操作的这样会保持一个长连接，一个应用里面没必要也不应该保持多个长连接，所以我们可以把WebSocket客户端挪到Service里面，使用广播和Activity进行通信。
 <!-- more -->

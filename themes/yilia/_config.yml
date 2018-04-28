@@ -1,6 +1,6 @@
 # Header
 menu:
-  主页: "http://www.huangyuanlove.com"
+  # 主页: "http://www.huangyuanlove.com"
   # 样式问题: "http://blog.huangyuanlove.com"
 
 # SubNav
@@ -86,4 +86,4 @@ smart_menu:
 friends: 
  
 
-aboutme: <a href="http://www.huangyuanlove.com">什么懂都点的Android攻城狮</a>
+aboutme: 什么懂都点的Android攻城狮

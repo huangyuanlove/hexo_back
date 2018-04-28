@@ -1,7 +1,7 @@
 ---
 title: Android N 应用内更新
 date: 2017-03-28 10:30:31
-tags: [Android爬坑之旅,Android N]
+tags: [Android爬坑之旅,Android]
 ---
 继之前跪在Android M的动态权限之后，最近又跪在了Android N的`StrictMode`上了。所以啊，要对技术持有敬畏的态度。
 场景如下：

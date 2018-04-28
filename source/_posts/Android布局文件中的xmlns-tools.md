@@ -1,7 +1,7 @@
 ---
 title: 'Android布局文件中的xmlns:tools'
 date: 2018-01-04 14:12:34
-tags: [android]
+tags: [Android]
 ---
 在使用AndroidStudio创建布局文件的时候，跟布局下总是有如下代码：
 ``` xml

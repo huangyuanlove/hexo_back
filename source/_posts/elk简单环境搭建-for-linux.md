@@ -1,7 +1,7 @@
 ---
 title: elk简单环境搭建 for linux
 date: 2017-06-13 19:39:30
-tags: [elk,运维,服务器]
+tags: [elk,运维]
 ---
 环境：ubuntu 16.06虚拟机：4核8G内存
 在官网下载的`tag.gz`包，官网地址[https://www.elastic.co/webinars/introduction-elk-stack](https://www.elastic.co/webinars/introduction-elk-stack)

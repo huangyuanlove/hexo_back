@@ -1,7 +1,7 @@
 ---
 title: 原CSDN博客
 date: 2016-10-16 22:39:41
-tags: csdn
+tags: [csdn]
 ---
 不打算在csdn上面写博客了,转到gitpage上面,自己用hexo搭建了博客系统.
 现在把原csdn的博客链接抄在下面

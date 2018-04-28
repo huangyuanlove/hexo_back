@@ -1,7 +1,7 @@
 ---
 title: Tinker初探
 date: 2018-03-10 12:35:18
-tags: [Android,热修复，tinker]
+tags: [Android,热修复,tinker]
 ---
 前两天想试一下热修复的功能，对比各大平台的热修复功能，看到tinker的[文档介绍](http://www.tinkerpatch.com/Docs/intro)，最终决定先拿Tinker试一下。
 > 
