@@ -17,7 +17,7 @@ tags: [hexo,gitpage,blog]
 
 ![安装nvm](/image/hexo/hexo_install_nvm.png  "安装nvm图片")
 安装时间长短视网速而定,我安装了大概十多分钟,然后重启一下终端.
-然后使用 `nvm ls-remote`查看一下有哪些本版可以安装,我当时安装的最新版是`6.6.0`,现在不知道是哪一版,如下
+然后使用 `nvm ls-remote`查看一下有哪些本版可以安装,我当时安装的最新版是`6.6.0`,现在不知道是哪一版,如b下
 ![nvm ls-remote](/image/hexo/nvm_ls-remote.png)
 找一个合适的版本使用如下命令安装
 `nvm install version`,例如 `nvm install 6.6.0`

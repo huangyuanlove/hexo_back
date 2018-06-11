@@ -4,7 +4,7 @@ date: 2017-03-21 20:05:01
 tags: [Android]
 ---
 　　Window表示一个窗口的概念，在日常开发中直接接触WIndow的机会并不对，再试在某些特殊时候我们需要在桌面上显示一个类似悬浮窗的东西，那么这种效果就需要用到Window来实现。
-　　Window只是个抽象类，它的具体实现是PhoneWindow。创建一个Window是很简单的事，只需要通过WindowManager即可完成，WindowManager是外界访问Window的入口，Window的具体实现位于WindowMangerService中，WindowMnager和WindowManager的交互是一个IPC过程，Android中所有的视图都是通过Window来呈现的，不管是Activity、Dialog还是Toast，它们的视图实际上都是附加在Window上的，因此Window实际是View的直接管理者。
+　　Window只是个抽象类，它的具体实现是PhoneWindow。创建一个Window是很简单的事，只需要通过WindowManager即可完成，WindowManager是外界访问Window的入口，Window的具体实现位于WindowMangerService中，WindowMnager和WWindowMangerService的交互是一个IPC过程，Android中所有的视图都是通过Window来呈现的，不管是Activity、Dialog还是Toast，它们的视图实际上都是附加在Window上的，因此Window实际是View的直接管理者。
 <!--more-->
 ### Window的内部机制
 　　Window是一个抽象的概念，每一个Window都对应着一个View和一个ViewRootImpl，Window和View通过ViewRootImpl来建立联系，因此Window并不是实际存在的，它是以View的形式存在，。这点从WindowManager的定义也可以看出，它提供的三个接口方法addView,updateViewLayout以及removeView都是针对View，这说明View才是Window存在的实体。在实际使用中无法直接访问Window，对Window的访问必须通过WindowManger。
