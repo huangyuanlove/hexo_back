@@ -379,3 +379,52 @@ public class MainActivity extends AppCompatActivity {
 07-23 14:56:57.185 16905-16918/com.huangyuanlove.testandroid:remote D/BookManagerService: unregisterListener,current size:1
 ```
 从上面的log可以看出，程序没有像我们所预期的那样执行。在解注册的过程中，服务端竟然无法找到我们之前注册的那个listener，其实，这是必然的，这种解注册的处理方式在日常开发过程中时常使用到，但是放到多进程中却无法奏效，因为Binder会把客户端传递过来的对象重新转化并生成一个新的对象。虽然我们在注册和解注册过程中使用的是同一个客户端对象，但是通过Binder传递到服务端后，却会产生两个全新的对象。别忘了对象是不能跨进程直接传输的，对象的跨进程传输本质上都是反序列化的过程，这就是为什么AIDL中的自定义对象都必须要实现Parcelable接口的原因。可以使用`RemoteCallbackList`。
+RemoteCallbackList是系统专门提供的用于删除跨进程listener的接口。 RemoteCallbackList是一个泛型， 支持管理任意的AIDL接口， 这点从它的声明就可以看出，因为所有的AIDL接口都继承自IInterface接口
+> public class RemoteCallbackList<E extends IInterface>
+
+它的工作原理很简单， 在它的内部有一个Map结构专门用来保存所有的AIDL回调，这个Map的key是IBinder类型， value是Callback类型， 如下所示:
+> ArrayMap<IBinder,Callback> mCallbacks = new ArrayMap<IBinder,Callback>();
+
+其中Callback中封装了真正的远程listener。 当客户端注册listener的时候，它会把这个listener的信息存入mCallbacks中， 其中key和value分别通过下面的方式获得：
+> IBinder key= listener.asBinder()
+> Callback value = new Callback(listener,cookie)
+
+虽然说多次跨进程传输客户端的同一个对象会在服务端生成不同的对象，但是这些新生成的对象有一个共同点，那就是它们底层的Binder对象是同一个， 利用这个特性，就可以实现上面我们无法实现的功能。当客户端解注册的时候，我们只要遍历服务端所有的listener， 找出那个和解注册listener具有相同Binder对象的服务端listener并把它删掉即可，这就是RemoteCallbackList为我们做的事情。同时RemoteCallbackList还有一个很有用的功能， 那就是当客户端进程终止后，它能够自动移除客户端所注册的listener。另外，RemoteCallbackList内部自动实现了线程同步的功能，所以我们使用它来注册和解注册时，不需要做额外的线程同步工作。
+RemoteCallbackList使用起来很简单，我们要对BookManagerService做一些修改，首先要创建一个RemoteCallbackList对象来替代之前的CopyOnWriteArrayList，如下所示:
+``` java
+private RemoteCallbackList<IOnNewBookArrivedListener> mListenerList = new RemoteCallbackList<IOnNewBookArrivedListener>();
+```
+然后修改registerListener和unregisterListener这两个接口的实现， 如下所示:
+``` java
+@Override
+public void registerListener(IOnNewBookArrivedIistener listener) throws RemoteException {
+    mListenerList.register(listener);
+}
+@Override
+public void unRegisterListener(IOnNewBookArrivedIistener listener) throws RemoteException {
+    mListenerList.unregister(listener);
+}
+```
+接着要修改onNewBookArrived方法，当有新书时，我们就要通知所有已注册的listener，如下所示:
+``` java
+private void onNewBookArrived(Book book) throws RemoteException {
+        books.add(book);
+       final int N  =mListenerList.beginBroadcast();
+       for(int i = 0 ; i < N;i++){
+           IOnNewBookArrivedIistener iOnNewBookArrivedIistener = mListenerList.getBroadcastItem(i);
+           if(iOnNewBookArrivedIistener!=null){
+               iOnNewBookArrivedIistener.onNewBookArrived(book);
+           }
+       }
+       mListenerList.finishBroadcast();
+    }
+```
+使用RemoteCallbackList，有一点需要注意，我们无法像操作List一样去操作它，尽管它的名字中也带个List，但是它并不是一个List。遍历RemoteCallbackList，必须要按照下面的方式进行，其中beginBroadcast和beginBroadcast必须要配对使用，哪怕我们仅仅是想要获取RemoteCallbackList中的元素个数，这是必须要注意的地方。
+另外还有几点需要说明一下：
+* 客户端调用远程服务的方法，被调用的方法运行在服务端的Binder线程池中，同时客户端线程会被挂起，这个时候如果服务端方法执行比较耗时，就会导致客户端线程长时间地阻塞在这里，而如果这个客户端线程是UI线程的话，就会导致客户端ANR。因此，如果我们明确知道某个远程方法是耗时的，那么就要避免在客户端的UI线程中去访问远程方法。由于客户端的`onServiceConnected`和`onServiceDisconnected`方法都运行在UI线程中，所以也不可以在它们里面直接调用服务端的耗时方法，这点要尤其注意。
+* 由于服务端的方法本身就运行在服务端的Binder线程池中，所以服务端方法本身就可以执行大量耗时操作，这个时候切记不要在服务端方法中开线程去进行异步任务，除非你明确知道自己在干什么，否则不建议这么做。
+* 同理，当远程服务端需要调用客户端的listener中的方法时，被调用的方法也运行在Binder线程池中，只不过是客户端的线程池。所以，我们同样不可以在服务端中调用客户端的耗时方法。比如针对BookManagerService的onNewBookArrived方法。在它内部调用了客户端的IOnNewBookArrivedListener中的onNewBookArrived方法，如果客户端的这个onNewBookArrived方法比较耗时的话，那么请确保BookManagerService中的onNewBookArrived运行在非UI线程中，否则将导致服务端无法响应。
+* 权限验证，第一种方法，我们可以在onBind中进行验证，验证不通过就直接返回null，这样验证失败的客户端直接无法绑定服务，至于验证方式可以有多种， 比如使用permission验证。第二种方法，我们可以在服务端的onTransact方法中进行权限验证，如果验证失败就直接返回false，这样服务端就不会终止执行AIDL中的方法从而达到保护服务端的效果。
+
+----
+以上
