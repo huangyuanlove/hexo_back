@@ -243,3 +243,351 @@ intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 所以现在明确了，Launcher中开启一个App，其实和我们在Activity中直接startActivity()基本一样，都是调用了Activity.startActivityForResult()。
 
 ###### Instrumentation
+每个Activity都持有Instrumentation对象的一个引用，但是整个进程只会存在一个Instrumentation对象。当startActivityForResult()调用之后，实际上还是调用了mInstrumentation.execStartActivity().
+下面是mInstrumetation.execStartActivity()的实现
+``` java
+public ActivityResult execStartActivity(
+            Context who, IBinder contextThread, IBinder token, Activity target,
+            Intent intent, int requestCode, Bundle options) {
+        IApplicationThread whoThread = (IApplicationThread) contextThread;
+        Uri referrer = target != null ? target.onProvideReferrer() : null;
+        if (referrer != null) {
+            intent.putExtra(Intent.EXTRA_REFERRER, referrer);
+        }
+        if (mActivityMonitors != null) {
+            synchronized (mSync) {
+                final int N = mActivityMonitors.size();
+                for (int i=0; i<N; i++) {
+                    final ActivityMonitor am = mActivityMonitors.get(i);
+                    if (am.match(who, null, intent)) {
+                        am.mHits++;
+                        if (am.isBlocking()) {
+                            return requestCode >= 0 ? am.getResult() : null;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        try {
+            intent.migrateExtraStreamToClipData();
+            intent.prepareToLeaveProcess();
+            int result = ActivityManagerNative.getDefault()
+                .startActivity(whoThread, who.getBasePackageName(), intent,
+                        intent.resolveTypeIfNeeded(who.getContentResolver()),
+                        token, target != null ? target.mEmbeddedID : null,
+                        requestCode, 0, null, options);
+            checkStartActivityResult(result, intent);
+        } catch (RemoteException e) {
+            throw new RuntimeException("Failure from system", e);
+        }
+        return null;
+    }
+
+```
+这里的 ActivityManagerNative.getDefault 返回ActivityManagerService的远程接口，即 ActivityManagerProxy 接口，有人可能会问了为什么会是ActivityManagerProxy，这就涉及到Binder通信了，这里不再展开。通过Binder驱动程序， ActivityManagerProxy 与AMS服务通信，则实现了跨进程到System进程。
+
+``` java
+ /**
+     * Retrieve the system's default/global activity manager.
+     */
+    static public IActivityManager getDefault() {
+        return gDefault.get();
+    }
+
+    private static final Singleton<IActivityManager> gDefault = new Singleton<IActivityManager>() {
+        protected IActivityManager create() {
+            IBinder b = ServiceManager.getService("activity");
+            if (false) {
+                Log.v("ActivityManager", "default service binder = " + b);
+            }
+            IActivityManager am = asInterface(b);
+            if (false) {
+                Log.v("ActivityManager", "default service = " + am);
+            }
+            return am;
+        }
+    };
+
+    /**
+     * Cast a Binder object into an activity manager interface, generating
+     * a proxy if needed.
+     */
+    static public IActivityManager asInterface(IBinder obj) {
+        if (obj == null) {
+            return null;
+        }
+        IActivityManager in =
+            (IActivityManager)obj.queryLocalInterface(descriptor);
+        if (in != null) {
+            return in;
+        }
+
+        return new ActivityManagerProxy(obj);
+    }
+```
+###### AMS响应Launcher进程请求
+至此，点击桌面图标调用startActivity()，终于把数据和要开启Activity的请求发送到了AMS了,AMS收到startActivity的请求之后，会按照如下的方法链进行调用：
+``` java
+@Override
+    public final int startActivity(IApplicationThread caller, String callingPackage,
+            Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode,
+            int startFlags, ProfilerInfo profilerInfo, Bundle options) {
+        return startActivityAsUser(caller, callingPackage, intent, resolvedType, resultTo,
+            resultWho, requestCode, startFlags, profilerInfo, options,
+            UserHandle.getCallingUserId());
+    }
+
+    @Override
+    public final int startActivityAsUser(IApplicationThread caller, String callingPackage,
+            Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode,
+            int startFlags, ProfilerInfo profilerInfo, Bundle options, int userId) {
+        enforceNotIsolatedCaller("startActivity");
+        userId = handleIncomingUser(Binder.getCallingPid(), Binder.getCallingUid(), userId,
+                false, ALLOW_FULL_ONLY, "startActivity", null);
+        // TODO: Switch to user app stacks here.
+        return mStackSupervisor.startActivityMayWait(caller, -1, callingPackage, intent,
+                resolvedType, null, null, resultTo, resultWho, requestCode, startFlags,
+                profilerInfo, null, null, options, false, userId, null, null);
+    }
+```
+这里又出现了一个`mStackSupervisor`，定义是这么说的
+``` java
+/** Run all ActivityStacks through this */
+    ActivityStackSupervisor mStackSupervisor;
+
+```
+在`mStackSupervisor.startActivityMayWait()`方法中又调用了`startActivityLocked()`方法，接着调用了`startActivityUncheckedLocked()`方法，在这个方法中一大堆眼花缭乱的判断，最终调用了`targetStack.startActivityLocked(r, newTask, doResume, keepCurTransition, options)`方法，然后调用了`mStackSupervisor.resumeTopActivitiesLocked(this, r, options)`方法，然后调用`result = targetStack.resumeTopActivityLocked(target, targetOptions)`方法，调用`result = resumeTopActivityInnerLocked(prev, options)`方法，在这个方法里，prev.app为记录启动Lancher进程的ProcessRecord，prev.app.thread为Lancher进程的远程调用接口IApplicationThead，所以可以调用prev.app.thread.schedulePauseActivity，到Lancher进程暂停指定Activity。至此，AMS对Launcher的请求已经响应，这是我们发现又通过Binder通信回调至Launcher进程
+
+######  Launcher进程挂起Launcher，再次通知AMS
+
+看一下怎么挂起Launcher的,在ActivityThread中：
+``` java
+private void handlePauseActivity(IBinder token, boolean finished,
+            boolean userLeaving, int configChanges, boolean dontReport) {
+        ActivityClientRecord r = mActivities.get(token);
+        if (r != null) {
+            //Slog.v(TAG, "userLeaving=" + userLeaving + " handling pause of " + r);
+            if (userLeaving) {
+                performUserLeavingActivity(r);
+            }
+
+            r.activity.mConfigChangeFlags |= configChanges;
+            performPauseActivity(token, finished, r.isPreHoneycomb());
+
+            // Make sure any pending writes are now committed.
+            if (r.isPreHoneycomb()) {
+                QueuedWork.waitToFinish();
+            }
+
+            // Tell the activity manager we have paused.
+            if (!dontReport) {
+                try {
+                    ActivityManagerNative.getDefault().activityPaused(token);
+                } catch (RemoteException ex) {
+                }
+            }
+            mSomeActivitiesChanged = true;
+        }
+    }
+```
+这部分Launcher的ActivityThread处理页面Paused并且再次通过ActivityManagerProxy通知AMS。
+
+###### AMS创建新的进程
+
+创建新进程的时候，AMS会保存一个ProcessRecord信息，如果应用程序中的AndroidManifest.xml配置文件中，我们没有指定Application标签的process属性，系统就会默认使用package的名称。每一个应用程序都有自己的uid，因此，这里uid + process的组合就可以为每一个应用程序创建一个ProcessRecord。
+在`ActivityManagerService`中，
+``` java
+private final void startProcessLocked(ProcessRecord app, String hostingType,
+            String hostingNameStr, String abiOverride, String entryPoint, String[] entryPointArgs) {
+        long startTime = SystemClock.elapsedRealtime();
+        ......
+        // Start the process.  It will either succeed and return a result containing
+            // the PID of the new process, or else throw a RuntimeException.
+            boolean isActivityProcess = (entryPoint == null);
+            if (entryPoint == null) entryPoint = "android.app.ActivityThread";
+            Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "Start proc: " +
+                    app.processName);
+            checkTime(startTime, "startProcess: asking zygote to start proc");
+            Process.ProcessStartResult startResult = Process.start(entryPoint,
+                    app.processName, uid, uid, gids, debugFlags, mountExternal,
+                    app.info.targetSdkVersion, app.info.seinfo, requiredAbi, instructionSet,
+                    app.info.dataDir, entryPointArgs);
+            checkTime(startTime, "startProcess: returned from zygote!");
+            Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+
+            if (app.isolated) {
+                mBatteryStatsService.addIsolatedUid(app.uid, app.info.uid);
+            }
+            mBatteryStatsService.noteProcessStart(app.processName, app.info.uid);
+            checkTime(startTime, "startProcess: done updating battery stats");
+```
+这里主要是调用Process.start接口来创建一个新的进程，新的进程会导入android.app.ActivityThread类，并且执行它的main函数，这就是每一个应用程序都有一个ActivityThread实例来对应的原因。
+
+###### 应用进程初始化
+来看Activity的main函数，这里绑定了主线程的Looper，并进入消息循环，大家应该知道，整个Android系统是消息驱动的，这也是为什么主线程默认绑定Looper的原因：
+``` java
+public static void main(String[] args) {
+        Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "ActivityThreadMain");
+        SamplingProfilerIntegration.start();
+
+        // CloseGuard defaults to true and can be quite spammy.  We
+        // disable it here, but selectively enable it later (via
+        // StrictMode) on debug builds, but using DropBox, not logs.
+        CloseGuard.setEnabled(false);
+
+        Environment.initForCurrentUser();
+
+        // Set the reporter for event logging in libcore
+        EventLogger.setReporter(new EventLoggingReporter());
+
+        AndroidKeyStoreProvider.install();
+
+        // Make sure TrustedCertificateStore looks in the right place for CA certificates
+        final File configDir = Environment.getUserConfigDirectory(UserHandle.myUserId());
+        TrustedCertificateStore.setDefaultUserDirectory(configDir);
+
+        Process.setArgV0("<pre-initialized>");
+
+        Looper.prepareMainLooper();
+
+        ActivityThread thread = new ActivityThread();
+        thread.attach(false);
+
+        if (sMainThreadHandler == null) {
+            sMainThreadHandler = thread.getHandler();
+        }
+
+        if (false) {
+            Looper.myLooper().setMessageLogging(new
+                    LogPrinter(Log.DEBUG, "ActivityThread"));
+        }
+
+        // End of event ActivityThreadMain.
+        Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+        Looper.loop();
+
+        throw new RuntimeException("Main thread loop unexpectedly exited");
+    }
+```
+attach函数最终调用了ActivityManagerService的远程接口ActivityManagerProxy的attachApplication函数，传入的参数是mAppThread，这是一个ApplicationThread类型的Binder对象，它的作用是AMS与应用进程进行进程间通信的。
+将进程和指定的Application绑定起来。这个是通过上节的ActivityThread对象中调用bindApplication()方法完成的。该方法发送一个BIND_APPLICATION的消息到消息队列中, 最终通过handleBindApplication()方法处理该消息. 然后调用makeApplication()方法来加载App的classes到内存中。
+
+###### 在AMS中注册应用进程，启动栈顶页面
+
+mMainStack.topRunningActivityLocked(null)从堆栈顶端取出要启动的Activity，并在realStartActivityLockedhan函数中通过ApplicationThreadProxy调回App进程启动页面。
+在`ActivityStackSupervisor`中
+``` java
+final boolean realStartActivityLocked(ActivityRecord r,
+            ProcessRecord app, boolean andResume, boolean checkConfig)
+            throws RemoteException {
+                    app.thread.scheduleLaunchActivity(new Intent(r.intent), r.appToken,
+                    System.identityHashCode(r), r.info, new Configuration(mService.mConfiguration),
+                    new Configuration(stack.mOverrideConfig), r.compat, r.launchedFromPackage,
+                    task.voiceInteractor, app.repProcState, r.icicle, r.persistentState, results,
+                    newIntents, !andResume, mService.isNextTransitionForward(), profilerInfo);
+            }
+```
+它会调用application线程对象中的scheduleLaunchActivity()发送一个LAUNCH_ACTIVITY消息到消息队列中, 通过 handleLaunchActivity()来处理该消息。在 handleLaunchActivity()通过performLaunchActiivty()方法回调Activity的onCreate()方法和onStart()方法，然后通过handleResumeActivity()方法，回调Activity的onResume()方法，而后会通知AMS该MainActivity已经处于resume状态最终显示Activity界面。
+至此，整个启动流程告一段落。
+
+
+最后：
+###### 一个App的程序入口到底是什么？
+是ActivityThread.main()。
+
+###### 整个App的主线程的消息循环是在哪里创建的？
+是在ActivityThread初始化的时候，就已经创建消息循环了，所以在主线程里面创建Handler不需要指定Looper，而如果在其他线程使用Handler，则需要单独使用Looper.prepare()和Looper.loop()创建消息循环。可以看ActivityThread的main方法
+
+###### Application是在什么时候创建的？onCreate()什么时候调用的？
+也是在ActivityThread.main()的时候，就是在thread.attach(false)的时候。
+
+``` java
+if (!system) {
+            ViewRootImpl.addFirstDrawHandler(new Runnable() {
+                @Override
+                public void run() {
+                    ensureJitEnabled();
+                }
+            });
+            android.ddm.DdmHandleAppName.setAppName("<pre-initialized>",
+                                                    UserHandle.myUserId());
+            RuntimeInit.setApplicationObject(mAppThread.asBinder());
+            final IActivityManager mgr = ActivityManagerNative.getDefault();
+            try {
+                mgr.attachApplication(mAppThread);
+            } catch (RemoteException ex) {
+                // Ignore
+            }
+}
+```
+这里需要关注的就是mgr.attachApplication(mAppThread)，这个就会通过Binder调用到AMS里面对应的方法:
+``` java
+    @Override
+    public final void attachApplication(IApplicationThread thread) {
+        synchronized (this) {
+            int callingPid = Binder.getCallingPid();
+            final long origId = Binder.clearCallingIdentity();
+            attachApplicationLocked(thread, callingPid);
+            Binder.restoreCallingIdentity(origId);
+        }
+    }
+```
+然后调用的就是`private final boolean attachApplicationLocked(IApplicationThread thread,int pid)`方法，thread是IApplicationThread，实际上就是ApplicationThread在服务端的代理类ApplicationThreadProxy，然后又通过IPC就会调用到ApplicationThread的对应方法。这个方法里面又调用了`sendMessage()`，里面有函数的编号H.BIND_APPLICATION，然后这个Messge会被H这个Handler处理:
+``` java
+private class H extends Handler {
+
+    public static final int BIND_APPLICATION        = 110;
+    case BIND_APPLICATION:
+                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "bindApplication");
+                    AppBindData data = (AppBindData)msg.obj;
+                    handleBindApplication(data);
+                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+                    break;
+}
+```
+然后在`handleBindApplication(data)`方法中
+``` java
+ try {
+      java.lang.ClassLoader cl = instrContext.getClassLoader();
+      mInstrumentation = (Instrumentation)cl.loadClass(data.instrumentationName.getClassName()).newInstance();
+} catch (Exception e) {
+        throw new RuntimeException("Unable to instantiate instrumentation "+ data.instrumentationName + ": " + e.toString(), e);
+
+        ......
+         // Do this after providers, since instrumentation tests generally start their
+            // test thread at this point, and we don't want that racing.
+            try {
+                mInstrumentation.onCreate(data.instrumentationArgs);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(
+                    "Exception thrown in onCreate() of "
+                    + data.instrumentationName + ": " + e.toString(), e);
+            }
+
+            try {
+                mInstrumentation.callApplicationOnCreate(app);
+            } catch (Exception e) {
+                if (!mInstrumentation.onException(app, e)) {
+                    throw new RuntimeException(
+                        "Unable to create application " + app.getClass().getName()
+                        + ": " + e.toString(), e);
+                }
+            }
+        } finally {
+            StrictMode.setThreadPolicy(savedPolicy);
+        }
+}
+```
+不同的版本代码不尽相同，但是基本逻辑不会变。
+参考、抄袭的链接如下：
+https://blog.csdn.net/bfboys/article/details/52564531
+https://www.jianshu.com/p/a72c5ccbd150
+https://www.jianshu.com/p/6037f6fda285
+https://www.jianshu.com/p/a72c5ccbd150
+
+----
+以上
+
+
