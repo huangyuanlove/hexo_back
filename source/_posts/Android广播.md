@@ -198,8 +198,7 @@ if ((receivers != null && receivers.size() > 0)
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case BROADCAST_INTENT_MSG: {
-                    if (DEBUG_BROADCAST) Slog.v(
-                            TAG_BROADCAST, "Received BROADCAST_INTENT_MSG");
+                    if (DEBUG_BROADCAST) Slog.v(TAG_BROADCAST, "Received BROADCAST_INTENT_MSG");
                     processNextBroadcast(true);
                 } break;
                 case BROADCAST_TIMEOUT_MSG: {
@@ -210,11 +209,130 @@ if ((receivers != null && receivers.size() > 0)
                 case SCHEDULE_TEMP_WHITELIST_MSG: {
                     DeviceIdleController.LocalService dic = mService.mLocalDeviceIdleController;
                     if (dic != null) {
-                        dic.addPowerSaveTempWhitelistAppDirect(UserHandle.getAppId(msg.arg1),
-                                msg.arg2, true, (String)msg.obj);
+                        dic.addPowerSaveTempWhitelistAppDirect(UserHandle.getAppId(msg.arg1),msg.arg2, true, (String)msg.obj);
                     }
                 } break;
             }
         }
     }
 ```
+收到消息后会调用`processNextBroadcast`方法，内容如下：
+``` java
+// First, deliver any non-serialized broadcasts right away.
+    while (mParallelBroadcasts.size() > 0) {
+        r = mParallelBroadcasts.remove(0);
+        r.dispatchTime = SystemClock.uptimeMillis();
+        r.dispatchClockTime = System.currentTimeMillis();
+
+        if (Trace.isTagEnabled(Trace.TRACE_TAG_ACTIVITY_MANAGER)) {
+            Trace.asyncTraceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER,
+                createBroadcastTraceTitle(r, BroadcastRecord.DELIVERY_PENDING),
+                System.identityHashCode(r));
+            Trace.asyncTraceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER,
+                createBroadcastTraceTitle(r, BroadcastRecord.DELIVERY_DELIVERED),
+                System.identityHashCode(r));
+        }
+
+        final int N = r.receivers.size();
+        
+        for (int i=0; i<N; i++) {
+            Object target = r.receivers.get(i);
+            if (DEBUG_BROADCAST)  Slog.v(TAG_BROADCAST,
+                    "Delivering non-ordered on [" + mQueueName + "] to registered "
+                    + target + ": " + r);
+            deliverToRegisteredReceiverLocked(r, (BroadcastFilter)target, false, i);
+        }
+        addBroadcastToHistoryLocked(r);
+       
+    }
+```
+
+可以看到，无序广播存储在`mParallelBroadcasts`中，系统会遍历`mParallelBroadcasts`并将其中的广播发送给它们所有的接收者，具体的发送过程是通过`deliverToRegisteredReceiverLocked`方法来实现的。`deliverToRegisteredReceiverLocked`方法负责将一个广播发送给一个特定的接收者，它内部调用了`performReceiveLocked`方法来完成具体的发送过程:
+``` java
+ performReceiveLocked(r.callerApp, r.resultTo,new Intent(r.intent), r.resultCode,r.resultData, r.resultExtras, false, false, r.userId);
+```
+`performReceiveLocked`方法的实现如下所示。由于接收广播会调起应用程序，因此app.thread不为null，根据前面的分析我们知道这里的`app.thread`仍然指`ApplicationThread`。
+``` java
+void performReceiveLocked(ProcessRecord app, IIntentReceiver receiver,Intent intent, int resultCode, String data, Bundle extras,boolean ordered, boolean sticky, int sendingUser) throws RemoteException {
+            
+            // Send the intent to the receiver asynchronously using one-way binder calls.
+    if (app != null) {
+        if (app.thread != null) {
+            // If we have an app thread, do the call through that so it is
+            // correctly ordered with other one-way calls.
+            try {
+                app.thread.scheduleRegisteredReceiver(receiver, intent, resultCode,
+                        data, extras, ordered, sticky, sendingUser, app.repProcState);
+            // TODO: Uncomment this when (b/28322359) is fixed and we aren't getting
+            // DeadObjectException when the process isn't actually dead.
+            //} catch (DeadObjectException ex) {
+            // Failed to call into the process.  It's dying so just let it die and move on.
+            //    throw ex;
+            } catch (RemoteException ex) {
+                // Failed to call into the process. It's either dying or wedged. Kill it gently.
+                synchronized (mService) {
+                    Slog.w(TAG, "Can't deliver broadcast to " + app.processName
+                            + " (pid " + app.pid + "). Crashing it.");
+                    app.scheduleCrash("can't deliver broadcast");
+                }
+                throw ex;
+            }
+        } else {
+            // Application has died. Receiver doesn't exist.
+            throw new RemoteException("app.thread must not be null");
+        }
+    } else {
+        receiver.performReceive(intent, resultCode, data, extras, ordered,
+                sticky, sendingUser);
+    }
+            
+}
+```
+`ApplicationThread`的`scheduleRegisteredReceiver`的实现比较简单，它通过`InnerReceiver`来实现广播的接收:
+``` java
+    // This function exists to make sure all receiver dispatching is
+    // correctly ordered, since these are one-way calls and the binder driver
+    // applies transaction ordering per object for such calls.
+    public void scheduleRegisteredReceiver(IIntentReceiver receiver, Intent intent,
+            int resultCode, String dataStr, Bundle extras, boolean ordered,
+            boolean sticky, int sendingUser, int processState) throws RemoteException {
+        updateProcessState(processState, false);
+        receiver.performReceive(intent, resultCode, dataStr, extras, ordered,
+                sticky, sendingUser);
+    }
+```
+`InnerReceiver`的`performReceive`方法会调用`LoadedApk.ReceiverDispatcher`的`performReceive`方法，`LoadedApk.ReceiverDispatcher`的`performReceive`方法的实现如下所示:
+``` java
+public void performReceive(Intent intent, int resultCode, String data,Bundle extras, boolean ordered, boolean sticky, int sendingUser) {
+    final Args args = new Args(intent, resultCode, data, extras, ordered,
+            sticky, sendingUser);
+    if (intent == null) {
+        Log.wtf(TAG, "Null intent received");
+    } else {
+        if (ActivityThread.DEBUG_BROADCAST) {
+            int seq = intent.getIntExtra("seq", -1);
+            Slog.i(ActivityThread.TAG, "Enqueueing broadcast " + intent.getAction()
+                    + " seq=" + seq + " to " + mReceiver);
+        }
+    }
+    if (intent == null || !mActivityThread.post(args.getRunnable())) {
+        if (mRegistered && ordered) {
+            IActivityManager mgr = ActivityManager.getService();
+            if (ActivityThread.DEBUG_BROADCAST) Slog.i(ActivityThread.TAG,
+                    "Finishing sync broadcast to " + mReceiver);
+            args.sendFinished(mgr);
+        }
+    }
+}
+```
+在上面的代码中，会创建一个Args对象并通过mActivityThread的post方法来执行Args中的逻辑，而Args实现了Runnable接口。mActivityThread是一个Handler，它其实就是ActivityThread中的mH，mH的类型是ActivityThread的内部类H。在Args的run方法中有如下几行代码:
+``` java
+final BroadcastReceiver receiver = mReceiver;
+final boolean ordered = mOrdered;
+receiver.setPendingResult(this);
+receiver.onReceive(mContext, intent);
+```
+这个时候BroadcastReceiver的onReceive方法被执行了，也就是说应用已经接收到广播了，同时onReceive方法是在广播接收者的主线程中被调用的。
+
+----
+以上
