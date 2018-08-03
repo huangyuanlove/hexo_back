@@ -152,7 +152,7 @@ public void show(IBinder windowToken) {
     mHandler.obtainMessage(SHOW, windowToken).sendToTarget();
 }
 ```
-在`mHandler`中调用了`mHandler`方法：
+在`mHandler`中调用了`handleShow`方法：
 ``` java 
 public void handleShow(IBinder windowToken) {
             if (localLOGV) Log.v(TAG, "HANDLE SHOW: " + this + " mView=" + mView
@@ -209,8 +209,8 @@ public void handleShow(IBinder windowToken) {
             }
         }
 ```
-上面的一坨是获取到`WindowsManager`然后通过`mWM.addView`将Toast显示到窗口上。
-
+上面的一坨是获取到`WindowManager`然后通过`mWM.addView`将Toast显示到窗口上。
+至于`WindowManager`如何添加view的，可以看这个：http://blog.huangyuanlove.com/2017/03/21/Window和CWindowManager/
 接下来看一下怎么取消Toast弹窗，上面提到了调用了`scheduleTimeoutLocked`方法。
 ``` java
 @GuardedBy("mToastQueue")
