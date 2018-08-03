@@ -13,6 +13,7 @@ tags: [Android]
 <!--more-->
 
 #### 广播的注册过程
+《Android开发艺术探索》9.4章
 广播的注册分为静态注册和动态注册，其中静态注册的广播在应用安装时由系统自动完成注册，具体来说是由PMS ( PackageManagerService)来完成整个注册过程的，除了广播以外，其他三大组件也都是在应用安装时由PMS解析并注册的。这里只分析广播的动态注册的过程，动态注册的过程是从ContextWrapper的registerReceiver方法开始的，和Activity以及Service一样 。ContextWrapper并 没有做实际的工作，而是将注册过程直接交给了ContextImpl来完成，如下所示：
 ``` java
     @Override
