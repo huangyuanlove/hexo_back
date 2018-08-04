@@ -2,6 +2,7 @@
 title: View绘制过程
 date: 2018-07-29 22:35:46
 tags: [Android]
+keywords: View绘制过程
 ---
 抄的《Android开发艺术探索》第四章
 `ViewRoot`对应于`ViewRootImpl`类，它是连接`WindowManager`和`DecorView`的纽带，`View`的三大流程均是通过`ViewRoot`来完成的。在`ActivityThread`中，当`Activity`对象被创建完毕后，会将`DecorView`添加到`Window`中，同时会创建`ViewRootImpl`对象，并将`ViewRootImpl`对象和`DecorView`建立关联，`View`的绘制流程是从`ViewRoot`的`performTraversals`方法开始的，它经过`measure`、`layout`和`draw`三个过程才能最终将一个`View`绘制出来，其中`measure`用来测量View的宽和高，`layout`用来确定View在父容器中的放置位置，而`draw`则负责将View绘制在屏幕上。

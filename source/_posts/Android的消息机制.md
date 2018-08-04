@@ -2,6 +2,7 @@
 title: Android的消息机制
 date: 2017-03-23 14:00:09
 tags: [Android]
+keywords: Handler
 ---
 　　Android消息机制主要是指Handler的运行机制，Handler的运行需要底层的MessageQueue和Looper的支撑。MessageQueue的中文翻译是消息队列，它的内部存储了一组消息，以队列的形式对外提供插入和删除的工作。虽然叫消息队列，但是它的内部存储结构并不是真正的队列，而是采用单链表的数据结构来存储消息队列。Looper可以理解为消息循环。由于MessageQueue只是一个消息的存储单元，它不能去处理消息，而Looper就填补了这个功能，Looper会以无限循环的形式去查找是否有新消息，如果有的话就处理消息，否则就等待。Looper中还有一个特殊的概念：ThreadLocal，ThreadLocal并不是线程，它的作用是可以在每个线程中存储数据。Handler创建的时候会采用当前线程的Looper来构造消息循环系统，ThreadLocal可以在不同的线程中互不干扰的存储并提供数据，Handler可以通过ThreadLocal轻松获取每个线程的Looper。需要注意的是，线程默认是没有Looper的，如果需要使用Handler就必须为现成创建Looper，我们经常提到的主线程，也叫UI线程，它就是ActivityThread，ActivityThread被创建时就会初始化Looper，这也是在主线程中默认可以使用Handler的原因。
 <!--more-->

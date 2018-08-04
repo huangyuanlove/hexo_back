@@ -2,6 +2,7 @@
 title: Android广播
 date: 2018-07-31 15:16:25
 tags: [Android]
+keywords: 广播,BroadcastReceiver，广播过程
 ---
 面试APUS的时候被问到广播：
 面试官：聊一下广播吧。

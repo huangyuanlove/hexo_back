@@ -2,6 +2,7 @@
 title: flask笔记一 快速入门
 date: 2017-07-15 09:55:52
 tags: [Python,flask]
+keywords: flask入门
 ---
 学习python和flask中看过的资料和自己的实践总结
 [Flask英文](http://flask.pocoo.org/)

@@ -2,6 +2,7 @@
 title: AndroidService
 date: 2018-08-01 10:01:16
 tags: [Android]
+keywords: Service,startService,bindService
 ---
 《Android开发艺术探索》9.3章
 `Service`分为两种工作状态,一种是启动状态，主要用于执行后台计算;另一种是绑定态,主要用于其他组件和`Service`的交互。需要注意的是，`Service`的这两种状态是可以共存的，即`Service`既可以处于启动状态也可以同时处于绑定状态。

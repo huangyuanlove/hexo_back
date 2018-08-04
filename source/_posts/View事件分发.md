@@ -2,6 +2,7 @@
 title: View事件分发
 date: 2018-07-29 11:28:20
 tags: [Android]
+keywords: View事件分发
 ---
 
 抄的《Android开发艺术探索》3.4.1 和 3.4.2

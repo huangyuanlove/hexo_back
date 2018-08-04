@@ -2,6 +2,7 @@
 title: 通过简单的自定义view来看View的工作流程
 date: 2017-03-18 14:54:01
 tags: [Android]
+keywords: 简单自定义View
 ---
 
 通过简单的自定义View(画个圆)，来了解一下View的工作流程以及自定义View应该注意的地方。

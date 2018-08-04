@@ -2,6 +2,7 @@
 title: git工具
 date: 2017-05-10 16:51:11
 tags: [git]
+keywords: git工具,git
 ---
 公司代码版本管理系统由svn迁到了git，对于AndroidStudio来讲，内置的GUI工具足以应付日常开发，但在请求失败的情况下，对失败原因的提示不够清晰。个人习惯上用命令行，但是对于命令行中比较两个文件差异以及合并来说，个人还是不大习惯，于是就配置成了使用其他软件进行合并。可以使用`$ git difftool --tool-help`查看对比文件差异支持的软件，用`$ git mergetool --tool-help`查看合并代码支持的软件，个人只试过两种:`codecompare`和`beyond compare`。不习惯`bc`的界面，最后决定使用`codecompare`。
 <!--more-->

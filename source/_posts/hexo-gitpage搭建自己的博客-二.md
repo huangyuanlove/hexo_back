@@ -2,6 +2,7 @@
 title: hexo+gitpage搭建自己的博客(二)
 date: 2016-10-25 21:11:53
 tags: [hexo,gitpage,blog]
+keywords: hexo,gitpage,blog
 ---
 
 之前我们已经安装好了`hexo`，接下来就是初始化了。
