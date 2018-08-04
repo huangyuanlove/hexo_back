@@ -82,8 +82,10 @@ theme: next
 exclude_generator:
 # Extensions
 Plugins:
-- hexo-generator-sitemap
 - hexo-generator-feed
+- hexo-generate-feed
+- hexo-generator-baidu-sitemap
+- hexo-generator-sitemap
 #sitemap
 sitemap:
   path: sitemap.xml
@@ -102,8 +104,6 @@ deploy:
   repository: git@github.com:huangyuanlove/huangyuanlove.github.io.git
   branch: master
 
-plugins: hexo-generate-feed
-
 # Swiftype Search Key
 swiftype_key: LoCFNsvjbeYQpYd-Wuxs
 
@@ -117,22 +117,3 @@ archive_generator:
 
 tag_generator:
   per_page: 10
-
-jsonContent:
-  meta: false
-  pages: false
-  posts:
-    title: true
-    date: true
-    path: true
-    text: true
-    raw: false
-    content: false
-    slug: false
-    updated: false
-    comments: false
-    link: false
-    permalink: false
-    excerpt: false
-    categories: false
-    tags: true
