@@ -2,6 +2,7 @@
 title: 网站免费升级https
 date: 2018-04-01 12:36:16
 tags: [网站https,乱七八糟]
+keywords: 网站免费升级https
 ---
 昨天跟着酷壳网左耳朵耗子的文章把自己在亚马逊主机上的网站变成https的安全访问了，证书不是自签名的，也不是花钱购买的。据说https的网站在搜索引擎中的rank值会比http的更高一些。升级完成后的浏览器截图如下：
 ![浏览器](/image/https/https1.png)

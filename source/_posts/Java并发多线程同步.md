@@ -1,7 +1,8 @@
 ---
 title: Java并发多线程同步
 date: 2018-03-20 10:43:39
-tags: [Java,线程同步]
+tags: [java]
+keywords: 多线程同步类
 ---
 最近遇到了多线程并发同步问题，找到了`java.util.concurrent`包下的`CountDownLatch`、`CyclicBarrier`、`Semaphore`这三个类。
 `CountDownLatch`可以实现类似计数器的功能，例如线程A需要等待B、C、D三个线程执行完成之后才可以执行。

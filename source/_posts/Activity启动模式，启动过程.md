@@ -2,6 +2,7 @@
 title: Activity启动模式，启动过程
 date: 2018-07-26 14:20:07
 tags: [Android,面试]
+keywords: 启动模式,启动过程,Intent匹配规则,App启动流程
 ---
 面试总结，关于Activity启动模式、启动过程，Intent匹配规则、App启动流程等
 <!--more-->

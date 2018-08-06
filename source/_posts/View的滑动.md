@@ -2,6 +2,7 @@
 title: View的滑动
 date: 2017-03-15 11:01:46
 tags: [Android]
+keywords: View的滑动
 ---
 　　View的位置主要由它的四个顶点来决定，分别对应于View的四个属性：top,left,right,bottom,其中top是左上角的纵坐标，left是左上角的横坐标，right是右下角的横坐标，bottom是右下角的纵坐标。需要注意的是，这些坐标都是相当于View的父容器来说的，因此它是一种相对坐标，View的坐标和父容器的关系如下所示：
 ![相对位置关系](/image/location.png)

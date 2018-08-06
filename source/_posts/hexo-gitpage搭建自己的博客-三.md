@@ -2,6 +2,7 @@
 title: hexo+gitpage搭建自己的博客(三)
 date: 2016-10-30 21:05:54
 tags: [blog,gitpage,hexo]
+keywords: hexo,gitpage,blog
 toc: true
 ---
 前两篇介绍了怎么用gitpage+github搭建自己的博客，这次主要介绍怎么更换主题和加入评论、统计等。

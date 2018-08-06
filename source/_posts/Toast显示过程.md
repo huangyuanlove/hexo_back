@@ -2,6 +2,7 @@
 title: Toast显示过程
 date: 2018-08-03 11:35:14
 tags: [Android]
+keywords: Toast显示过程
 ---
 抄书抄的有点烦，自己也学着分析一下源码，挑了个在我看来比较简单的Toast显示过程来玩一玩。
 ``` java

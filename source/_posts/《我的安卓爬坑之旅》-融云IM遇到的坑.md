@@ -2,6 +2,7 @@
 title: 《我的安卓爬坑之旅》--融云IM遇到的坑
 date: 2016-12-01 15:20:47
 tags: [Android爬坑之旅,Android,融云IM]
+keywords: Android,融云IM
 ---
 这篇博客是关于融云IM使用中遇到的问题，不算是坑，只能说是注意事项吧
 <!--more-->

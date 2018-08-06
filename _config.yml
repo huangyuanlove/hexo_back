@@ -7,7 +7,7 @@ title: 放码过来
 subtitle: 技术宅 huangyuan@huangyuanlove.com
 description: 锱铢必较间接性奋发图强，睚眦必报持续性混吃等死
 author: HuangYuan_xuan
-language: zh-CN
+language: zh-Hans
 email: huangyuan@huangyuanlove.com
 
 # URL
@@ -78,12 +78,14 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: yilia
+theme: next
 exclude_generator:
 # Extensions
 Plugins:
-- hexo-generator-sitemap
 - hexo-generator-feed
+- hexo-generate-feed
+- hexo-generator-baidu-sitemap
+- hexo-generator-sitemap
 #sitemap
 sitemap:
   path: sitemap.xml
@@ -102,21 +104,16 @@ deploy:
   repository: git@github.com:huangyuanlove/huangyuanlove.github.io.git
   branch: master
 
-jsonContent:
-  meta: false
-  pages: false
-  posts:
-    title: true
-    date: true
-    path: true
-    text: true
-    raw: false
-    content: false
-    slug: false
-    updated: false
-    comments: false
-    link: false
-    permalink: false
-    excerpt: false
-    categories: false
-    tags: true
+# Swiftype Search Key
+swiftype_key: LoCFNsvjbeYQpYd-Wuxs
+
+index_generator:
+  per_page: 10
+
+archive_generator:
+  per_page: 20
+  yearly: true
+  monthly: true
+
+tag_generator:
+  per_page: 10

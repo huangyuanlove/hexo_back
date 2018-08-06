@@ -2,6 +2,7 @@
 title: Jenkins安装与使用
 date: 2017-06-28 17:30:42
 tags: [jenkins,运维]
+keywords: jenkins搭建
 ---
 公司需求，业务越来越多，服务器越来越多，后台部署项目麻烦的要死，于是上了`jenkins`这货。
 关于这货是干嘛的，请移步这里[https://jenkins.io/](https://jenkins.io/),下载请移步这里[https://jenkins.io/download/](https://jenkins.io/download/)

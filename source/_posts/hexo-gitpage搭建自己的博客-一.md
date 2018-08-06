@@ -2,6 +2,7 @@
 title: hexo+gitpage搭建自己的博客(一)
 date: 2016-10-21 00:04:26
 tags: [hexo,gitpage,blog]
+keywords: hexo,gitpage,blog
 ---
 **不说环境直接写配置的行为都是耍流氓**
 按照惯例,先说自己的环境:`ubunu`,然后就没有然后了.<hr>
