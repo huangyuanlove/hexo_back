@@ -188,7 +188,62 @@ To use percent, you need to set the following:
 ```
 ##### Ratio
 
+可以设置控件的宽高比例，为了实现这种方式，需要让控件的宽或者高设置为0dp(MATCH_CONSTRAINT)，如下：
+
+``` xml
+<Button android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1" />
+```
+这样的话，高度会随着宽度的改变而改变，并且大小和宽度一致。设置宽高比的方式有两种：
+1. 一个浮点数，`受约束的一方的尺寸/另一方尺寸`得到的数字
+2. 宽度:高度
+
+如果宽高两个方向同时设置了0dp(MATCH_CONSTRAINT)，系统会设置满足比例的最大尺寸，这种情况下还要保持宽高比例，需要在比例前面添加W或者H以确定受约束的是高还是宽。
+> You can also use ratio if both dimensions are set to MATCH_CONSTRAINT (0dp). In this case the system sets the largest dimensions the satisfies all constraints and maintains the    aspect ratio specified. To constrain one specific side based on the dimensions of another, you can pre append W," or H, to constrain the width or height respectively. For          example, If one dimension is constrained by two targets (e.g. width is 0dp and centered on parent) you can indicate which side should be constrained, by adding the letter W (for   constraining the width) or H (for constraining the height) in front of the ratio, separated by a comma:
+  ``` xml
+    <Button android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+  ```
+> will set the height of the button following a 16:9 ratio, while the width of the button will match the constraints to parent.
 
 #### Chains
+Chains 在单轴（水平或垂直）上提供类似组的行为。另一个轴可以独立地约束。
+
+##### Creating a chain
+如果一组小部件通过双向连接链接在一起，则它们被视为链（参见下图，显示最小链，具有两个小部件）。
+![chain](/image/Android/ConstraintLayout/chain.png)
+
+##### Chain heads
+横向上，Chain头部是Chain最左边的控件；纵向上，Chain头部是Chain最顶部的控件。
+![chain head](/image/Android/ConstraintLayout/chain_head.png)
+
+##### Margins in chains
+如果连接时定义了外边距，Chain就会发生变化。在SPREAD CHAIN中，外边距会从已经分配好的空间中去掉。原文如下：
+> If margins are specified on connections, they will be taken in account. In the case of spread chains, margins will be deducted from the allocated space.
+
+##### Chain Style
+当对Chain的第一个元素设置layout_constraintHorizontal_chainStyle或layout_constraintVertical_chainStyle属性，Chain就会根据特定的样式（默认样式为CHAIN_SPREAD）进行相应变化，样式类型如下：
+
+* CHAIN_SPREAD -- 元素呗分散开 (默认样式) 
+* Weighted chain -- 在 CHAIN_SPREAD mo样式中,如果某些控件设置了`MATCH_CONSTRAINT`属性, 他们将平分剩余空间 
+* CHAIN_SPREAD_INSIDE -- Chain的头尾元素紧贴父容器
+* CHAIN_PACKED -- Chain中的所有控件合并在一起后在剩余的空间中居中
+
+图示如下：
+![chain styles](/image/Android/ConstraintLayout/chain_styles.png)
+
+##### Weighted chains
+默认的Chain会在空间里平均散开。如果其中有一个或多个元素使用了MATCH_CONSTRAINT属性，那么他们会将剩余的空间平均填满。属性layout_constraintHorizontal_height和layout_constraintVertical_weight控制使用MATCH_CONSTRAINT的元素如何均分空间。 例如，一个Chain中包含两个使用MATCH_CONSTRAINT的元素，第一个元素使用的权重为2，第二个元素使用的权重为1，那么被第一个元素占用的空间是第二个元素的2倍。
+
+##### Margins and chains (in 1.1)
+在chain中是可以使用margin属性的，例如，在一个水平的chain中，一个元素定义了right_magin=10dp,下一个元素定义了margin_left=5dp，那么两者之间的间距就是15dp.
+
 #### Virtual Helpers objects
-#### Optimizer
+
+##### Guideline
+
+##### Barrier
