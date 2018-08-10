@@ -466,11 +466,12 @@ Group可以包含多个对其他控件的引用，这样我们操作这个group�
 首先使用`include`标签将模板包含进来，然后创建其他需要替换的控件：
 ![merge constraintLayout placeholder preview](/image/Android/ConstraintLayout/merge_constraint_layout_placeholder_preview.png)
 当然也可以在代码中调用`Placeholder.setContent(id)`动态替换，配合`CoordinatorLayout`可以做出比较好玩的动画效果：
-![constraintLayout placeholder + CoordinatorLayout](/image/Android/ConstraintLayout/constraintLayout_placeholderandCoordinatorLayout.gif)
+![constraintLayout placeholder + CoordinatorLayout](/image/Android/ConstraintLayout/constraintLayout_placeholderand_CoordinatorLayout.gif)
 代码在这里
 https://github.com/Thumar/Placeholder
 
-`ConstraintLayout`1.1版本之后的东西常用的差不多就这些了
+`ConstraintLayout` 1.1版本之后的东西常用的差不多就这些了
+
 ----
 
 以上
