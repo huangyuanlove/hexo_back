@@ -245,5 +245,232 @@ Chains 在单轴（水平或垂直）上提供类似组的行为。另一个轴�
 #### Virtual Helpers objects
 
 ##### Guideline
+`Guideline`是只能用在`ConstraintLayout`布局里面的一个工具类，用于辅助布局，类似为辅助线，可以设置`android:orientation`属性来确定是横向的还是纵向的。 
+* 当设置为vertical的时候，Guideline的宽度为0，高度是parent也就是ConstraintLayout的高度 
+* 同样设置为horizontal的时候，高度为0，宽度是parent的宽度
+
+定位Guideline有三种方式，这三种方式只能选择一个
+* 指定距离左侧或顶部的固定距离（layout_constraintGuide_begin） 
+* 指定距离右侧或底部的固定距离（layout_constraintGuide_end） 
+* 指定在父控件中的宽度或高度的百分比（layout_constraintGuide_percent）
+
+示例如下：
+``` xml
+<android.support.constraint.Guideline
+        android:id="@+id/vertical_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/horizontal_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+```
+声明了一个垂直居中，一个水平居中的GuideLine，效果如下，这两个控件在View上是不可见的。
+![guideline declaration](/image/Android/ConstraintLayout/guideLine_declaration.png)
+
+接着就可以根据这两条辅助线来定位其他控件了
+``` xml
+<Button
+    android:text="top_left"
+    android:id="@+id/top_left_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toLeftOf="@id/vertical_guideline"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<Button
+    android:text="top_right"
+    android:id="@+id/top_right_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+    app:layout_constraintLeft_toLeftOf="@id/vertical_guideline"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<Button
+    android:text="bottom_right"
+    android:id="@+id/bottom_right_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="@id/vertical_guideline"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="@id/horizontal_guideline" />
+
+<Button
+    android:text="bottom_left"
+    android:id="@+id/bottom_left_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="@id/vertical_guideline"
+    app:layout_constraintTop_toTopOf="@id/horizontal_guideline" />
+
+```
+效果如下：
+![guideline_relative](/image/Android/ConstraintLayout/guideline_relative.png)
 
 ##### Barrier
+Barrier可以引用多个控件，根据他们之中最大的宽高来创建一个虚拟的guideline，
+假设我们有两个按钮，`@id/button1`和`@id/button2`,让Barrier的constraint_referenced_ids属性引用这两个id，如下：
+``` xml
+<android.support.constraint.Barrier
+    android:id="@+id/barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="end"
+    app:constraint_referenced_ids="button1,button2" />
+```
+示例如下：
+![barrier](/image/Android/ConstraintLayout/barrier1.png)
+图中蓝色的线就是`Barrier`，`Barrier`所在问的方位由`barrierDirection`确定，可以设置为`start`,`end`,`top`,`bottom`,`right`,`left`
+这时候我们改变一个两个按钮的宽度，让button2的宽度小于button1，则效果如下：
+![barrier](/image/Android/ConstraintLayout/barrier2.png)
+这样我们就可以把其他控件约束于barrier的右侧，使得button1和button2不会覆盖(被覆盖)其他控件
+
+##### Group
+Group可以包含多个对其他控件的引用，这样我们操作这个group就相当于操作引用的控件
+``` xml
+<android.support.constraint.Group
+        android:visibility="gone"
+        android:id="@+id/button_group"
+        app:constraint_referenced_ids="login,register,modify_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+```
+像上面这样，只要操作Group的`visibility`属性，就相当于同时操作`@id/login`,`@id/register`,`@id/modify_password`这三个控件的`visibility`属性。
+
+##### Placeholders
+顾名思义就是一个用来占位的东西，对于样式相同，功能不同的界面，可以把样式做成style或者使用PlaceHolders来做：
+``` xml
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="81dp"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+ 
+    <android.support.constraint.Placeholder
+        android:id="@+id/template_main_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:content="@+id/top_image"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+ 
+    <android.support.constraint.Placeholder
+        android:id="@+id/template_save"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:content="@+id/save"
+        app:layout_constraintEnd_toStartOf="@+id/template_delete"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="460dp" />
+ 
+    <android.support.constraint.Placeholder
+        android:id="@+id/template_delete"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:content="@+id/delete"
+        app:layout_constraintEnd_toStartOf="@+id/template_cancel"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/template_save"
+        tools:layout_editor_absoluteY="460dp" />
+ 
+    <android.support.constraint.Placeholder
+        android:id="@+id/template_cancel"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:content="@+id/cancel"
+        app:layout_constraintEnd_toStartOf="@+id/template_edit"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/template_delete"
+        tools:layout_editor_absoluteY="460dp" />
+ 
+    <android.support.constraint.Placeholder
+        android:id="@+id/template_edit"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:content="@+id/edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/template_cancel"
+        tools:layout_editor_absoluteY="460dp" />
+ 
+</merge>
+```
+如果想要在预览界面看起来像是在ConstraintLayout里面的话就加上`tools:parentTag="android.support.constraint.ConstraintLayout"`
+预览如下：
+![constraintLayout placeholder preview](/image/Android/ConstraintLayout/constraint_layout_placeholder_preview.png)
+在上面的布局文件中，每一个Placeholder都添加了`app:content`属性，表示要用这个属性指定的id对应的控件来替换`Placeholder`，
+在其他布局文件中：
+``` xml
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include android:id="@+id/root" layout="@layout/constraint_layout_placeholder"/>
+    <ImageButton
+        android:id="@+id/main_title_image"
+        android:src="@drawable/main_title_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <ImageButton
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/ic_save_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_edit_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+
+        app:srcCompat="@drawable/ic_cancel_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+
+        app:srcCompat="@drawable/ic_delete_black_24dp" />
+</android.support.constraint.ConstraintLayout>
+```
+首先使用`include`标签将模板包含进来，然后创建其他需要替换的控件：
+![merge constraintLayout placeholder preview](/image/Android/ConstraintLayout/merge_constraint_layout_placeholder_preview.png)
+当然也可以在代码中调用`Placeholder.setContent(id)`动态替换，配合`CoordinatorLayout`可以做出比较好玩的动画效果：
+![constraintLayout placeholder + CoordinatorLayout](/image/Android/ConstraintLayout/constraintLayout_placeholderandCoordinatorLayout.gif)
+代码在这里
+https://github.com/Thumar/Placeholder
+
+`ConstraintLayout`1.1版本之后的东西常用的差不多就这些了
+----
+
+以上
