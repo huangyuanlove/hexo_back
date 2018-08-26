@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AndroidHook,反射,动态代理" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="放码过来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Hook过程：
+
+寻找 Hook 点，原则是静态变量或者单例对象，尽量 Hook public 的对象和方法。Hook的选择点：静态变量和单例，因为一旦创建对象，它们不容易变化，非常容易定位。
+选择合适的代理方式，如果是接口可以用动态代理。
+偷梁换柱——用代理对象替换原始对象。注意Android 的 API 版本比较多，方法和类可能不一样，所以要做好 API 的兼容工作。还有不要hook太底层的东">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android hook--示例">
+<meta property="og:url" content="http://blog.huangyuanlove.com/2018/08/06/Android-hook-示例/index.html">
+<meta property="og:site_name" content="放码过来">
+<meta property="og:description" content="Hook过程：
+
+寻找 Hook 点，原则是静态变量或者单例对象，尽量 Hook public 的对象和方法。Hook的选择点：静态变量和单例，因为一旦创建对象，它们不容易变化，非常容易定位。
+选择合适的代理方式，如果是接口可以用动态代理。
+偷梁换柱——用代理对象替换原始对象。注意Android 的 API 版本比较多，方法和类可能不一样，所以要做好 API 的兼容工作。还有不要hook太底层的东">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/Android/hook/guide.jpg">
+<meta property="og:updated_time" content="2018-08-06T15:26:37.283Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android hook--示例">
+<meta name="twitter:description" content="Hook过程：
+
+寻找 Hook 点，原则是静态变量或者单例对象，尽量 Hook public 的对象和方法。Hook的选择点：静态变量和单例，因为一旦创建对象，它们不容易变化，非常容易定位。
+选择合适的代理方式，如果是接口可以用动态代理。
+偷梁换柱——用代理对象替换原始对象。注意Android 的 API 版本比较多，方法和类可能不一样，所以要做好 API 的兼容工作。还有不要hook太底层的东">
+<meta name="twitter:image" content="http://blog.huangyuanlove.com/image/Android/hook/guide.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.huangyuanlove.com/2018/08/06/Android-hook-示例/"/>
+
+
+
+
+
+  <title>Android hook--示例 | 放码过来</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-123314537-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?98796e1ecbcbaac6a6d9d3fea85985ba";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">放码过来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术宅 huangyuan@huangyuanlove.com</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LoCFNsvjbeYQpYd-Wuxs','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.huangyuanlove.com/2018/08/06/Android-hook-示例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangYuan_xuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="放码过来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android hook--示例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T15:46:06+08:00">
+                2018年08月06日
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,010
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="/image/Android/hook/guide.jpg" rel="gallery_cjlakazak000euodgkqv01sxt"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="/image/Android/hook/guide.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <p>Hook过程：</p>
+<ol>
+<li>寻找 Hook 点，原则是静态变量或者单例对象，尽量 Hook public 的对象和方法。<br>Hook的选择点：静态变量和单例，因为一旦创建对象，它们不容易变化，非常容易定位。</li>
+<li>选择合适的代理方式，如果是接口可以用动态代理。</li>
+<li>偷梁换柱——用代理对象替换原始对象。<br>注意Android 的 API 版本比较多，方法和类可能不一样，所以要做好 API 的兼容工作。还有不要hook太底层的东西，各个厂商的rom代码不一样<a id="more"></a>
+</li>
+</ol>
+<h4 id="hookView的点击事件"><a href="#hookView的点击事件" class="headerlink" title="hookView的点击事件"></a>hookView的点击事件</h4><p>先来个简单点的，View的点击事件。</p>
+<h5 id="hookOnLongClick"><a href="#hookOnLongClick" class="headerlink" title="hookOnLongClick"></a>hookOnLongClick</h5><p>顺着View的<code>setOnClickListener</code>方法找到了<code>getListenerInfo</code>方法，进而找到了<code>ListenerInfo</code>类，而view的click，longClick，ScrollChange的监听事件都存放在这里面。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hookOnLongCLickListener</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">//拿到mListenerInfo ，可以通过getListenerInfo方法</span></div><div class="line">        Class&lt;?&gt; clazzView = Class.forName(<span class="string">"android.view.View"</span>);</div><div class="line">        Method getListenerInfoMethod = clazzView.getDeclaredMethod(<span class="string">"getListenerInfo"</span>);</div><div class="line">        getListenerInfoMethod.setAccessible(<span class="keyword">true</span>);</div><div class="line">        Object listenerInfo = getListenerInfoMethod.invoke(view);</div><div class="line"></div><div class="line">        <span class="comment">//拿到 mOnLongClickListener字段，这里的ListenerInfo是View的内部类，需要用$符号链接。</span></div><div class="line">        Class&lt;?&gt; clazz = Class.forName(<span class="string">"android.view.View$ListenerInfo"</span>);</div><div class="line">        Field field = clazz.getDeclaredField(<span class="string">"mOnLongClickListener"</span>);</div><div class="line">        field.setAccessible(<span class="keyword">true</span>);</div><div class="line">        <span class="comment">//拿到原来的mOnLongClickListener字段的值</span></div><div class="line">        View.OnLongClickListener raw =(View.OnLongClickListener) field.get(listenerInfo);</div><div class="line">        <span class="comment">//替换成我们自己的</span></div><div class="line">        field.set(listenerInfo, <span class="keyword">new</span> HookOnLongClickListener(raw));</div><div class="line"></div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">HookOnLongClickListener</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnLongClickListener</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> View.OnLongClickListener raw;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HookOnLongClickListener</span><span class="params">(View.OnLongClickListener raw)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.raw = raw;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onLongClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">        Log.e(<span class="string">"HookUtil"</span>,<span class="string">"HookOnLongClickListener"</span>);</div><div class="line">        Toast.makeText(MainActivity.<span class="keyword">this</span>,<span class="string">"替换之后"</span>,Toast.LENGTH_SHORT).show();</div><div class="line">        <span class="keyword">if</span>(raw!=<span class="keyword">null</span>)&#123;</div><div class="line">            <span class="comment">//调用原来的onLongClick，保持原有逻辑不变</span></div><div class="line">            raw.onLongClick(v);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样调用<code>hookOnLongCLickListerner(view)</code>方法即可在原有逻辑不变的情况下添加我们自己的逻辑。</p>
+<h5 id="hookOnLongClick-1"><a href="#hookOnLongClick-1" class="headerlink" title="hookOnLongClick"></a>hookOnLongClick</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hookOnClickListener</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">//拿到mListenerInfo ，可以通过getListenerInfo方法</span></div><div class="line">        Method getListenerInfoMethod = view.getClass().getDeclaredMethod(<span class="string">"getListenerInfo"</span>);</div><div class="line">        getListenerInfoMethod.setAccessible(<span class="keyword">true</span>);</div><div class="line">        Object listenerInfo = getListenerInfoMethod.invoke(view);</div><div class="line"></div><div class="line">        <span class="comment">// 得到 原始的 OnClickListener 对象</span></div><div class="line">        Class&lt;?&gt; listenerInfoClz = Class.forName(<span class="string">"android.view.View$ListenerInfo"</span>);</div><div class="line">        Field mOnClickListener = listenerInfoClz.getDeclaredField(<span class="string">"mOnClickListener"</span>);</div><div class="line">        mOnClickListener.setAccessible(<span class="keyword">true</span>);</div><div class="line">        View.OnClickListener originOnClickListener = (View.OnClickListener) mOnClickListener.get(listenerInfo);</div><div class="line"></div><div class="line">        <span class="comment">// 用自定义的 OnClickListener 替换原始的 OnClickListener</span></div><div class="line">        View.OnClickListener hookedOnClickListener = <span class="keyword">new</span> HookedOnClickListener(originOnClickListener);</div><div class="line">        mOnClickListener.set(listenerInfo, hookedOnClickListener);</div><div class="line"></div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">HookedOnClickListener</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> View.OnClickListener origin;</div><div class="line"></div><div class="line">    HookedOnClickListener(View.OnClickListener origin) &#123;</div><div class="line">        <span class="keyword">this</span>.origin = origin;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">        Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"hook click"</span>, Toast.LENGTH_SHORT).show();</div><div class="line">        Log.i(<span class="string">"hook"</span>, <span class="string">"Before click, do what you want to to."</span>);</div><div class="line">        <span class="keyword">if</span> (origin != <span class="keyword">null</span>) &#123;</div><div class="line">            origin.onClick(v);</div><div class="line">        &#125;</div><div class="line">        Log.i(<span class="string">"hook"</span>, <span class="string">"After click, do what you want to to."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样调用<code>hookOnLongClickListerner(view)</code>方法即可在原有逻辑不变的情况下添加我们自己的逻辑。</p>
+<h4 id="hookAlarmManager"><a href="#hookAlarmManager" class="headerlink" title="hookAlarmManager"></a>hookAlarmManager</h4><p>在设置Alarm的过程中，会调用AlarmManager.set方法，而AlarmManager对象又很方便得到：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);</div><div class="line">Class&lt;?&gt; alarmManagerClass = alarm.getClass();</div><div class="line">Field mService = alarmManagerClass.getDeclaredField(<span class="string">"mService"</span>);</div><div class="line">mService.setAccessible(<span class="keyword">true</span>);</div><div class="line">Object mSerViceInstant = mService.get(alarm);</div><div class="line"></div><div class="line">AlarmManagerInvocationHandler handler = <span class="keyword">new</span> AlarmManagerInvocationHandler(mSerViceInstant);</div><div class="line">Class&lt;?&gt; IActivityManagerIntercept = Class.forName(<span class="string">"android.app.IAlarmManager"</span>);</div><div class="line">Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),</div><div class="line">        <span class="keyword">new</span> Class&lt;?&gt;[]&#123;IActivityManagerIntercept&#125;, handler);</div><div class="line">mService.set(alarm, proxy);</div><div class="line"></div><div class="line"><span class="comment">//动态代理</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AlarmManagerInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Object iAlarmManagerObject;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">AlarmManagerInvocationHandler</span><span class="params">(Object iAlarmManagerObject)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.iAlarmManagerObject = iAlarmManagerObject;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">        Log.i(<span class="string">"alarm_manager"</span>, method.getName());</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (<span class="string">"set"</span>.equals(method.getName())) &#123;</div><div class="line">            Log.e(<span class="string">"alarm_manager"</span>, <span class="string">"调用了mService.set()"</span>);</div><div class="line"></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">long</span> interval = <span class="number">0</span>;</div><div class="line">                <span class="keyword">int</span> alarmManagerTimeType = Integer.valueOf(args[<span class="number">1</span>].toString());</div><div class="line">                <span class="keyword">long</span> alarmManagerAtTime = Long.valueOf(args[<span class="number">2</span>].toString());</div><div class="line">                Log.e(<span class="string">"alarm_manager_interval"</span>, <span class="string">"alarmManagerTimeType:"</span> +alarmManagerTimeType);</div><div class="line">                Log.e(<span class="string">"alarm_manager_interval"</span>, <span class="string">"alarmManagerAtTime:"</span> +alarmManagerAtTime);</div><div class="line">                <span class="keyword">switch</span> (alarmManagerTimeType) &#123;</div><div class="line">                    <span class="keyword">case</span> AlarmManager.RTC_WAKEUP:</div><div class="line">                    <span class="keyword">case</span> AlarmManager.RTC:</div><div class="line">                        Log.e(<span class="string">"alarm_manager_interval"</span>, <span class="string">"currentTimeMillis--RTC:"</span> +System.currentTimeMillis());</div><div class="line">                         interval = alarmManagerAtTime - System.currentTimeMillis();</div><div class="line"></div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    <span class="keyword">case</span> AlarmManager.ELAPSED_REALTIME:</div><div class="line">                    <span class="keyword">case</span> AlarmManager.ELAPSED_REALTIME_WAKEUP:</div><div class="line">                        Log.e(<span class="string">"alarm_manager_interval"</span>, <span class="string">"currentTimeMillis--ELAPSED_REALTIME:"</span> +SystemClock.elapsedRealtime());</div><div class="line">                        interval = alarmManagerAtTime - SystemClock.elapsedRealtime();</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">                Log.e(<span class="string">"alarm_manager_interval"</span>,interval+<span class="string">"--&gt;"</span> + interval/<span class="number">1000</span>/<span class="number">60</span> );</div><div class="line"></div><div class="line"></div><div class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line"></div><div class="line"></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> method.invoke(iAlarmManagerObject, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="hookAMS"><a href="#hookAMS" class="headerlink" title="hookAMS"></a>hookAMS</h4><p>对于Activity的启动过程，我们可以hook它的startActivity方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hookASM</span><span class="params">()</span></span>&#123;</div><div class="line">     <span class="keyword">try</span> &#123;</div><div class="line">         Class&lt;?&gt; activityManagerNativeClass = Class.forName(<span class="string">"android.app.ActivityManagerNative"</span>);</div><div class="line">         Field field = activityManagerNativeClass.getDeclaredField(<span class="string">"gDefault"</span>);</div><div class="line">         field.setAccessible(<span class="keyword">true</span>);</div><div class="line">         Object gDefault= field.get(<span class="keyword">null</span>);</div><div class="line"></div><div class="line">         Class&lt;?&gt; singletonClass = Class.forName(<span class="string">"android.util.Singleton"</span>);</div><div class="line">         Field mInstance = singletonClass.getDeclaredField(<span class="string">"mInstance"</span>);</div><div class="line">         mInstance.setAccessible(<span class="keyword">true</span>);</div><div class="line">         Object iActivityManagerObject = mInstance.get(gDefault);</div><div class="line"></div><div class="line"></div><div class="line">         <span class="comment">//开始动态代理，用代理对象替换掉真实的ActivityManager，</span></div><div class="line">         AmsInvocationHandler amsInvocationHandler = <span class="keyword">new</span> AmsInvocationHandler(iActivityManagerObject);</div><div class="line">         Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), iActivityManagerObject.getClass().getInterfaces(), amsInvocationHandler);</div><div class="line"></div><div class="line">         <span class="comment">//现在替换掉这个对象</span></div><div class="line">         mInstance.set(gDefault, proxy);</div><div class="line"></div><div class="line">     &#125;<span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">         e.printStackTrace();</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"> <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">AmsInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line"></div><div class="line">     <span class="keyword">private</span> Object iActivityManagerObject;</div><div class="line">     <span class="function"><span class="keyword">private</span> <span class="title">AmsInvocationHandler</span><span class="params">(Object iActivityManagerObject)</span> </span>&#123;</div><div class="line">         <span class="keyword">this</span>.iActivityManagerObject = iActivityManagerObject;</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     <span class="meta">@Override</span></div><div class="line">     <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line"></div><div class="line">         Log.i(<span class="string">"hookASM"</span>, method.getName());</div><div class="line">         <span class="comment">//我要在这里搞点事情</span></div><div class="line">         <span class="keyword">if</span> (<span class="string">"startActivity"</span>.contains(method.getName())) &#123;</div><div class="line">             Log.e(<span class="string">"hookASM"</span>,<span class="string">"Activity已经开始启动"</span>);</div><div class="line">         &#125;</div><div class="line">         <span class="keyword">return</span> method.invoke(iActivityManagerObject, args);</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<h2 id="既然我们能够接管startActivity方法，我们就可以伪造一个Intent去启动一个没有在清单文件中注册的Activity。"><a href="#既然我们能够接管startActivity方法，我们就可以伪造一个Intent去启动一个没有在清单文件中注册的Activity。" class="headerlink" title="既然我们能够接管startActivity方法，我们就可以伪造一个Intent去启动一个没有在清单文件中注册的Activity。"></a>既然我们能够接管startActivity方法，我们就可以伪造一个Intent去启动一个没有在清单文件中注册的Activity。</h2><p>以上</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechatpay.png" alt="HuangYuan_xuan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/alipay.png" alt="HuangYuan_xuan 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/Android-hook--反射基础/" rel="next" title="Android hook--反射基础">
+                <i class="fa fa-chevron-left"></i> Android hook--反射基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/09/ConstraintLayout/" rel="prev" title="ConstraintLayout">
+                ConstraintLayout <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODYyMC8xNTE0OA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466"
+                alt="HuangYuan_xuan" />
+            
+              <p class="site-author-name" itemprop="name">HuangYuan_xuan</p>
+              <p class="site-description motion-element" itemprop="description">锱铢必较间接性奋发图强，睚眦必报持续性混吃等死</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyuanlove" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:huangyuan@huangyuanlove.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#hookView的点击事件"><span class="nav-number">1.</span> <span class="nav-text">hookView的点击事件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#hookOnLongClick"><span class="nav-number">1.1.</span> <span class="nav-text">hookOnLongClick</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hookOnLongClick-1"><span class="nav-number">1.2.</span> <span class="nav-text">hookOnLongClick</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hookAlarmManager"><span class="nav-number">2.</span> <span class="nav-text">hookAlarmManager</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hookAMS"><span class="nav-number">3.</span> <span class="nav-text">hookAMS</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#既然我们能够接管startActivity方法，我们就可以伪造一个Intent去启动一个没有在清单文件中注册的Activity。"><span class="nav-number"></span> <span class="nav-text">既然我们能够接管startActivity方法，我们就可以伪造一个Intent去启动一个没有在清单文件中注册的Activity。</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangYuan_xuan</span>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数UV:<span id="busuanzi_value_site_uv"></span>PV:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">博客字数统计&#58;</span>
+    
+    <span title="博客字数统计">103.2k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65959286";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

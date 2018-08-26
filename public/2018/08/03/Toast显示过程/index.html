@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Toast显示过程" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="放码过来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="抄书抄的有点烦，自己也学着分析一下源码，挑了个在我看来比较简单的Toast显示过程来玩一玩。1Toast.makeText(context, text, duration).show();
+先了解一下makeText过程，该过程最终都会调用下面的方法：1234567891011121314151617181920/**     * Make a standard toast to display">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Toast显示过程">
+<meta property="og:url" content="http://blog.huangyuanlove.com/2018/08/03/Toast显示过程/index.html">
+<meta property="og:site_name" content="放码过来">
+<meta property="og:description" content="抄书抄的有点烦，自己也学着分析一下源码，挑了个在我看来比较简单的Toast显示过程来玩一玩。1Toast.makeText(context, text, duration).show();
+先了解一下makeText过程，该过程最终都会调用下面的方法：1234567891011121314151617181920/**     * Make a standard toast to display">
+<meta property="og:updated_time" content="2018-08-04T05:16:23.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Toast显示过程">
+<meta name="twitter:description" content="抄书抄的有点烦，自己也学着分析一下源码，挑了个在我看来比较简单的Toast显示过程来玩一玩。1Toast.makeText(context, text, duration).show();
+先了解一下makeText过程，该过程最终都会调用下面的方法：1234567891011121314151617181920/**     * Make a standard toast to display">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.huangyuanlove.com/2018/08/03/Toast显示过程/"/>
+
+
+
+
+
+  <title>Toast显示过程 | 放码过来</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-123314537-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?98796e1ecbcbaac6a6d9d3fea85985ba";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">放码过来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术宅 huangyuan@huangyuanlove.com</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LoCFNsvjbeYQpYd-Wuxs','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.huangyuanlove.com/2018/08/03/Toast显示过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangYuan_xuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="放码过来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Toast显示过程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-03T11:35:14+08:00">
+                2018年08月03日
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,402
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  21
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>抄书抄的有点烦，自己也学着分析一下源码，挑了个在我看来比较简单的Toast显示过程来玩一玩。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Toast.makeText(context, text, duration).show();</div></pre></td></tr></table></figure></p>
+<p>先了解一下makeText过程，该过程最终都会调用下面的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">     * Make a standard toast to display using the specified looper.</div><div class="line">     * If looper is null, Looper.myLooper() is used.</div><div class="line">     * <span class="doctag">@hide</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Toast <span class="title">makeText</span><span class="params">(@NonNull Context context, @Nullable Looper looper,</span></span></div><div class="line">            @NonNull CharSequence text, @Duration <span class="keyword">int</span> duration) &#123;</div><div class="line">        Toast result = <span class="keyword">new</span> Toast(context, looper);</div><div class="line"></div><div class="line">        LayoutInflater inflate = (LayoutInflater)</div><div class="line">                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);</div><div class="line">        View v = inflate.inflate(com.android.internal.R.layout.transient_notification, <span class="keyword">null</span>);</div><div class="line">        TextView tv = (TextView)v.findViewById(com.android.internal.R.id.message);</div><div class="line">        tv.setText(text);</div><div class="line"></div><div class="line">        result.mNextView = v;</div><div class="line">        result.mDuration = duration;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>创建一个新的Toast对象，在Toast的构造方法中有一个TN类型的mTN对象：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mTN = <span class="keyword">new</span> TN(context.getPackageName(), looper);</div></pre></td></tr></table></figure></p>
+<p><code>TN</code>是<code>ITransientNotification.Stub</code>的子类，注意一下这个对象，这对后面的过程很重要。<br><a id="more"></a><br>得到Toast对象后接着调用<code>show</code>方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">     * Show the view for the specified duration.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mNextView == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"setView must have been called"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        INotificationManager service = getService();</div><div class="line">        String pkg = mContext.getOpPackageName();</div><div class="line">        TN tn = mTN;</div><div class="line">        tn.mNextView = mNextView;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            service.enqueueToast(pkg, tn, mDuration);</div><div class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">            <span class="comment">// Empty</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>重点在<code>service</code>上，它是<code>INotificationManager</code>的实例对象，是个用于Binder机制IPC通信的接口，实际上getService返回了一个以”notification”为标记的远程服务对象的代理。这个远程服务对象就是NotificationManagerService，以下简称NMS。NMS中的enqueueToast方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enqueueToast</span><span class="params">(String pkg, ITransientNotification callback, <span class="keyword">int</span> duration)</span></span></div><div class="line">&#123;</div><div class="line">    ......</div><div class="line">    <span class="keyword">synchronized</span> (mToastQueue) &#123;</div><div class="line">        <span class="keyword">int</span> callingPid = Binder.getCallingPid();</div><div class="line">        <span class="keyword">long</span> callingId = Binder.clearCallingIdentity();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ToastRecord record;</div><div class="line">            <span class="keyword">int</span> index;</div><div class="line">            <span class="comment">// All packages aside from the android package can enqueue one toast at a time</span></div><div class="line">            <span class="keyword">if</span> (!isSystemToast) &#123;</div><div class="line">                index = indexOfToastPackageLocked(pkg);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                index = indexOfToastLocked(pkg, callback);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// If the package already has a toast, we update its toast</span></div><div class="line">            <span class="comment">// in the queue, we don't move it to the end of the queue.</span></div><div class="line">            <span class="keyword">if</span> (index &gt;= <span class="number">0</span>) &#123;</div><div class="line">                record = mToastQueue.get(index);</div><div class="line">                record.update(duration);</div><div class="line">                record.update(callback);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                Binder token = <span class="keyword">new</span> Binder();</div><div class="line">                mWindowManagerInternal.addWindowToken(token, TYPE_TOAST, DEFAULT_DISPLAY);</div><div class="line">                record = <span class="keyword">new</span> ToastRecord(callingPid, pkg, callback, duration, token);</div><div class="line">                mToastQueue.add(record);</div><div class="line">                index = mToastQueue.size() - <span class="number">1</span>;</div><div class="line">            &#125;</div><div class="line">            keepProcessAliveIfNeededLocked(callingPid);</div><div class="line">            <span class="comment">// If it's at index 0, it's the current toast.  It doesn't matter if it's</span></div><div class="line">            <span class="comment">// new or just been updated.  Call back and tell it to show itself.</span></div><div class="line">            <span class="comment">// If the callback fails, this will remove it from the list, so don't</span></div><div class="line">            <span class="comment">// assume that it's valid after this.</span></div><div class="line">            <span class="keyword">if</span> (index == <span class="number">0</span>) &#123;</div><div class="line">                showNextToastLocked();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            Binder.restoreCallingIdentity(callingId);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>方法中的第二个参数callBack就是上面的TN对象，关键在于下面的index的判断：<br>mToastQueue是个list，如果是非系统tost，并且该taost存在于list中(根据pkg判断)，就取出该ToastRecord并且更新，如果不存在，则新建一个ToastRecord存入list中。<br>如果ToastRecord是在list的第一个位置，接着调用<code>showNextToastLocaked</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GuardedBy</span>(<span class="string">"mToastQueue"</span>)</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">showNextToastLocked</span><span class="params">()</span> </span>&#123;</div><div class="line">    ToastRecord record = mToastQueue.get(<span class="number">0</span>);</div><div class="line">    <span class="keyword">while</span> (record != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (DBG) Slog.d(TAG, <span class="string">"Show pkg="</span> + record.pkg + <span class="string">" callback="</span> + record.callback);</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            record.callback.show(record.token);</div><div class="line">            scheduleTimeoutLocked(record);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">            Slog.w(TAG, <span class="string">"Object died trying to show notification "</span> + record.callback</div><div class="line">                    + <span class="string">" in package "</span> + record.pkg);</div><div class="line">            <span class="comment">// remove it from the list and let the process die</span></div><div class="line">            <span class="keyword">int</span> index = mToastQueue.indexOf(record);</div><div class="line">            <span class="keyword">if</span> (index &gt;= <span class="number">0</span>) &#123;</div><div class="line">                mToastQueue.remove(index);</div><div class="line">            &#125;</div><div class="line">            keepProcessAliveIfNeededLocked(record.pid);</div><div class="line">            <span class="keyword">if</span> (mToastQueue.size() &gt; <span class="number">0</span>) &#123;</div><div class="line">                record = mToastQueue.get(<span class="number">0</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                record = <span class="keyword">null</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>关键的两行代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">record.callback.show(record.token);</div><div class="line">scheduleTimeoutLocked(record);</div></pre></td></tr></table></figure></p>
+<p>第一行负责显示，第二行负责超时关闭并显示队列中的下一个Toast。<br>在第一行中，callBack就是我们上面提到的TN对象的实例mTN：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">* schedule handleShow into the right thread</div><div class="line">*/</div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(IBinder windowToken)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (localLOGV) Log.v(TAG, <span class="string">"SHOW: "</span> + <span class="keyword">this</span>);</div><div class="line">    mHandler.obtainMessage(SHOW, windowToken).sendToTarget();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在<code>mHandler</code>中调用了<code>handleShow</code>方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleShow</span><span class="params">(IBinder windowToken)</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (localLOGV) Log.v(TAG, <span class="string">"HANDLE SHOW: "</span> + <span class="keyword">this</span> + <span class="string">" mView="</span> + mView</div><div class="line">                    + <span class="string">" mNextView="</span> + mNextView);</div><div class="line">            <span class="comment">// If a cancel/hide is pending - no need to show - at this point</span></div><div class="line">            <span class="comment">// the window token is already invalid and no need to do any work.</span></div><div class="line">            <span class="keyword">if</span> (mHandler.hasMessages(CANCEL) || mHandler.hasMessages(HIDE)) &#123;</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (mView != mNextView) &#123;</div><div class="line">                <span class="comment">// remove the old view if necessary</span></div><div class="line">                handleHide();</div><div class="line">                mView = mNextView;</div><div class="line">                Context context = mView.getContext().getApplicationContext();</div><div class="line">                String packageName = mView.getContext().getOpPackageName();</div><div class="line">                <span class="keyword">if</span> (context == <span class="keyword">null</span>) &#123;</div><div class="line">                    context = mView.getContext();</div><div class="line">                &#125;</div><div class="line">                mWM = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);</div><div class="line">                <span class="comment">// We can resolve the Gravity here by using the Locale for getting</span></div><div class="line">                <span class="comment">// the layout direction</span></div><div class="line">                <span class="keyword">final</span> Configuration config = mView.getContext().getResources().getConfiguration();</div><div class="line">                <span class="keyword">final</span> <span class="keyword">int</span> gravity = Gravity.getAbsoluteGravity(mGravity, config.getLayoutDirection());</div><div class="line">                mParams.gravity = gravity;</div><div class="line">                <span class="keyword">if</span> ((gravity &amp; Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.FILL_HORIZONTAL) &#123;</div><div class="line">                    mParams.horizontalWeight = <span class="number">1.0f</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> ((gravity &amp; Gravity.VERTICAL_GRAVITY_MASK) == Gravity.FILL_VERTICAL) &#123;</div><div class="line">                    mParams.verticalWeight = <span class="number">1.0f</span>;</div><div class="line">                &#125;</div><div class="line">                mParams.x = mX;</div><div class="line">                mParams.y = mY;</div><div class="line">                mParams.verticalMargin = mVerticalMargin;</div><div class="line">                mParams.horizontalMargin = mHorizontalMargin;</div><div class="line">                mParams.packageName = packageName;</div><div class="line">                mParams.hideTimeoutMilliseconds = mDuration ==</div><div class="line">                    Toast.LENGTH_LONG ? LONG_DURATION_TIMEOUT : SHORT_DURATION_TIMEOUT;</div><div class="line">                mParams.token = windowToken;</div><div class="line">                <span class="keyword">if</span> (mView.getParent() != <span class="keyword">null</span>) &#123;</div><div class="line">                    <span class="keyword">if</span> (localLOGV) Log.v(TAG, <span class="string">"REMOVE! "</span> + mView + <span class="string">" in "</span> + <span class="keyword">this</span>);</div><div class="line">                    mWM.removeView(mView);</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (localLOGV) Log.v(TAG, <span class="string">"ADD! "</span> + mView + <span class="string">" in "</span> + <span class="keyword">this</span>);</div><div class="line">                <span class="comment">// Since the notification manager service cancels the token right</span></div><div class="line">                <span class="comment">// after it notifies us to cancel the toast there is an inherent</span></div><div class="line">                <span class="comment">// race and we may attempt to add a window after the token has been</span></div><div class="line">                <span class="comment">// invalidated. Let us hedge against that.</span></div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    mWM.addView(mView, mParams);</div><div class="line">                    trySendAccessibilityEvent();</div><div class="line">                &#125; <span class="keyword">catch</span> (WindowManager.BadTokenException e) &#123;</div><div class="line">                    <span class="comment">/* ignore */</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>上面的一坨是获取到<code>WindowManager</code>然后通过<code>mWM.addView</code>将Toast显示到窗口上。<br>至于<code>WindowManager</code>如何添加view的，可以看这个：<a href="http://blog.huangyuanlove.com/2017/03/21/Window和CWindowManager/">http://blog.huangyuanlove.com/2017/03/21/Window和CWindowManager/</a><br>接下来看一下怎么取消Toast弹窗，上面提到了调用了<code>scheduleTimeoutLocked</code>方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GuardedBy</span>(<span class="string">"mToastQueue"</span>)</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">scheduleTimeoutLocked</span><span class="params">(ToastRecord r)</span></span>&#123;</div><div class="line">    mHandler.removeCallbacksAndMessages(r);</div><div class="line">    Message m = Message.obtain(mHandler, MESSAGE_TIMEOUT, r);</div><div class="line">    <span class="keyword">long</span> delay = r.duration == Toast.LENGTH_LONG ? LONG_DELAY : SHORT_DELAY;</div><div class="line">    mHandler.sendMessageDelayed(m, delay);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用mHandler发送了一个延时消息去调用<code>handleTimeout</code>方法，延迟时间就是根据duration来判断的。这里的<code>mHandler</code>是<code>WorkerHandler</code>继承自<code>Handler</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">handleTimeout</span><span class="params">(ToastRecord record)</span></span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (DBG) Slog.d(TAG, <span class="string">"Timeout pkg="</span> + record.pkg + <span class="string">" callback="</span> + record.callback);</div><div class="line">        <span class="keyword">synchronized</span> (mToastQueue) &#123;</div><div class="line">            <span class="keyword">int</span> index = indexOfToastLocked(record.pkg, record.callback);</div><div class="line">            <span class="keyword">if</span> (index &gt;= <span class="number">0</span>) &#123;</div><div class="line">                cancelToastLocked(index);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>接着调用了<code>cancelToastLocked</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GuardedBy</span>(<span class="string">"mToastQueue"</span>)</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cancelToastLocked</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">        ToastRecord record = mToastQueue.get(index);</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            record.callback.hide();</div><div class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">            Slog.w(TAG, <span class="string">"Object died trying to hide notification "</span> + record.callback</div><div class="line">                    + <span class="string">" in package "</span> + record.pkg);</div><div class="line">            <span class="comment">// don't worry about this, we're about to remove it from</span></div><div class="line">            <span class="comment">// the list anyway</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        ToastRecord lastToast = mToastQueue.remove(index);</div><div class="line">        mWindowManagerInternal.removeWindowToken(lastToast.token, <span class="keyword">true</span>, DEFAULT_DISPLAY);</div><div class="line"></div><div class="line">        keepProcessAliveIfNeededLocked(record.pid);</div><div class="line">        <span class="keyword">if</span> (mToastQueue.size() &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// Show the next one. If the callback fails, this will remove</span></div><div class="line">            <span class="comment">// it from the list, so don't assume that the list hasn't changed</span></div><div class="line">            <span class="comment">// after this point.</span></div><div class="line">            showNextToastLocked();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>在该方法中调用了<code>callback.hide()</code>方法移除toast的显示。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleHide</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (localLOGV) Log.v(TAG, <span class="string">"HANDLE HIDE: "</span> + <span class="keyword">this</span> + <span class="string">" mView="</span> + mView);</div><div class="line">    <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">// note: checking parent() just to make sure the view has</span></div><div class="line">        <span class="comment">// been added...  i have seen cases where we get here when</span></div><div class="line">        <span class="comment">// the view isn't yet added, so let's try not to crash.</span></div><div class="line">        <span class="keyword">if</span> (mView.getParent() != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (localLOGV) Log.v(TAG, <span class="string">"REMOVE! "</span> + mView + <span class="string">" in "</span> + <span class="keyword">this</span>);</div><div class="line">            mWM.removeViewImmediate(mView);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        mView = <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果这时候mToastQueue中还有ToastRecord，则调用<code>showNextToastLocked</code>方法显示下一个。</p>
+<hr>
+<p>以上</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechatpay.png" alt="HuangYuan_xuan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/alipay.png" alt="HuangYuan_xuan 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/02/Android-ContentProvider/" rel="next" title="Android ContentProvider">
+                <i class="fa fa-chevron-left"></i> Android ContentProvider
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/Android-hook--反射基础/" rel="prev" title="Android hook--反射基础">
+                Android hook--反射基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODYyMC8xNTE0OA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466"
+                alt="HuangYuan_xuan" />
+            
+              <p class="site-author-name" itemprop="name">HuangYuan_xuan</p>
+              <p class="site-description motion-element" itemprop="description">锱铢必较间接性奋发图强，睚眦必报持续性混吃等死</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyuanlove" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:huangyuan@huangyuanlove.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangYuan_xuan</span>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数UV:<span id="busuanzi_value_site_uv"></span>PV:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">博客字数统计&#58;</span>
+    
+    <span title="博客字数统计">103.2k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65959286";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

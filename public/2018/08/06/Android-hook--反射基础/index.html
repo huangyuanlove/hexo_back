@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AndroidHook,反射,动态代理" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="放码过来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="假如你已经非常熟悉java中反射(reflect)和代理(Proxy)，那你还在这里看我这篇文章纯粹就是浪费时间了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android hook--反射基础">
+<meta property="og:url" content="http://blog.huangyuanlove.com/2018/08/06/Android-hook--反射基础/index.html">
+<meta property="og:site_name" content="放码过来">
+<meta property="og:description" content="假如你已经非常熟悉java中反射(reflect)和代理(Proxy)，那你还在这里看我这篇文章纯粹就是浪费时间了。">
+<meta property="og:updated_time" content="2018-08-06T13:15:46.774Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android hook--反射基础">
+<meta name="twitter:description" content="假如你已经非常熟悉java中反射(reflect)和代理(Proxy)，那你还在这里看我这篇文章纯粹就是浪费时间了。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.huangyuanlove.com/2018/08/06/Android-hook--反射基础/"/>
+
+
+
+
+
+  <title>Android hook--反射基础 | 放码过来</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-123314537-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?98796e1ecbcbaac6a6d9d3fea85985ba";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">放码过来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术宅 huangyuan@huangyuanlove.com</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LoCFNsvjbeYQpYd-Wuxs','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.huangyuanlove.com/2018/08/06/Android-hook--反射基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangYuan_xuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="放码过来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android hook--反射基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T15:18:09+08:00">
+                2018年08月06日
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,719
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  36
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>假如你已经非常熟悉java中反射(reflect)和代理(Proxy)，那你还在这里看我这篇文章纯粹就是浪费时间了。<br><a id="more"></a></p>
+<h4 id="反射是什么"><a href="#反射是什么" class="headerlink" title="反射是什么"></a>反射是什么</h4><p>官方介绍</p>
+<blockquote>
+<p>Reflection is commonly used by programs which require the ability to examine or modify the runtime behavior of applications running in the Java virtual machine. This is a relatively advanced feature and should be used only by developers who have a strong grasp of the fundamentals of the language. With that caveat in mind, reflection is a powerful technique and can enable applications to perform operations which would otherwise be impossible.</p>
+</blockquote>
+<p>概括来讲就是：<strong> 反射这个功能很XX </strong><br>大家常见的对反射机制的概念:<br>在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法；并且对于任意一个对象，都能够调用它的任意一个方法；这种动态获取信息以及动态调用对象方法的功能成为Java语言的反射机制。</p>
+<h4 id="涉及到的类"><a href="#涉及到的类" class="headerlink" title="涉及到的类"></a>涉及到的类</h4><ul>
+<li><code>Class</code>：反射的核心类，可以获取类的属性，方法等信息。 </li>
+<li><code>Field</code>：Java.lang.reflec包中的类，表示类的成员变量，可以用来获取和设置类之中的属性值。 </li>
+<li><code>Method</code>： Java.lang.reflec包中的类，表示类的方法，它可以用来获取类中的方法信息或者执行方法。 </li>
+<li><code>Constructor</code>： Java.lang.reflec包中的类，表示类的构造方法。</li>
+</ul>
+<h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>先写一个简单的Person类当做目标类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> String name;</div><div class="line">	<span class="keyword">private</span> String nickName;</div><div class="line">	<span class="keyword">int</span> age;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">	<span class="function"><span class="keyword">protected</span>  <span class="title">Person</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>. age = age;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Person</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.name = name;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name,String nickName)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.name = name;</div><div class="line">		<span class="keyword">this</span>.nickName = nickName;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, String nickName, <span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>();</div><div class="line">		<span class="keyword">this</span>.name = name;</div><div class="line">		<span class="keyword">this</span>.nickName = nickName;</div><div class="line">		<span class="keyword">this</span>.age = age;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"Person [name="</span> + name + <span class="string">", nickName="</span> + nickName + <span class="string">", age="</span> + age + <span class="string">"]"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h5 id="获取想要操作的类的Class对象"><a href="#获取想要操作的类的Class对象" class="headerlink" title="获取想要操作的类的Class对象"></a>获取想要操作的类的Class对象</h5><ol>
+<li><p>Object.getClass();</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">  Person person = <span class="keyword">new</span> Person();</div><div class="line">Class personClass = person.getClass();</div></pre></td></tr></table></figure>
+</li>
+<li><p>任何数据类型（包括基本数据类型）都有一个“静态”的class属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class personClass2 = Person.class;</div></pre></td></tr></table></figure>
+</li>
+<li><p>通过Class类的静态方法：forName（String  className）(常用)   </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class personClass3 = Class.forName(<span class="string">"com.huangyuanlove.Person"</span>);</div></pre></td></tr></table></figure>
+<p>需要注意的是，在运行期间，一个只有一个Class对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">System.out.println(personClass);</div><div class="line">System.out.println(personClass == personClass2);</div><div class="line">System.out.println(personClass == personClass3);</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<blockquote>
+<p>class com.huangyuanlove.Person<br> true<br> true</p>
+</blockquote>
+</li>
+</ol>
+<h5 id="调用Class类中的方法"><a href="#调用Class类中的方法" class="headerlink" title="调用Class类中的方法"></a>调用Class类中的方法</h5><h6 id="获取构造方法并创造对象："><a href="#获取构造方法并创造对象：" class="headerlink" title="获取构造方法并创造对象："></a>获取构造方法并创造对象：</h6>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"> 	Person person = <span class="keyword">new</span> Person();</div><div class="line">Class personClass = person.getClass();</div><div class="line"></div><div class="line"><span class="comment">// 获取所有的公有构造方法</span></div><div class="line">Constructor[] publicConstructors = personClass.getConstructors();</div><div class="line">System.out.println(<span class="string">"获取所有的公有构造方法"</span>);</div><div class="line"><span class="keyword">for</span> (Constructor c : publicConstructors) &#123;</div><div class="line">	System.out.println(c);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取所有的构造方法</span></div><div class="line">Constructor[] allConstructors = personClass.getDeclaredConstructors();</div><div class="line">System.out.println(<span class="string">"获取所有的构造方法"</span>);</div><div class="line"><span class="keyword">for</span> (Constructor c : allConstructors) &#123;</div><div class="line">	System.out.println(c);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取公有，无参构造方法</span></div><div class="line">Constructor publicConstructorWithoutArgs = personClass.getConstructor();</div><div class="line">System.out.println(<span class="string">"获取公有，无参构造方法"</span>);</div><div class="line">System.out.println(publicConstructorWithoutArgs);</div><div class="line">System.out.println(publicConstructorWithoutArgs.newInstance());</div><div class="line"></div><div class="line"><span class="comment">// 获取私有，有一个String类型参数的构造方法</span></div><div class="line">Constructor publicConstructorWithOneStringArgs = personClass.getDeclaredConstructor(String.class);</div><div class="line">System.out.println(<span class="string">"获取私有，有一个String类型参数的构造方法"</span>);</div><div class="line">System.out.println(publicConstructorWithOneStringArgs);</div><div class="line">personClass.getDeclaredField(<span class="string">"nickName"</span>).setAccessible(<span class="keyword">true</span>);</div><div class="line">System.out.println(publicConstructorWithOneStringArgs.newInstance(<span class="string">"xuan"</span>));</div><div class="line"></div><div class="line"><span class="comment">// 获取公有，有两个个String类型参数的构造方法</span></div><div class="line">Constructor publicConstructorWithTwoStringArgs = personClass.getConstructor(String.class, String.class);</div><div class="line">System.out.println(<span class="string">"获取公有，有两个个String类型参数的构造方法"</span>);</div><div class="line">System.out.println(publicConstructorWithTwoStringArgs);</div><div class="line">publicConstructorWithTwoStringArgs.setAccessible(<span class="keyword">true</span>);</div><div class="line">System.out.println(publicConstructorWithTwoStringArgs.newInstance(<span class="string">"xuan"</span>, <span class="string">"huangyuan"</span>));</div></pre></td></tr></table></figure>
+<p>  这里需要注意的是，在获取私有，有一个String类型参数的构造方法，并调用<code>newInstance</code>方法的时候会抛出异常，这是因为该构造方法中的<code>nickName</code>字段是私有的,将其注释掉可获得如下输出<br>  输出：</p>
+<blockquote>
+<p>获取所有的公有构造方法<br>    public com.huangyuanlove.Person(java.lang.String,java.lang.String,int)<br>    public com.huangyuanlove.Person(java.lang.String,java.lang.String)<br>    public com.huangyuanlove.Person()<br>    获取所有的构造方法<br>    public com.huangyuanlove.Person(java.lang.String,java.lang.String,int)<br>    public com.huangyuanlove.Person(java.lang.String,java.lang.String)<br>    private com.huangyuanlove.Person(java.lang.String)<br>    protected com.huangyuanlove.Person(int)<br>    public com.huangyuanlove.Person()<br>    获取公有，无参构造方法<br>    public com.huangyuanlove.Person()<br>    Person [name=null, nickName=null, age=0]<br>    获取私有，有一个String类型参数的构造方法<br>    private com.huangyuanlove.Person(java.lang.String)<br>    获取公有，有两个个String类型参数的构造方法<br>    public com.huangyuanlove.Person(java.lang.String,java.lang.String)<br>    Person [name=xuan, nickName=huangyuan, age=0]</p>
+</blockquote>
+<h6 id="获取成员变量并进行操作"><a href="#获取成员变量并进行操作" class="headerlink" title="获取成员变量并进行操作"></a>获取成员变量并进行操作</h6>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">  Person person = <span class="keyword">new</span> Person();</div><div class="line">Class personClass = person.getClass();</div><div class="line"></div><div class="line"><span class="comment">// 获取所有的公共成员变量</span></div><div class="line">Field publicFields[] = personClass.getFields();</div><div class="line">System.out.println(<span class="string">"获取所有的公共成员变量"</span>);</div><div class="line"><span class="keyword">for</span> (Field f : publicFields) &#123;</div><div class="line">	System.out.println(f);</div><div class="line">&#125;</div><div class="line"><span class="comment">// 获取所有的成员变量</span></div><div class="line">Field allFields[] = personClass.getDeclaredFields();</div><div class="line">System.out.println(<span class="string">"获取所有的成员变量"</span>);</div><div class="line"><span class="keyword">for</span> (Field f : allFields) &#123;</div><div class="line">	System.out.println(f);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取某个公有成员变量并赋值</span></div><div class="line">Field nameField = personClass.getField(<span class="string">"name"</span>);</div><div class="line">nameField.set(person, <span class="string">"huangyuan"</span>);</div><div class="line">System.out.println(person);</div><div class="line"></div><div class="line"><span class="comment">// 获取某个私有成员变量并赋值</span></div><div class="line">Field nickNameField = personClass.getDeclaredField(<span class="string">"nickName"</span>);</div><div class="line">  <span class="comment">//因为nickName是私有的，所有需要先设置可访问</span></div><div class="line">nickNameField.setAccessible(<span class="keyword">true</span>);</div><div class="line">nickNameField.set(person, <span class="string">"xuan"</span>);</div><div class="line">System.out.println(person);</div></pre></td></tr></table></figure>
+<p>  可以得到如下输出：</p>
+<blockquote>
+<p>获取所有的公共成员变量<br>    public java.lang.String com.huangyuanlove.Person.name<br>    获取所有的成员变量<br>    public java.lang.String com.huangyuanlove.Person.name<br>    private java.lang.String com.huangyuanlove.Person.nickName<br>    int com.huangyuanlove.Person.age<br>    Person [name=huangyuan, nickName=null, age=0]<br>    Person [name=huangyuan, nickName=xuan, age=0]</p>
+</blockquote>
+<p>  重要的事情来了，一定要记住，谁要是想上面那样反射获取类的公有成员变量然后进行赋值操作，肯定被骂的祸国殃民、民不聊生、生灵涂炭，都public了你还反射。<br>  获取私有变量的时候需要使用<code>getDeclaredField</code>方法，否则会抛出<code>noSuchFieldException</code></p>
+<h6 id="获取方法并进行调用"><a href="#获取方法并进行调用" class="headerlink" title="获取方法并进行调用"></a>获取方法并进行调用</h6><p>   在类中添加两个方法<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHi</span><span class="params">()</span> </span>&#123;</div><div class="line">    System.out.println(<span class="string">"hi"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">saySomeThing</span><span class="params">(String someThing)</span> </span>&#123;</div><div class="line">    System.out.println(someThing);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>  反射获取类方法并进行调用<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">  Person person = <span class="keyword">new</span> Person();</div><div class="line">Class personClass = person.getClass();</div><div class="line"></div><div class="line"><span class="comment">// 获取所有公共方法</span></div><div class="line">System.out.println(<span class="string">"获取所有公共方法"</span>);</div><div class="line">Method publicMethods[] = personClass.getMethods();</div><div class="line"><span class="keyword">for</span> (Method m : publicMethods) &#123;</div><div class="line">	System.out.println(m.getName());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取所有方法</span></div><div class="line">System.out.println(<span class="string">"获取所有方法"</span>);</div><div class="line">Method allMethods[] = personClass.getDeclaredMethods();</div><div class="line"><span class="keyword">for</span> (Method m : allMethods) &#123;</div><div class="line">	System.out.println(m.getName());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取指定的公有方法</span></div><div class="line">System.out.println(<span class="string">"获取指定的公有方法"</span>);</div><div class="line">Method publicMethodWithoutArgs = personClass.getMethod(<span class="string">"sayHi"</span>);</div><div class="line">publicMethodWithoutArgs.invoke(person);</div><div class="line"></div><div class="line"><span class="comment">// 获取指定的私有方法</span></div><div class="line">System.out.println(<span class="string">"获取指定的私有方法"</span>);</div><div class="line">Method privateMethodWithStringArgs = personClass.getDeclaredMethod(<span class="string">"saySomeThing"</span>, String.class);</div><div class="line">privateMethodWithStringArgs.setAccessible(<span class="keyword">true</span>);</div><div class="line">privateMethodWithStringArgs.invoke(person, <span class="string">"someThing"</span>);</div></pre></td></tr></table></figure></p>
+<p>  得到输出：</p>
+<blockquote>
+<p>获取所有公共方法<br>    toString<br>    sayHi<br>    wait<br>    wait<br>    wait<br>    equals<br>    hashCode<br>    getClass<br>    notify<br>    notifyAll<br>    获取所有方法<br>    toString<br>    sayHi<br>    saySomeThing<br>    获取指定的公有方法<br>    hi<br>    获取指定的私有方法<br>    someThing</p>
+</blockquote>
+<p>  获取到的方法中并不包含构造方法，但是包含从父类继承下来的公共方法。和上面的获取成员变量赋值一样，谁要是反射去获取公共方法再去调用，基本上就凉了。</p>
+<h4 id="静态代理和动态代理"><a href="#静态代理和动态代理" class="headerlink" title="静态代理和动态代理"></a>静态代理和动态代理</h4><h5 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h5><p>简单来说，代理就是用一个代理类来封装一个委托类，这样做有两个好处：可以隐藏委托类的具体实现；可以在不改变委托类的情况下增加额外的操作。而静态代理，就是在程序运行之前，代理类就已经存在了。静态代理一般的实现方式为：委托类和代理类都实现同一个接口或者是继承自同一个父类，然后在代理类中保存一个委托类的对象引用（父类或者父类接口的对象引用），通过给构造器传入委托类的对象进行初始化，在同名方法中通过调用委托类的方法实现静态代理。除此之外，在代理类同名方法中还可以实现一些额外的功能。代码如下：<br>RealObject类为委托类，SimpleProxy类为代理类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Interface</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">somethingElse</span><span class="params">(String arg)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RealObject</span> <span class="keyword">implements</span> <span class="title">Interface</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">        System.out.println(<span class="string">"doSomething"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">somethingElse</span><span class="params">(String arg)</span> </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">        System.out.println(<span class="string">"somethingElse "</span> + arg);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimpleProxy</span> <span class="keyword">implements</span> <span class="title">Interface</span> </span>&#123;</div><div class="line">    <span class="comment">// 保存委托类（父接口的引用）</span></div><div class="line">    <span class="keyword">private</span> Interface proxied;</div><div class="line"></div><div class="line">    <span class="comment">// 传入委托类的对象用于初始化</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleProxy</span><span class="params">(Interface proxied)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.proxied = proxied;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 两个同名方法中还实现了其他的功能</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">        System.out.println(<span class="string">"SimpleProxy doSomething"</span>);</div><div class="line">        proxied.doSomething();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">somethingElse</span><span class="params">(String arg)</span> </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">        System.out.println(<span class="string">"SimpleProxy somethingElse "</span> + arg);</div><div class="line">        proxied.somethingElse(arg);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleProxyDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        consumer(<span class="keyword">new</span> RealObject());</div><div class="line">        consumer(<span class="keyword">new</span> SimpleProxy(<span class="keyword">new</span> RealObject()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">consumer</span><span class="params">(Interface iface)</span> </span>&#123;</div><div class="line">        iface.doSomething();</div><div class="line">        iface.somethingElse(<span class="string">"bonobo"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h5 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h5><p>静态代理的局限性在于，代理类需要在程序运行之前就编写好，而动态代理则可以在程序运行的过程中动态创建并处理对所代理方法的调用。在动态代理中，需要定义一个中介类，这个类实现InvocationHandle接口（主要是里面的invoke方法）。这个中介类位于委托类和代理类之间，作为一个调用处理器而存在。它保存一个委托类的引用，通过传入委托类对象进行初始化；然后在invoke方法中，实现对委托类方法的调用，并增加需要的额外操作。在需要使用动态代理时，首先通过Proxy类中的newProxyInstance方法得到代理类对象（方法的三个参数分别是：（通常是委托类实现接口的）类加载器，希望代理类实现的接口列表（通常也是委托类实现的接口），以及一个调用处理器的对象），然后通过这个代理类对象直接调用代理类的方法。这种调用实际上会通过调用处理器调用invoke方法，进而实现对委托类相应方法的调用。</p>
+<p>注意在动态代理中，只实现了一个调用处理器，而没有真正实现代理类。代理类对象是通过Proxy类中的newProxyInstance方法得到的。这样，不管你在调用委托类任何方法时需要加入的额外操作都可以仅仅在调用处理器中的invoke方法中实现就可以了。代码示例如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleDynamiProxyDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">consumer</span><span class="params">(Interface iface)</span> </span>&#123;</div><div class="line">        iface.doSomething();</div><div class="line">        iface.somethingElse(<span class="string">"bonobo"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        RealObject real = <span class="keyword">new</span> RealObject();</div><div class="line">        consumer(real);</div><div class="line">        <span class="comment">// 通过Proxy.newProxyInstance方法得到代理类对象</span></div><div class="line">        Interface proxy = (Interface) Proxy.newProxyInstance(Interface.class.getClassLoader(),</div><div class="line">                <span class="keyword">new</span> Class[] &#123; Interface.class &#125;, <span class="keyword">new</span> DynamicProxyHandler(real));</div><div class="line">        <span class="comment">// 通过代理类对象直接调用方法，会被重定向到调用处理器上的invoke方法</span></div><div class="line">        consumer(proxy);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 中介类（调用处理器）</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DynamicProxyHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line">    <span class="comment">// 保存一个委托类的对象</span></div><div class="line">    <span class="keyword">private</span> Object proxied;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DynamicProxyHandler</span><span class="params">(Object proxied)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.proxied = proxied;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 三个参数：代理类的引用，方法名和方法的参数列表</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">        System.out.println(<span class="string">"**** proxy: "</span> + proxy.getClass() + <span class="string">", method: "</span> + method + <span class="string">", args: "</span> + args);</div><div class="line">        <span class="keyword">if</span> (args != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">for</span> (Object arg : args) &#123;</div><div class="line">                System.out.println(<span class="string">" "</span> + arg);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 实现对委托类方法的调用，参数表示委托类对象和参数</span></div><div class="line">        <span class="keyword">return</span> method.invoke(proxied, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<p>以上<br>以上静态代理和动态代理相关的文字代码出自于 <a href="https://www.cnblogs.com/hrcnblogs/p/8711418.html" target="_blank" rel="external">https://www.cnblogs.com/hrcnblogs/p/8711418.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechatpay.png" alt="HuangYuan_xuan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/alipay.png" alt="HuangYuan_xuan 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/03/Toast显示过程/" rel="next" title="Toast显示过程">
+                <i class="fa fa-chevron-left"></i> Toast显示过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/Android-hook-示例/" rel="prev" title="Android hook--示例">
+                Android hook--示例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODYyMC8xNTE0OA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466"
+                alt="HuangYuan_xuan" />
+            
+              <p class="site-author-name" itemprop="name">HuangYuan_xuan</p>
+              <p class="site-description motion-element" itemprop="description">锱铢必较间接性奋发图强，睚眦必报持续性混吃等死</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyuanlove" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:huangyuan@huangyuanlove.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#反射是什么"><span class="nav-number">1.</span> <span class="nav-text">反射是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#涉及到的类"><span class="nav-number">2.</span> <span class="nav-text">涉及到的类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简介"><span class="nav-number">3.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#获取想要操作的类的Class对象"><span class="nav-number">3.1.</span> <span class="nav-text">获取想要操作的类的Class对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#调用Class类中的方法"><span class="nav-number">3.2.</span> <span class="nav-text">调用Class类中的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#获取构造方法并创造对象："><span class="nav-number">3.2.1.</span> <span class="nav-text">获取构造方法并创造对象：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#获取成员变量并进行操作"><span class="nav-number">3.2.2.</span> <span class="nav-text">获取成员变量并进行操作</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#获取方法并进行调用"><span class="nav-number">3.2.3.</span> <span class="nav-text">获取方法并进行调用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态代理和动态代理"><span class="nav-number">4.</span> <span class="nav-text">静态代理和动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#静态代理"><span class="nav-number">4.1.</span> <span class="nav-text">静态代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#动态代理"><span class="nav-number">4.2.</span> <span class="nav-text">动态代理</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangYuan_xuan</span>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数UV:<span id="busuanzi_value_site_uv"></span>PV:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">博客字数统计&#58;</span>
+    
+    <span title="博客字数统计">103.2k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65959286";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

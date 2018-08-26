@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="LaTeX" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="放码过来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="接上篇，写好的tex文件在这 https://github.com/huangyuanlove/latex_practice/blob/master/latex(1)/chapter_one.tex
+写个框架既然有目标了，我们先写个大概的框架，然后往里面填充内容1234567891011121314151617181920% coding:UTF-8\documentclass[UTF8]&amp;#12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LaTeX笔记(二)(开篇)">
+<meta property="og:url" content="http://blog.huangyuanlove.com/2018/01/27/LaTeX笔记-二/index.html">
+<meta property="og:site_name" content="放码过来">
+<meta property="og:description" content="接上篇，写好的tex文件在这 https://github.com/huangyuanlove/latex_practice/blob/master/latex(1)/chapter_one.tex
+写个框架既然有目标了，我们先写个大概的框架，然后往里面填充内容1234567891011121314151617181920% coding:UTF-8\documentclass[UTF8]&amp;#12">
+<meta property="og:updated_time" content="2018-08-04T05:15:15.413Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LaTeX笔记(二)(开篇)">
+<meta name="twitter:description" content="接上篇，写好的tex文件在这 https://github.com/huangyuanlove/latex_practice/blob/master/latex(1)/chapter_one.tex
+写个框架既然有目标了，我们先写个大概的框架，然后往里面填充内容1234567891011121314151617181920% coding:UTF-8\documentclass[UTF8]&amp;#12">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.huangyuanlove.com/2018/01/27/LaTeX笔记-二/"/>
+
+
+
+
+
+  <title>LaTeX笔记(二)(开篇) | 放码过来</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-123314537-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?98796e1ecbcbaac6a6d9d3fea85985ba";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">放码过来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术宅 huangyuan@huangyuanlove.com</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LoCFNsvjbeYQpYd-Wuxs','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.huangyuanlove.com/2018/01/27/LaTeX笔记-二/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangYuan_xuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="放码过来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LaTeX笔记(二)(开篇)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-27T22:59:42+08:00">
+                2018年01月27日
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,229
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  36
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>接上篇，写好的tex文件在这 <a href="https://github.com/huangyuanlove/latex_practice/blob/master/latex(1)/chapter_one.tex" target="_blank" rel="external">https://github.com/huangyuanlove/latex_practice/blob/master/latex(1)/chapter_one.tex</a></p>
+<h5 id="写个框架"><a href="#写个框架" class="headerlink" title="写个框架"></a>写个框架</h5><p>既然有目标了，我们先写个大概的框架，然后往里面填充内容<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">% coding:UTF-8</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="tag">\<span class="name">documentclass</span><span class="string">[UTF8]</span><span class="string">&#123;ctexart&#125;</span></span></div><div class="line"></div><div class="line"><span class="tag">\<span class="name">title</span><span class="string">&#123;杂谈勾股定理&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">author</span><span class="string">&#123;xuan&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">date</span><span class="string">&#123;\today&#125;</span></span></div><div class="line"></div><div class="line"><span class="tag">\<span class="name">bibliographystyle</span><span class="string">&#123;plain&#125;</span></span></div><div class="line"></div><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;document&#125;</span></span></div><div class="line"></div><div class="line"><span class="tag">\<span class="name">maketitle</span></span></div><div class="line"><span class="tag">\<span class="name">tableofcontents</span></span></div><div class="line"><span class="tag">\<span class="name">section</span><span class="string">&#123;勾股定理在古代&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">section</span><span class="string">&#123;勾股定理的近代形式&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">bibliography</span><span class="string">&#123;math&#125;</span></span></div><div class="line"></div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;document&#125;</span></span></div></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<ul>
+<li>以 <code>%</code>开头的行是注释，源文件一行中百分号后面的内容都会被忽略。</li>
+<li>第<strong>4</strong>行是文档类，因为是中文的短文，所以用的是<code>ctexart</code>，并用[UTF8]选项说明编码方式。</li>
+<li>第<strong>6-8</strong>行声明了文章的标题、作者、日期。其中的<code>\today</code>是当前日期。但是这些信息是通过<strong>14</strong>行的<code>\maketitle</code>排版的。</li>
+<li>第<strong>10</strong>行的<code>\bibliographystyle</code>声明参考文献的格式。<br>以上在<code>\begin{document}</code>之前的部分称为<code>导言区(preamble)</code>，导言区通常用来对文档的性质做一些设置，或自定义一些命令。</li>
+<li>第<strong>12-20</strong>行以<code>\begin{document}</code>和<code>\end{socument}</code>声明了一个document环境，里面是论文的正文部分，也就是直接输出的部分。</li>
+<li>第<strong>14</strong>行的<code>\maketitle</code>输出论文标题。</li>
+<li>第<strong>15</strong>行的<code>\tableofcontents</code>输出目录。</li>
+<li>第<strong>16-17</strong>行两个<code>\section</code>开始新的一节。</li>
+<li>第<strong>18</strong>行的<code>\bibliography{math}</code>则是从文献数据库math(这里的math文献数据库是我们自己编辑的一个文件)中获取文献信息，打印参考文献列表。<blockquote>
+<p>为了格式清晰，源文件使用了一些空行作为分隔，在正文外的部分，空行不代表任何意义</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="填写正文"><a href="#填写正文" class="headerlink" title="填写正文"></a>填写正文</h5><p>自己把大段的文字先写上再说，自己试试查看排版之后格式。</p>
+<ul>
+<li>使用空行分段，</li>
+<li>段落的第一行缩进不需要自己打空格<h5 id="命令与环境"><a href="#命令与环境" class="headerlink" title="命令与环境"></a>命令与环境</h5><h6 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h6>脚注是在正文<strong>欧几里得</strong>的后面用脚注命令<code>\footnote</code>得到的。<figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">该定理的严格表述和证明则见于欧几里得</div><div class="line"><span class="tag">\<span class="name">footnote</span><span class="string">&#123;欧几里得，约公元前330--275年。&#125;</span></span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在这里，<code>\footnote</code>后面花括号内的部分是命令的参数，也就是脚注的内容。<br>注意一个细节，在表示起止年份时，用两个减号(–)，通常用来表示数字的范围。<br>文中还使用<code>\emph</code>命令改变字体的形状，表示强调的内容：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">的整数称为<span class="tag">\<span class="name">emph</span><span class="string">&#123;勾股数&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>一个LaTeX命令(宏)的格式为：<br>无参数：<code>\command</code><br>有n个参数:<code>\command&lt;arg1&gt;&lt;arg2&gt;&lt;arg3&gt;</code><br>有可选参数:<code>\command&lt;arg——opt&gt;&lt;arg2&gt;&lt;arg3&gt;</code><br>命令都一反斜线<code>\</code>开头，后接命令名，可以带一些参数，必选参数使用花括号括起来，可选参数使用方括号括起来。<br>引用的内容这是在正文中使用<code>quote</code>环境得到的。<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">我国《周髀算经》载商高（约公元前12世纪）答周公问：</div><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;quote&#125;</span></span></div><div class="line">勾广三，股修四，经隅五。</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;quote&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>quote环境即以<code>\begin{quote}</code>和<code>\end{quote}</code>为起止位置的部分，突出引用部分。但是quote环境不能改变引用内容的字体，因此还需要再使用改变字体的命令<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;quote&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">kaishu</span></span><span class="tag">\<span class="name">zihao</span><span class="string">&#123;-5&#125;</span></span> 引用的内容</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;quote&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>这里<code>\zihao</code>是一个有参数的命令，选择字号(-5就是小五号)，而<code>\kaishu</code>则是没有参数的命令，把字体切换为楷书，注意用空格把命令和后面的文字分开。<br>文章的摘要也是在<code>\maketitle</code>之后用<code>abstract</code>环境生成的：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;abstract&#125;</span></span></div><div class="line">刚开始学<span class="tag">\<span class="name">LaTeX</span></span>,如果学习不是为了装逼，那一切将毫无意义。</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;abstract&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>当然我们也可以自定义环境，比如上面的突出引用的环境：<br>在导言区<code>\maketitle</code>之后<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">newenvironment</span><span class="string">&#123;myquote&#125;</span><span class="string">&#123;\begin&#123;quote&#125;</span></span><span class="tag">\<span class="name">kaishu</span></span><span class="tag">\<span class="name">zihao</span><span class="string">&#123;-5&#125;</span></span>&#125;&#123;<span class="tag">\<span class="name">end</span><span class="string">&#123;quote&#125;</span></span>&#125;</div></pre></td></tr></table></figure></p>
+<p>之后我们在突出引用的时候就可以这么写：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">我国《周髀算经》载商高（约公元前12世纪）答周公问：</div><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;myquote&#125;</span></span></div><div class="line">勾广三，股修四，经隅五。</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;myquote&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>文章第二节的定理，是用一类定理环境输出的，定理环境是一类环境，在使用前需要先在导言区做定义：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">newtheorem</span><span class="string">&#123;thm&#125;</span><span class="string">&#123;定理&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>这就定义了一个<code>thm</code>环境，定理环境可以有一个可选参数，就是定理的名字，所以文章中的勾股定义就可以由新定义的<code>thm</code>环境得到：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;thm&#125;</span><span class="string">[勾股定理]</span></span></div><div class="line">直角三角形斜边的平方等于两腰的平方和。</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;thm&#125;</span></span></div></pre></td></tr></table></figure></p>
+<h6 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h6><p>最简单的方式就是把公式用<code>$</code>符号括起来，比如<code>$a+b$</code>就可以得到斜体的<em>a+b</em>，这种夹在行文中的公式称为”正文公式(in-text formula)”或”行内公式(inline formula)”。为了方便引用，经常会给公式编号，这种公式被称为”显式公式”或”列表公式(display formula)”,使用<code>equation</code>环境就可以方便地输入这种公式。<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;equation&#125;</span></span></div><div class="line">a(a+b) = ab + ac</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;equation&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p> 键盘上没有的符号，就需要使用命令来输入，”角”符号”∠”,就可以用<code>\angle</code>输入(虽然有的输入法也提供了数学符号的选项，但是不建议这么做，可以自己试试有什么区别)。<br> 数学公式还有上线标、分式、根式等，在勾股定理的表达中，就用到了上标表示乘方：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;equation&#125;</span></span></div><div class="line">AB^2 = BC^2 + AC^2</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;equation&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p> 符号<code>^</code>用来引入一个上标，<code>_</code>医用一个下标，如果上下标识多个字符，则需要使用花括号分组：<code>2^{10}</code>。<br> 所以90°怎么输入，在latex默认的字体中，并没有专用于表示角度的符号，输入角度的时候是通过上标输入的:<code>^\circ</code>，其中<code>\circ</code>通常用来表示函数符号的二元运算符<code>○</code>，我们把它的上标借用来表示角度。</p>
+<h6 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h6><p> 使用图片有两种途径：一个是插入事先准备好的图片，二是使用latex代码直接在文档中画图。<br> 插图功能不是由latex内核直接提供，而是有<strong>graphicx</strong>宏包提供的，要使用<strong>graphicx</strong>宏包的插图功能呢个，需要在导言区使用<code>\usepackage</code>命令引入宏包：<br> <figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">documentclass</span><span class="string">&#123;ctexart&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;graphicx&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p> 引入<strong>graphicx</strong>宏包后，就可以使用<code>\includegraphics</code>命令插图了：<br> <figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">includegraphic</span><span class="string">[width=3cm]</span><span class="string">&#123;gougu.png&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>这里<code>\includegraphic</code>有两个参数，方括号中可选参数<code>width=3cm</code>设置图形在文档中显示的宽度为3cm，第二个参数则是图片的文件名(和源文件同级)，还有一些类似的参数如scale(缩放)、height等。<br>除了一些很小的图标，我们很少进行图文混排，而是使用单独的环境列出，而且很大的图形如果位置是固定，会给分页造成困难，因此，通常都把图像放在一个可以变动相对位置的环境中，称为浮动体。在浮动体中还可以给图片加入说明性标题。<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;figure&#125;</span><span class="string">[ht]</span></span></div><div class="line">  <span class="tag">\<span class="name">centering</span></span></div><div class="line">  <span class="tag">\<span class="name">includegraphics</span><span class="string">[width=3cm]</span><span class="string">&#123;gougu.png&#125;</span></span></div><div class="line">  <span class="tag">\<span class="name">caption</span></span> &#123;<span class="tag">\<span class="name">kaishu</span></span><span class="tag">\<span class="name">zihao</span><span class="string">&#123;-5&#125;</span></span> 宋赵爽在《周髀算经》注中做的弦图（仿制），该图给出了勾股定理的一个极具对称美德证明。&#125;</div><div class="line">  <span class="tag">\<span class="name">label</span><span class="string">&#123;fig:gougu&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;figure&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>在上面的代码中，第1行和第6行使用了<code>figure</code>环境，就是插图使用的浮动体环境，<code>figure</code>环境有可选参数<code>[ht]</code>，表示浮动体可以出现在环境周围的文本所在处和一页的顶部。<code>figure</code>环境内部相当于普通的段落(默认没有缩进)；第二行用生命<code>\centering</code>表示后面的内容居中；第3行插入图片；第4行使用<code>\caption</code>命令给插图加上自动编号和标题；第5行的<code>\lable</code>命令则给图形定义一个标签，这个标签就可以在文章的其他地方引用<code>\caption</code>产生的编号。</p>
+<h6 id="使用表格"><a href="#使用表格" class="headerlink" title="使用表格"></a>使用表格</h6><p>制作表格，需要确定是表格的行、列、对齐模式和表格线，这是由<code>tabular</code>环境完成的：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;table&#125;</span><span class="string">[h]</span></span></div><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;tabular&#125;</span><span class="string">&#123;|lcr|&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">hline</span></span></div><div class="line">直角边 <span class="formula">$a$</span> &amp; 直角边 <span class="formula">$b$</span> &amp; 斜边 <span class="formula">$c$</span><span class="tag">\<span class="name">\</span></span></div><div class="line"><span class="tag">\<span class="name">hline</span></span></div><div class="line">3 &amp;  4 &amp; 5<span class="tag">\<span class="name">\</span></span></div><div class="line">5 &amp;  12&amp;  13<span class="tag">\<span class="name">\</span></span></div><div class="line"><span class="tag">\<span class="name">hline</span></span></div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;tabular&#125;</span></span><span class="comment">%</span></div><div class="line"><span class="tag">\<span class="name">qquad</span></span></div><div class="line">(<span class="formula">$a^2 + b^2 = c^2$</span>)</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;table&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>表格和插图一样，一般也放在浮动环境中，即<code>table</code>环境中，参数大致和<code>figure</code>差不多；<br><code>tabular</code>环境有一个参数，里面声明了表格中列的模式，在上面的表格中<code>|lcr|</code>表示第一列的内容左对齐，第二类居中对齐，第三列居中对齐，在第一列前面和第三列后面各有一条垂直的表格线。<br>在<code>tabular</code>环境中，行与行之间用命令<code>\\</code>隔开，每一行内的表项使用符号<code>$</code>隔开，表格中的横线是用命令<code>\hline</code>生成。<br>这里并没有给表格加标题，也没有把内容居中，而是把表格个一个公式并排排开，中间使用一个<code>\qquad</code>分割，这个命令产生长为2em(大约两个’M’的宽度)的空白。因为已经使用<code>\qquad</code>生成足够长度的空格了，所以再用<code>\end{tabular}</code>后的注释符取消换行产生的一个多余空格。又因为表格是和正文连在一起的，不允许再浮动了，所以在<code>table</code>环境中的表示位置参数处使用了<code>[H]</code>，但是这个参数是由<strong>float</strong>宏包提供的，所以还要在导言区使用<code>\usepackage{float}</code>。</p>
+<h6 id="文献引用"><a href="#文献引用" class="headerlink" title="文献引用"></a>文献引用</h6><p>上面提到了引用文献，是在<code>math.bib</code>这个文件中指定的，下面是<code>math.bib</code>文件的内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">% Encoding: UTF-8</div><div class="line"></div><div class="line">@Book&#123;Shiye,</div><div class="line">  title  = &#123;几何的有名定理&#125;,</div><div class="line">  year   = &#123;1986&#125;,</div><div class="line">  author = &#123;矢野健太郎&#125;,</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Book&#123;Kline,</div><div class="line">  title  = &#123;古今数学思想&#125;,</div><div class="line">  year   = &#123;2002&#125;,</div><div class="line">  author = &#123;克莱因&#125;,</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Book&#123;quanjing,</div><div class="line">  title   = &#123;商高、赵爽与刘徽关于勾股定理的证明&#125;,</div><div class="line">  year    = &#123;1998&#125;,</div><div class="line">  author  = &#123;曲安京&#125;,</div><div class="line">  volume  = &#123;20&#125;,</div><div class="line">  number  = &#123;3&#125;,</div><div class="line">  journal = &#123;数学传播&#125;,</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Comment&#123;jabref-meta: databaseType:bibtex;&#125;</div></pre></td></tr></table></figure></p>
+<p>一个文献数据文件的格式并不复杂，每一个条目包括类型、引用标签、标题、年限、作者等信息，可以手工输入，也可以通过jabref制作。<br>在实际应用中，BIBTEX数据并不需要我们自己录入，可以从相关的学科网站直接现在或是从其他类型的文献数据库转换得到。<br>BIBTEX是一个专门用于处理LATEX文档文献列表的程序，使用BIBTEX处理文献时，编译源文件需要增加为四次运行程序(在TexWorks中点击四次按钮)<br><code>pdflatex ***.tex</code><br><code>bibtex ***.aux</code><br><code>pdflatex ***.tex</code><br><code>pdflatex ***.tex</code><br>第一次运行为BIBTEX准备好辅助文件，确定数据库中的哪些文献将被列出来，然后bibtex处理辅助文件aux，从文献数据库中选取文件，按指定的格式生成文献列表的latex代码，后面两次再读入文献列表代码并生成正确的引用信息。<br>latex只选择被引用的文献，引用文献的方法是在正文中使用<code>\cite</code>命令，如：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将勾股定理的发现归功于公元前 6 世纪的毕达哥拉斯学派<span class="tag">\<span class="name">cite</span><span class="string">&#123;Kline&#125;</span></span>。该学派得到了一个法则...</div><div class="line">...是我国古代对勾股定理的一种证明<span class="tag">\<span class="name">cite</span><span class="string">&#123;quanjing&#125;</span></span>。</div></pre></td></tr></table></figure></p>
+<p><code>\cite</code>命令的参数<code>Kline</code>和<code>quanjing</code>分别是其中两篇的引用标签，也就是在<code>math.bib</code>中每个条目第一行出现的星系，使用<code>\cite</code>命令会在引用的文字显示文献在列表中的标号(它在第3次pdflatex编译后才能确定)，同时在辅助文件中说明某文献将被引用。如果要在列表中显示并不直接引用的文献，可以使用<code>\nocite</code>命令，一般是把它放在<code>\bibliography</code>之前：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">nocite</span><span class="string">&#123;Shiye&#125;</span></span></div><div class="line"><span class="tag">\<span class="name">bibliography</span><span class="string">&#123;math&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>目录也是自动从章节命令中提取并写入目录文件中的，在文章中我们就使用了<code>\tableofcontents</code>命令，它将在第二次编译时生效。<br>引用并不仅限于参考文献，图表、公式的编号，只要事先设定了标签，同样可以引用。基本的交叉引用命令是<code>\ref</code>，它以标签问参数，得到被引用标号。比如在这篇文章中，在插入图片时是引用<code>\label</code>命令为弦图定义了标签<code>\label{fig:gougu}</code>，这样在正文中就可以使用<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">图<span class="tag">\<span class="name">ref</span><span class="string">&#123;fig:gougu&#125;</span></span>是我国古代对勾股定理的一种证明<span class="tag">\<span class="name">cite</span><span class="string">&#123;quanjing&#125;</span></span>。</div></pre></td></tr></table></figure></p>
+<p>公式编号的引用也可照此做法，不过需要先在公式中定义标签：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;equation&#125;</span></span> <span class="tag">\<span class="name">label</span><span class="string">&#123;eq:gougu&#125;</span></span></div><div class="line">AB^2 = BC^2 + AC^2</div><div class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;equation&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>引用数学公式的时候一般使用数学宏包<code>amsmath</code>就定义了<code>\eqref</code>命令，专门用于公式的引用，并能产生括号：<br>导言区引入包<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;amsmath&#125;</span></span></div></pre></td></tr></table></figure></p>
+<p>正文中引用公式：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">满足式<span class="tag">\<span class="name">eqref</span><span class="string">&#123;eq:gougu&#125;</span></span>的整数称为<span class="tag">\<span class="name">emph</span><span class="string">&#123;勾股数&#125;</span></span>。</div></pre></td></tr></table></figure></p>
+<hr>
+<p>以上。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechatpay.png" alt="HuangYuan_xuan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/alipay.png" alt="HuangYuan_xuan 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LaTeX/" rel="tag"><i class="fa fa-tag"></i> LaTeX</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/18/LaTeX笔记-一/" rel="next" title="LaTeX笔记(一)(准备工作)">
+                <i class="fa fa-chevron-left"></i> LaTeX笔记(一)(准备工作)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/11/LaTeX笔记-三/" rel="prev" title="LaTeX笔记(三)(杂)">
+                LaTeX笔记(三)(杂) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODYyMC8xNTE0OA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466"
+                alt="HuangYuan_xuan" />
+            
+              <p class="site-author-name" itemprop="name">HuangYuan_xuan</p>
+              <p class="site-description motion-element" itemprop="description">锱铢必较间接性奋发图强，睚眦必报持续性混吃等死</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyuanlove" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:huangyuan@huangyuanlove.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#写个框架"><span class="nav-number">1.</span> <span class="nav-text">写个框架</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#填写正文"><span class="nav-number">2.</span> <span class="nav-text">填写正文</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#命令与环境"><span class="nav-number">3.</span> <span class="nav-text">命令与环境</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#脚注"><span class="nav-number">3.1.</span> <span class="nav-text">脚注</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#数学公式"><span class="nav-number">3.2.</span> <span class="nav-text">数学公式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#插入图片"><span class="nav-number">3.3.</span> <span class="nav-text">插入图片</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使用表格"><span class="nav-number">3.4.</span> <span class="nav-text">使用表格</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#文献引用"><span class="nav-number">3.5.</span> <span class="nav-text">文献引用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangYuan_xuan</span>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数UV:<span id="busuanzi_value_site_uv"></span>PV:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">博客字数统计&#58;</span>
+    
+    <span title="博客字数统计">103.2k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65959286";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

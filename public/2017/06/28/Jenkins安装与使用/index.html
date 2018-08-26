@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="jenkins搭建" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="放码过来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="公司需求，业务越来越多，服务器越来越多，后台部署项目麻烦的要死，于是上了jenkins这货。关于这货是干嘛的，请移步这里https://jenkins.io/,下载请移步这里https://jenkins.io/download/安装环境：ubuntu 16.04、tomcat7(这个是因为Jenkins是个war包)、maven(这个是因为后台的项目是maven工程)、jdk8(这个是因为需要t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jenkins安装与使用">
+<meta property="og:url" content="http://blog.huangyuanlove.com/2017/06/28/Jenkins安装与使用/index.html">
+<meta property="og:site_name" content="放码过来">
+<meta property="og:description" content="公司需求，业务越来越多，服务器越来越多，后台部署项目麻烦的要死，于是上了jenkins这货。关于这货是干嘛的，请移步这里https://jenkins.io/,下载请移步这里https://jenkins.io/download/安装环境：ubuntu 16.04、tomcat7(这个是因为Jenkins是个war包)、maven(这个是因为后台的项目是maven工程)、jdk8(这个是因为需要t">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_start.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_index.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_jdk.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_maven.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_create_new_project.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_config_project.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_project_build.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_start_build_project.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_build_history.png">
+<meta property="og:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_build_console_output.png">
+<meta property="og:updated_time" content="2018-08-04T04:56:29.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jenkins安装与使用">
+<meta name="twitter:description" content="公司需求，业务越来越多，服务器越来越多，后台部署项目麻烦的要死，于是上了jenkins这货。关于这货是干嘛的，请移步这里https://jenkins.io/,下载请移步这里https://jenkins.io/download/安装环境：ubuntu 16.04、tomcat7(这个是因为Jenkins是个war包)、maven(这个是因为后台的项目是maven工程)、jdk8(这个是因为需要t">
+<meta name="twitter:image" content="http://blog.huangyuanlove.com/image/jenkins/jenkins_start.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.huangyuanlove.com/2017/06/28/Jenkins安装与使用/"/>
+
+
+
+
+
+  <title>Jenkins安装与使用 | 放码过来</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-123314537-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?98796e1ecbcbaac6a6d9d3fea85985ba";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">放码过来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术宅 huangyuan@huangyuanlove.com</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LoCFNsvjbeYQpYd-Wuxs','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.huangyuanlove.com/2017/06/28/Jenkins安装与使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangYuan_xuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="放码过来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Jenkins安装与使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-28T17:30:42+08:00">
+                2017年06月28日
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  688
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>公司需求，业务越来越多，服务器越来越多，后台部署项目麻烦的要死，于是上了<code>jenkins</code>这货。<br>关于这货是干嘛的，请移步这里<a href="https://jenkins.io/" target="_blank" rel="external">https://jenkins.io/</a>,下载请移步这里<a href="https://jenkins.io/download/" target="_blank" rel="external">https://jenkins.io/download/</a><br>安装环境：ubuntu 16.04、tomcat7(这个是因为Jenkins是个war包)、maven(这个是因为后台的项目是maven工程)、jdk8(这个是因为需要tomcat)、gradle(构建Android工程)、SDK(构建Android工程)<br><a id="more"></a></p>
+<h4 id="Jenkins-环境"><a href="#Jenkins-环境" class="headerlink" title="Jenkins 环境"></a>Jenkins 环境</h4><p>安装JDK、Tomcat、MAVEN(如有需要)、gradle(构建Android工程)、SDK(构建Android工程)</p>
+<h4 id="安装Jenkins"><a href="#安装Jenkins" class="headerlink" title="安装Jenkins"></a>安装Jenkins</h4><p>在上面的下载地址下载war，丢到tomcat的webapps文件夹下，然后启动tomcat，浏览器访问jenkin工程<code>127.0.0.1:8080/jenkins</code>如下图所示：<br><img src="/image/jenkins/jenkins_start.png" alt="jenkins首次启动"><br>打开红字提示的文件，里面是首次进入时需要的密码,点击右下角continue。</p>
+<h5 id="jenkins安装插件"><a href="#jenkins安装插件" class="headerlink" title="jenkins安装插件"></a>jenkins安装插件</h5><p>可以自定义也可以安装推荐的插件，我这里安装的是建议的插件.稍等一会，插件安装完成后会自动跳转到创建jenkins用户的界面</p>
+<h5 id="创建jenkins用户"><a href="#创建jenkins用户" class="headerlink" title="创建jenkins用户"></a>创建jenkins用户</h5><p>按照提示创建即可，点击右下角<code>Save and finish</code></p>
+<h5 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h5><p>以后再次访问jenkins的时候就不用再去使用初始密码，只需要使用上一步创建的账号即可，登录后首界面如下，<br><img src="/image/jenkins/jenkins_index.png" alt="jenkins首页"><br>点击左侧的<code>系统管理</code>，在中间列出的工具里面点击<code>Global Tool Configuration</code>，指定JDK和MAVEN的路径，如下<br><img src="/image/jenkins/jenkins_jdk.png" alt="jenkins配置JDK"><br><img src="/image/jenkins/jenkins_maven.png" alt="jenkins配置MAVEN"><br>然后Save保存</p>
+<h4 id="创建一个新的Maven工程"><a href="#创建一个新的Maven工程" class="headerlink" title="创建一个新的Maven工程"></a>创建一个新的Maven工程</h4><p>点击左侧菜单栏<code>新建</code>,输入工程名字，然后选择<code>构建一个只有风格的软件项目</code>,然后<code>ok</code><br><img src="/image/jenkins/jenkins_create_new_project.png" alt="jenkins创建新工程"></p>
+<h4 id="配置工程"><a href="#配置工程" class="headerlink" title="配置工程"></a>配置工程</h4><p>在新的界面可以配置项目的构建、源码管理等<br>我的工程是存放在git上面的，所以就选择git<br><img src="/image/jenkins/jenkins_config_project.png" alt="jenkins源码管理"><br>构建触发器可以配置在什么时间配置，我们暂时没有，需要手动点击构建才行<br>构建环境没有配置<br>构建一项选择 <code>Invoke top-level Maven target</code>,当然根据需求可以选择其他构建方式<br><code>Maven Version</code>是上面配置maven时选择的别名，<code>Goals</code>是需要执行的maven命令(前面不需要加maven)<br><img src="/image/jenkins/jenkins_project_build.png" alt="jenkins构建项目"><br>点击左下角保存</p>
+<h4 id="开始构建"><a href="#开始构建" class="headerlink" title="开始构建"></a>开始构建</h4><p>点击左侧的立即构建，可以在构建历史中查看原来构建的个过程<br><img src="/image/jenkins/jenkins_start_build_project.png" alt="jenkins构建"><br>点击构建历史列表里面对应构建历史的小圆点，可以查看控制台输出<br><img src="/image/jenkins/jenkins_build_history.png" alt="jenkins构建历史"><br><img src="/image/jenkins/jenkins_build_console_output.png" alt="jenkins"><br>ps：如果是普通用户启动的tomcat，使用git管理源码，则下载下来的工程源码在<code>/home/username/.jenkins/workspace</code>，如果是root用户，则在 <code>/root/.jenkins/workspace</code>下<br>pps:据说<code>jenkins</code>的包不需要tomcat也可以，执行<code>java -jar ***.war</code>即可</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechatpay.png" alt="HuangYuan_xuan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/alipay.png" alt="HuangYuan_xuan 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jenkins/" rel="tag"><i class="fa fa-tag"></i> jenkins</a>
+          
+            <a href="/tags/运维/" rel="tag"><i class="fa fa-tag"></i> 运维</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/13/elk简单环境搭建-for-linux/" rel="next" title="elk简单环境搭建 for linux">
+                <i class="fa fa-chevron-left"></i> elk简单环境搭建 for linux
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/03/TCP协议的简单理解/" rel="prev" title="TCP协议的简单理解">
+                TCP协议的简单理解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODYyMC8xNTE0OA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466"
+                alt="HuangYuan_xuan" />
+            
+              <p class="site-author-name" itemprop="name">HuangYuan_xuan</p>
+              <p class="site-description motion-element" itemprop="description">锱铢必较间接性奋发图强，睚眦必报持续性混吃等死</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyuanlove" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:huangyuan@huangyuanlove.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Jenkins-环境"><span class="nav-number">1.</span> <span class="nav-text">Jenkins 环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Jenkins"><span class="nav-number">2.</span> <span class="nav-text">安装Jenkins</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#jenkins安装插件"><span class="nav-number">2.1.</span> <span class="nav-text">jenkins安装插件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建jenkins用户"><span class="nav-number">2.2.</span> <span class="nav-text">创建jenkins用户</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置Jenkins"><span class="nav-number">2.3.</span> <span class="nav-text">配置Jenkins</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建一个新的Maven工程"><span class="nav-number">3.</span> <span class="nav-text">创建一个新的Maven工程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置工程"><span class="nav-number">4.</span> <span class="nav-text">配置工程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开始构建"><span class="nav-number">5.</span> <span class="nav-text">开始构建</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangYuan_xuan</span>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数UV:<span id="busuanzi_value_site_uv"></span>PV:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">博客字数统计&#58;</span>
+    
+    <span title="博客字数统计">103.2k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65959286";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

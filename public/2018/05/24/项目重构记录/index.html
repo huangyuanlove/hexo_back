@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="重构" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="放码过来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="总结一下在新公司一个月来学到的东西吧。公司的项目采用Native+RN进行开发，前两周简单的了解了一下项目结构，写了一些自动打包的脚本。后两周大致学习了一下RN，然后就是调整项目结构，做重构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目重构记录">
+<meta property="og:url" content="http://blog.huangyuanlove.com/2018/05/24/项目重构记录/index.html">
+<meta property="og:site_name" content="放码过来">
+<meta property="og:description" content="总结一下在新公司一个月来学到的东西吧。公司的项目采用Native+RN进行开发，前两周简单的了解了一下项目结构，写了一些自动打包的脚本。后两周大致学习了一下RN，然后就是调整项目结构，做重构。">
+<meta property="og:updated_time" content="2018-08-05T03:46:07.153Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="项目重构记录">
+<meta name="twitter:description" content="总结一下在新公司一个月来学到的东西吧。公司的项目采用Native+RN进行开发，前两周简单的了解了一下项目结构，写了一些自动打包的脚本。后两周大致学习了一下RN，然后就是调整项目结构，做重构。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.huangyuanlove.com/2018/05/24/项目重构记录/"/>
+
+
+
+
+
+  <title>项目重构记录 | 放码过来</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-123314537-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?98796e1ecbcbaac6a6d9d3fea85985ba";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">放码过来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术宅 huangyuan@huangyuanlove.com</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LoCFNsvjbeYQpYd-Wuxs','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.huangyuanlove.com/2018/05/24/项目重构记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangYuan_xuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="放码过来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">项目重构记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T12:11:00+08:00">
+                2018年05月24日
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  898
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>总结一下在新公司一个月来学到的东西吧。公司的项目采用Native+RN进行开发，前两周简单的了解了一下项目结构，写了一些自动打包的脚本。后两周大致学习了一下RN，然后就是调整项目结构，做重构。</p>
+<a id="more"></a>
+<p>一些简单的记录，</p>
+<h5 id="需要注意的地方"><a href="#需要注意的地方" class="headerlink" title="需要注意的地方"></a>需要注意的地方</h5><ol>
+<li>主工程module下的插件是 <blockquote>
+<p>apply plugin: ‘com.android.application’</p>
+</blockquote>
+</li>
+</ol>
+<p>library中的插件是</p>
+<blockquote>
+<p>apply plugin: ‘com.android.library’</p>
+</blockquote>
+<ol>
+<li><p>在library module中，生成的R文件中的变量没有被final修饰，所以在<code>switch case</code>中需要改一下写法，比如改成<code>if else</code>。</p>
+</li>
+<li><p>ButterKnife中注解@bind中要求参数是final类型，所以在library中这个注解也不好用，作者给出了解决方案。</p>
+</li>
+<li><p>library module中不能有applicationId。</p>
+<h5 id="改动记录"><a href="#改动记录" class="headerlink" title="改动记录"></a>改动记录</h5><p>涉及到源代码的部分没有公开。</p>
+</li>
+<li><p>将原项目中所有library依赖移动到<code>BaseApp</code>文件夹下,统一由一个git子模块引用。，所以需要在工程根目录下的<code>setting.gradle</code>中修改<code>include</code>路径</p>
+<blockquote>
+<p>include  ‘:base’</p>
+</blockquote>
+</li>
+</ol>
+<p>改为</p>
+<blockquote>
+<p>include  ‘:BaseApp:base’</p>
+</blockquote>
+<p>library中依赖的其他library也需要做修改(路径前添加<code>:BaseApp</code> )，如<code>RiskControlSdk</code>中<code>dependencies</code>中</p>
+<blockquote>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">releaseCompile project(<span class="string">path:</span> <span class="string">'BaseComponents'</span>, <span class="string">configuration:</span> <span class="string">'release'</span>)</div><div class="line">debugCompile project(<span class="string">path:</span> <span class="string">':BaseComponents'</span>, <span class="string">configuration:</span> <span class="string">'debug'</span>)</div></pre></td></tr></table></figure>
+</blockquote>
+<p>改为</p>
+<blockquote>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">releaseCompile project(<span class="string">path:</span> <span class="string">':BaseApp:BaseComponents'</span>, <span class="string">configuration:</span> <span class="string">'release'</span>)</div><div class="line">debugCompile project(<span class="string">path:</span> <span class="string">':BaseApp:BaseComponents'</span>, <span class="string">configuration:</span> <span class="string">'debug'</span>)</div></pre></td></tr></table></figure>
+</blockquote>
+<ol>
+<li><p>原app module(现base)中用到<code>butterknife</code>，在@bind注解要求参数是final类型，但是在library项目中，生成的R文件中的id不是final。<br><code>butterknife</code>作者给出类解决办法:升级<code>butterknife</code>到8.8.1，在library中的<code>build.gradle</code>添加<code>apply plugin: &#39;com.jakewharton.butterknife&#39;</code>插件，用于生成<code>R2</code>文件，将原来的<code>R.id.xxx</code>改为<code>R2.id.xxx</code>。同理，在<code>switch case</code>中用R.id的地方也要做相应修改。参考 <a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">https://github.com/JakeWharton/butterknife</a></p>
+</li>
+<li><p>将gradle依赖、某些appkey在根目录下的<code>config.gradle</code>中配置<br>在项目根目录下新建<code>config.gradle</code>文件，用来存放公共配置，如</p>
+</li>
+</ol>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">ext &#123;</div><div class="line">	url = <span class="string">"https://test.test.com"</span></div><div class="line">	UMENG_APPKEY = <span class="string">"*****"</span></div><div class="line">	UMENG_MESSAGE_SECRET = <span class="string">"*******"</span></div><div class="line">	WEIXIN_APP_ID = <span class="string">"******"</span></div><div class="line">	WEIXIN_APP_SECRET = <span class="string">"********"</span></div><div class="line">	android = [</div><div class="line"><span class="symbol">		compileSdkVersion:</span> <span class="number">25</span>,</div><div class="line"><span class="symbol">		buildToolsVersion:</span> <span class="string">"25.0.2"</span>,</div><div class="line">		<span class="string">applicationId    :</span> <span class="string">"xxxxx"</span>,</div><div class="line">		<span class="string">minSdkVersion    :</span> <span class="number">16</span>,</div><div class="line">		<span class="string">targetSdkVersion :</span> <span class="number">22</span>,</div><div class="line">		<span class="string">versionCode      :</span> <span class="number">120</span>,</div><div class="line">		<span class="string">versionName      :</span> <span class="string">"1.2.0"</span>,</div><div class="line">	]</div><div class="line">	dependencies = [</div><div class="line">		<span class="string">"appcompat-v7"</span>                : <span class="string">"com.android.support:appcompat-v7:25.0.0"</span>,</div><div class="line">		<span class="string">"support-v4"</span>                  : <span class="string">'com.android.support:support-v4:25.0.0'</span>,</div><div class="line">		<span class="string">"support-v13"</span>                 : <span class="string">'com.android.support:support-v13:23.4.0'</span>,</div><div class="line">		<span class="string">"support-annotations"</span>         : <span class="string">'com.android.support:support-annotations:23.4.0'</span>,</div><div class="line">		<span class="string">"butterknife"</span>                 : <span class="string">"com.jakewharton:butterknife:8.8.1"</span>,</div><div class="line">		<span class="string">"xutils"</span>                      : <span class="string">'org.xutils:xutils:3.5.0'</span>,</div><div class="line">		<span class="string">"junit"</span>                       : <span class="string">'junit:junit:4.12'</span>,</div><div class="line">		<span class="string">"react-native"</span>                : <span class="string">"com.facebook.react:react-native:0.49.5"</span>,</div><div class="line">		<span class="string">"subsampling-scale-image-view"</span>: <span class="string">'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'</span>,</div><div class="line">		<span class="string">"eventbus"</span>                    : <span class="string">'de.greenrobot:eventbus:2.4.0'</span>,</div><div class="line">		<span class="string">"okio"</span>                        : <span class="string">'com.squareup.okio:okio:1.8.0'</span>,</div><div class="line">		<span class="string">"universal-image-loader"</span>      : <span class="string">'com.nostra13.universalimageloader:universal-image-loader:1.9.5'</span>,</div><div class="line">		<span class="string">"multidex"</span>                    : <span class="string">'com.android.support:multidex:1.0.1'</span>,</div><div class="line">		<span class="string">"nohttp"</span>:<span class="string">'com.yanzhenjie.nohttp:nohttp:1.1.4'</span>,</div><div class="line">	]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用时注意事项：</p>
+<ol>
+<li>现在library中的所有appkey(三方)相关的，都由工程根目录下的配置文件<code>config.gradle</code>提供，然后添加到该module的<code>BuildConfig.java</code>文件中，代码中从<code>BuildConfig.java</code>文件中引用</li>
+</ol>
+<p>在<code>config.gradle</code>文件中添加一个三方key值<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ext&#123;</div><div class="line">	UMENG_APPKEY = <span class="string">"************"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在module中的<code>build.grale</code>引用<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> UMENG_APPKEY = rootProject.ext.UMENG_APPKEY</div></pre></td></tr></table></figure></p>
+<p>加入到该module的<code>BuildConfig.java</code>文件</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">defaultConfig&#123;</div><div class="line">	buildConfigField <span class="string">"String"</span>, <span class="string">"umeng_analytics_key"</span>, <span class="string">"\""</span> + UMENG_APPKEY + <span class="string">"\""</span></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>代码中引用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">BuildConfig.umeng_analytics_key</div></pre></td></tr></table></figure></p>
+<p>这里需要注意的是，import该文件的时候，是从该module的<code>manifest.xml</code>中的跟标签的<code>package</code>属性所指向的包名导入的，如</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">	<span class="attr">package</span>=<span class="string">"com.huangyuanlove.test"</span>&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>则<code>BuildConfig.java</code>文件的导入路径为 <code>import com.huangyuanlove.test;</code></p>
+<ol>
+<li>所有使用gradle依赖的三方全部放在根目录的<code>config.gradle</code>文件夹下，其他module引用时可参考下面的配置。如</li>
+</ol>
+<p>需要添加一个新的依赖，在根目录下的 <code>config.gradle</code>文件中</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ext&#123;</div><div class="line">	dependencies=[</div><div class="line">		<span class="string">"newDependency"</span>:<span class="string">"dependency"</span>,</div><div class="line">	]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在其他module中引用</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> dependency = rootProject.ext.dependencies</div><div class="line">dependencies &#123;</div><div class="line">	compile dependency[<span class="string">"newDependency"</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechatpay.png" alt="HuangYuan_xuan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/alipay.png" alt="HuangYuan_xuan 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/01/网站免费升级https/" rel="next" title="网站免费升级https">
+                <i class="fa fa-chevron-left"></i> 网站免费升级https
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/03/面试总结/" rel="prev" title="面试总结">
+                面试总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODYyMC8xNTE0OA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466"
+                alt="HuangYuan_xuan" />
+            
+              <p class="site-author-name" itemprop="name">HuangYuan_xuan</p>
+              <p class="site-description motion-element" itemprop="description">锱铢必较间接性奋发图强，睚眦必报持续性混吃等死</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyuanlove" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:huangyuan@huangyuanlove.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#需要注意的地方"><span class="nav-number">1.</span> <span class="nav-text">需要注意的地方</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#改动记录"><span class="nav-number">2.</span> <span class="nav-text">改动记录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangYuan_xuan</span>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数UV:<span id="busuanzi_value_site_uv"></span>PV:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">博客字数统计&#58;</span>
+    
+    <span title="博客字数统计">103.2k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65959286";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

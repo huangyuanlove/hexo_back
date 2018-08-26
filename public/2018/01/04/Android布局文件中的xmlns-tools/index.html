@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="xmlns-tools" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="放码过来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="在使用AndroidStudio创建布局文件的时候，跟布局下总是有如下代码：123&amp;lt;RootTag xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;    xmlns:tools=&quot;http://schemas.android.com/tools&quot;    tools:context=&quot;***.***Activity&quot; &amp;gt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android布局文件中的xmlns:tools">
+<meta property="og:url" content="http://blog.huangyuanlove.com/2018/01/04/Android布局文件中的xmlns-tools/index.html">
+<meta property="og:site_name" content="放码过来">
+<meta property="og:description" content="在使用AndroidStudio创建布局文件的时候，跟布局下总是有如下代码：123&amp;lt;RootTag xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;    xmlns:tools=&quot;http://schemas.android.com/tools&quot;    tools:context=&quot;***.***Activity&quot; &amp;gt">
+<meta property="og:updated_time" content="2018-08-04T04:48:31.962Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android布局文件中的xmlns:tools">
+<meta name="twitter:description" content="在使用AndroidStudio创建布局文件的时候，跟布局下总是有如下代码：123&amp;lt;RootTag xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;    xmlns:tools=&quot;http://schemas.android.com/tools&quot;    tools:context=&quot;***.***Activity&quot; &amp;gt">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.huangyuanlove.com/2018/01/04/Android布局文件中的xmlns-tools/"/>
+
+
+
+
+
+  <title>Android布局文件中的xmlns:tools | 放码过来</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-123314537-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?98796e1ecbcbaac6a6d9d3fea85985ba";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">放码过来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术宅 huangyuan@huangyuanlove.com</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LoCFNsvjbeYQpYd-Wuxs','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.huangyuanlove.com/2018/01/04/Android布局文件中的xmlns-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangYuan_xuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="放码过来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android布局文件中的xmlns:tools</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-04T14:12:34+08:00">
+                2018年01月04日
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,599
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  21
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在使用AndroidStudio创建布局文件的时候，跟布局下总是有如下代码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">RootTag</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">tools:context</span>=<span class="string">"***.***Activity"</span> &gt;</div></pre></td></tr></table></figure></p>
+<p>于是在官网查了一下这俩货是干嘛用的，下面是自己的翻译+实践<br><a id="more"></a><br><code>xmlns</code>的全称是<code>xmlnamespace</code>,和c++中<code>namespace</code>差不多，都是为了解决命名上的冲突问题。<br>在Android布局文件中，常见的<code>xmlns</code>大概有三个（你可以随意命名，把tools改成bug也可以，只要对应使用tools的地方都改成bug，说白了，它只是个变量而已）。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">xmlns:android="http://schemas.android.com/apk/res/android"</div><div class="line">xmlns:tools="http://schemas.android.com/tools"</div><div class="line">xmlns:app="http://schemas.android.com/apk/res-auto"</div></pre></td></tr></table></figure></p>
+<h6 id="android"><a href="#android" class="headerlink" title="android"></a>android</h6><p>用于Android系统定义的一些属性</p>
+<h6 id="app"><a href="#app" class="headerlink" title="app"></a>app</h6><p>用于我们自定义的一些属性</p>
+<h6 id="tools"><a href="#tools" class="headerlink" title="tools"></a>tools</h6><p>给IDE或者预览界面用的，当打包编译时并不会包含在apk中。</p>
+<h4 id="tools可以干什么"><a href="#tools可以干什么" class="headerlink" title="tools可以干什么"></a>tools可以干什么</h4><p>先看官网介绍 <a href="https://developer.android.com/studio/write/tool-attributes.html" target="_blank" rel="external">https://developer.android.com/studio/write/tool-attributes.html</a></p>
+<blockquote>
+<p>Android Studio supports a variety of XML attributes in the tools namespace that enable design-time features (such as which layout to show in a fragment) or compile-time behaviors (such as which shrinking mode to apply to your XML resources). When you build your app, the build tools remove these attributes so there is no effect on your APK size or runtime behavior.</p>
+</blockquote>
+<p>大致意思就是说使用<code>tools</code>后面的属性不会再编译时存在，只存在于设计时的预览，不会影响apk的体积，</p>
+<h5 id="Error-handling-attributes"><a href="#Error-handling-attributes" class="headerlink" title="Error handling attributes"></a>Error handling attributes</h5><p>影响Lint提示的属性主要有下面三种：</p>
+<blockquote>
+<p><strong>tools:ignore</strong><br>Intended for: Any element<br>Used by: Lint</p>
+<p><strong>tools:targetApi</strong><br>Intended for: Any element<br>Used by: Lint</p>
+<p><strong>tools:locale</strong><br>Intended for: resources<br>Used by: Lint, Android Studio editor</p>
+</blockquote>
+<p><code>ignore</code>属性是告诉Lint忽略xml中的某些警告，比如我们在<code>ImageView</code>或者<code>ImageButton</code>中没有写<code>contentDescription</code>属性，Lint会有警告：<code>Missing contentDescription attribute on image</code>,原因是这个属性是提供无障碍阅读的，没有这个属性的话<code>Screen Reader</code>无法正常工作，但是有些特定分类的软件是不考虑这些东西的。虽然这种警告无所谓，但是对于要求代码中不能有warning的公司来说，这是不可取的，我们可以用<code>ignore</code>属性来忽略这个警告(如果你说你改了Lint的警告级别，当我没说)：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">ImageView</span></span></div><div class="line"><span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line"><span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line"><span class="attr">android:layout_marginStart</span>=<span class="string">"@dimen/margin_main"</span></div><div class="line"><span class="attr">android:layout_marginTop</span>=<span class="string">"@dimen/margin_main"</span></div><div class="line"><span class="attr">android:scaleType</span>=<span class="string">"center"</span></div><div class="line"><span class="attr">android:src</span>=<span class="string">"@drawable/divider"</span></div><div class="line"><span class="attr">tools:ignore</span>=<span class="string">"contentDescription"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<p><code>targetApi</code>和代码中的注解<code>@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)</code>差不多。假设配置文件中的最小sdkLevel为11，而布局文件中使用了21的控件比如<code>GridLayout</code>,Lint会有警告，为了消除这个警告，可以这么写：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">GridLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">tools:targetApi</span>=<span class="string">"14"</span> &gt;</div></pre></td></tr></table></figure></p>
+<p><code>locale</code>是告诉Lint和AndroidStudio editor默认的是什么语言，如果不指定的话，默认是英语。可以把这个属性添加到<code>values/strings.xml</code>中：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resources</span> <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></div><div class="line">    <span class="attr">tools:locale</span>=<span class="string">"es"</span>/&gt;</div></pre></td></tr></table></figure></p>
+<h5 id="Design-time-view-attributes-设计时试图属性"><a href="#Design-time-view-attributes-设计时试图属性" class="headerlink" title="Design-time view attributes(设计时试图属性)"></a>Design-time view attributes(设计时试图属性)</h5><h6 id="tools-instead-of-android"><a href="#tools-instead-of-android" class="headerlink" title="tools: instead of android"></a>tools: instead of android</h6><p><strong>Intended for:</strong> <em><code>View</code></em><br><strong>Used by:</strong>  <em>Android Studio layout editor</em></p>
+<p>我们有一个<code>TextView</code>，需要显示从网络获取到的文件，控件大小是<code>wrap_content</code>,但是<code>TextView</code>中没有文字的话在预览界面中是看不到的，大部分同学可能会使用<code>android:text=XXXX</code>这个属性，调整好布局之后再把文字删除。一两个控件还好说，控件多了指不定哪个控件就忘记删除文本了，我们可以使用<code>tools</code>这个东西：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/unlock_bike"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"#12345678"</span></div><div class="line">    <span class="attr">android:paddingBottom</span>=<span class="string">"10dp"</span></div><div class="line">    <span class="attr">android:paddingTop</span>=<span class="string">"10dp"</span></div><div class="line">    <span class="attr">tools:text</span>=<span class="string">"测试用例"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<p>这时我们在IDE预览界面是可以看到文字的，打包成apk运行在手机上时是看不到的。<br>总之，<code>tools</code>可以告诉<code>Android Studio</code>哪些属性在运行的时候是被忽略的，只在设计布局的时候有效。基本上原生控件的属性都可以这么使用。</p>
+<h6 id="tools-context"><a href="#tools-context" class="headerlink" title="tools:context"></a>tools:context</h6><p><strong>Intended for:</strong> <em>Any root View</em><br><strong>Used by:</strong>  <em>Lint, Android Studio layout editor</em><br>这个属性告诉IDE当前布局和哪个activity相关联，在预览界面使用关联Activity的主题展示。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">android.support.constraint.ConstraintLayout</span></span></div><div class="line">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">tools:context</span>=<span class="string">".MainActivity"</span> &gt;</div></pre></td></tr></table></figure></p>
+<h6 id="tools-itemCount"><a href="#tools-itemCount" class="headerlink" title="tools:itemCount"></a>tools:itemCount</h6><p><strong>Intended for:</strong> <em>RecyclerView</em><br><strong>Used by:</strong> <em>Android Studio layout editor</em><br>这个属性告诉编辑器在预览窗口展示多少个列表项<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">android.support.v7.widget.RecyclerView</span></span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/recyclerView"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">tools:itemCount</span>=<span class="string">"3"</span>/&gt;</div></pre></td></tr></table></figure></p>
+<h6 id="tools-layout"><a href="#tools-layout" class="headerlink" title="tools:layout"></a>tools:layout</h6><p><strong>Intended for:</strong> <em><code>fragment</code></em><br><strong>Used by:</strong> <em>Android Studio layout editor</em><br>这个属性告诉编辑器fragment中显示哪个布局文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">fragment</span> <span class="attr">android:name</span>=<span class="string">"com.example.master.ItemListFragment"</span></span></div><div class="line">    <span class="attr">tools:layout</span>=<span class="string">"@layout/list_content"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<h6 id="tools-listitem-tools-listheader-tools-listfooter"><a href="#tools-listitem-tools-listheader-tools-listfooter" class="headerlink" title="tools:listitem / tools:listheader / tools:listfooter"></a>tools:listitem / tools:listheader / tools:listfooter</h6><p><strong>Intended for:</strong> <em><code>AdapterView</code> (and subclasses like <code>ListView</code>)</em><br><strong>Used by:</strong> <em>Android Studio layout editor</em><br>看属性名字就能猜出来了，预览界面显示列表的头部，底部和列表项布局<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">ListView</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@android:id/list"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">tools:listitem</span>=<span class="string">"@layout/sample_list_item"</span></div><div class="line">    <span class="attr">tools:listheader</span>=<span class="string">"@layout/sample_list_header"</span></div><div class="line">    <span class="attr">tools:listfooter</span>=<span class="string">"@layout/sample_list_footer"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<h6 id="tools-showIn"><a href="#tools-showIn" class="headerlink" title="tools:showIn"></a>tools:showIn</h6><p><strong>Intended for:</strong> <em>Any root <code>View</code> in a layout that’s referred to by an <code>include</code></em><br><strong>Used by:</strong> <em>Android Studio layout editor</em><br>此属性可以通过指向使用此布局包含的布局，因此您可以预览(和编辑)这个文件，因为它嵌入在其父布局时出现<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">TextView</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:text</span>=<span class="string">"@string/hello_world"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">tools:showIn</span>=<span class="string">"@layout/activity_main"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<h6 id="tools-menu"><a href="#tools-menu" class="headerlink" title="tools:menu"></a>tools:menu</h6><p><strong>Intended for:</strong>  <em>Any root <code>View</code></em><br><strong>Used by:</strong> <em>Android Studio layout editor</em><br>此属性指定菜单应该显示在应用程序栏的布局预览。该值可以是一个或多个菜单id，由逗号分隔<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">tools:menu</span>=<span class="string">"menu1,menu2"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<h6 id="tools-minValue-tools-maxValue"><a href="#tools-minValue-tools-maxValue" class="headerlink" title="tools:minValue / tools:maxValue"></a>tools:minValue / tools:maxValue</h6><p><strong>Intended for:</strong> <em><code>NumberPicker</code></em><br><strong>Used by:</strong> <em>Android Studio layout editor</em><br>设置NumberPicker的最大值和最小值<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">NumberPicker</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/numberPicker"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">tools:minValue</span>=<span class="string">"0"</span></div><div class="line">    <span class="attr">tools:maxValue</span>=<span class="string">"10"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<h6 id="tools-openDrawer"><a href="#tools-openDrawer" class="headerlink" title="tools:openDrawer"></a>tools:openDrawer</h6><p><strong>Intended for:</strong> <em><code>DrawerLayout</code></em><br><strong>Used by:</strong> <em>Android Studio layout editor</em><br>设置<code>DrawerLayout</code>在预览窗口的打开位置</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Constant</th>
+<th style="text-align:center">Value</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">end</td>
+<td style="text-align:center">800005</td>
+<td style="text-align:center">Push object to the end of its container, not changing its size.</td>
+</tr>
+<tr>
+<td style="text-align:center">left</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">Push object to the left of its container, not changing its size.</td>
+</tr>
+<tr>
+<td style="text-align:center">right</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">Push object to the right of its container, not changing its size.</td>
+</tr>
+<tr>
+<td style="text-align:center">start</td>
+<td style="text-align:center">800003</td>
+<td style="text-align:center">Push object to the beginning of its container, not changing its size.</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">android.support.v4.widget.DrawerLayout</span></span></div><div class="line">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/drawer_layout"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">tools:openDrawer</span>=<span class="string">"start"</span> /&gt;</div></pre></td></tr></table></figure>
+<p>下面的不想翻译了，链接在下面<br><a href="https://developer.android.com/studio/write/tool-attributes.html#resource_shrinking_attributes" target="_blank" rel="external">https://developer.android.com/studio/write/tool-attributes.html#resource_shrinking_attributes</a><br>自己撸吧</p>
+<hr>
+<p>以上</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechatpay.png" alt="HuangYuan_xuan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/alipay.png" alt="HuangYuan_xuan 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/30/写在2018元旦之前-2017的总结/" rel="next" title="写在2018元旦之前:2017的总结">
+                <i class="fa fa-chevron-left"></i> 写在2018元旦之前:2017的总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/18/LaTeX笔记-一/" rel="prev" title="LaTeX笔记(一)(准备工作)">
+                LaTeX笔记(一)(准备工作) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODYyMC8xNTE0OA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars0.githubusercontent.com/u/4216225?v=3&s=466"
+                alt="HuangYuan_xuan" />
+            
+              <p class="site-author-name" itemprop="name">HuangYuan_xuan</p>
+              <p class="site-description motion-element" itemprop="description">锱铢必较间接性奋发图强，睚眦必报持续性混吃等死</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/huangyuanlove" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:huangyuan@huangyuanlove.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#android"><span class="nav-number">1.</span> <span class="nav-text">android</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#app"><span class="nav-number">2.</span> <span class="nav-text">app</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools"><span class="nav-number">3.</span> <span class="nav-text">tools</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tools可以干什么"><span class="nav-number"></span> <span class="nav-text">tools可以干什么</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Error-handling-attributes"><span class="nav-number"></span> <span class="nav-text">Error handling attributes</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Design-time-view-attributes-设计时试图属性"><span class="nav-number"></span> <span class="nav-text">Design-time view attributes(设计时试图属性)</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-instead-of-android"><span class="nav-number">1.</span> <span class="nav-text">tools: instead of android</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-context"><span class="nav-number">2.</span> <span class="nav-text">tools:context</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-itemCount"><span class="nav-number">3.</span> <span class="nav-text">tools:itemCount</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-layout"><span class="nav-number">4.</span> <span class="nav-text">tools:layout</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-listitem-tools-listheader-tools-listfooter"><span class="nav-number">5.</span> <span class="nav-text">tools:listitem / tools:listheader / tools:listfooter</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-showIn"><span class="nav-number">6.</span> <span class="nav-text">tools:showIn</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-menu"><span class="nav-number">7.</span> <span class="nav-text">tools:menu</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-minValue-tools-maxValue"><span class="nav-number">8.</span> <span class="nav-text">tools:minValue / tools:maxValue</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tools-openDrawer"><span class="nav-number">9.</span> <span class="nav-text">tools:openDrawer</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangYuan_xuan</span>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数UV:<span id="busuanzi_value_site_uv"></span>PV:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">博客字数统计&#58;</span>
+    
+    <span title="博客字数统计">103.2k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65959286";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
