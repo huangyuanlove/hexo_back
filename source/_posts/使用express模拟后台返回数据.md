@@ -1,7 +1,7 @@
 ---
 title: 使用express模拟后台返回数据
 date: 2018-09-27 14:52:19
-tags: [Android,]
+tags: [Android]
 keywords: 模拟后端,模拟接口数据,express
 ---
 在研发过程中，有时候会遇到前端写完了，但是后端接口还没有完成的情况。一般情况下我们会写一些假数据来填充UI，这种方式没有办法检测网络请求有没有问题。我们可以自己搭一个服务，请求自己的服务来返回一些模拟数据。比如可以使用node和express模块来做。
@@ -24,15 +24,19 @@ keywords: 模拟后端,模拟接口数据,express
 成功后会自动在目标位置创建一个名为myapp的项目并生成很多文件
 ![创建myapp](/image/Android/express/create_myapp.png)
 然后根据提示执行
+
 ``` shell
-cd testExpress && npm install
-``` 
+  cd testExpress && npm install
+```
+
 之后执行 `npm start`
 提示 
+
 ``` shell
 > myapp@0.0.0 start /Users/huangyuan/myapp
 > node ./bin/www
 ```
+
 表示启动服务成功，然后在浏览器输入`http://127.0.0.1:3000`,界面显示`Welcome to Express`说明服务已经启动成功
 
 #### 项目结构
@@ -70,13 +74,24 @@ router.get('/', function(req, res, next) {
 module.exports = router;
 ```
 
+如果我们需要根据请求参数不同返回不同的数据，只要取到请求参数，然后自己构建返回值就好了：在`version.js`中
+``` js
+router.get('/param',function (req,res,next) {
+   res.send(req.query.name)
+});
+```
+
 在`app.js`中注册：
 ``` javaScript
 var versionRouter = require('./routes/version')
 ...
-app.use('/versioninfo',versionRouter)
+app.use('/version',versionRouter)
 ```
+
 需要注意的是在`app.use`方法中传入的第一个参数就是我们要访问的路径
+如果我们请求的路径为 `/version/param?name=xuan`,那么返回值为`xuan`,可以参考官方文档Request中的req.query
+如果我们请求的路径为 `/version`,那么返回值为data的值
+
 重启服务，然后访问一下，如果返回了正确的json数据，说明配置成功。在修改配置或者添加内容的时候，如果再次访问没有成功或者还是原来的内容，注意看一下控制台是不是被304缓存了。
 
 这样我们只需要在研发阶段把地址指向我们自己的服务，联调时指向测试服务器就可以了。
