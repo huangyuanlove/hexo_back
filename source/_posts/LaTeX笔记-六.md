@@ -2,6 +2,7 @@
 title: LaTeX笔记-六(数学公式)
 date: 2018-02-27 16:17:51
 tags: [LaTeX]
+mathjax: true
 keywords: LaTeX数学公式
 ---
 TeX有两种数学公式，一种是夹杂在行文段落中的公式，如$\int f(x) \text{d}x=1$,一般称为**行内(inline)**数学公式，或**正文(in-text)**数学公式;另一种就是像下面这样单独占据郑航居中展示出来，称为**显示**数学公式
@@ -62,7 +63,9 @@ $$ (\overbrace{a_0,a_1,...,a_n}^{\text{共 $n+1$ 项}}) = (\underbrace{0,0,...,0
 在行内公式和显示公式中，分式的大小是不同的。行内分式中分子分母都用较小的字号排版，以免超出文本行的高度。
 连分式是一种特殊的分式，amsmath提供的`\cfrac`专用于输入连分式。这个命令可以带一个可选的参数l、c、r，表示左、中、右，默认是居中，如：
 `$$ \cfrac{1}{1+\cfrac{2}{1+\cfrac{3}{1+x}}} = \cfrac[r]{1}{1+\cfrac{2}{1+\cfrac[l]{3}{1+x}}} $$`
-得到 ![结果](/image/latex/latex_note_six_1.png),`markdown`对这个支持不是很好，结果用图片代替了。
+
+得到  $$ \cfrac{1}{1+\cfrac{2}{1+\cfrac{3}{1+x}}} = \cfrac[r]{1}{1+\cfrac{2}{1+\cfrac[l]{3}{1+x}}} $$
+ ![结果](/image/latex/latex_note_six_1.png),`markdown`对这个支持不是很好，结果用图片代替了。
 还有一些类似分数分成上下两半,如二项式系数$\binom nk$，`amsmath`提供了`\binom`来输入二项式系数，其用法与`\frac`类似:
 ``` tex
 `$$ (a+b)^2 = \binom {20}{02} a^2 + \binom 21 ab + \binom 22 b^2 $$`
@@ -91,23 +94,26 @@ $$ \sqrt[\uproot{16}\leftroot{-2}n] {\frac{x^2 + \sqrt 2}{x+y}} $$
 
 |环境|代码|结果|
 |:----:|:----:|:----:|
-|matrix|`$$\begin{matrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{matrix}$$`|$$\begin{matrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{matrix}$$|
-|bmatrix|`$$\begin{bmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{bmatrix}$$`|$$\begin{bmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{bmatrix}$$|
-|vmatrix|`$$\begin{vmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{vmatrix}$$`|$$\begin{vmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{vmatrix}$$|
-|pmatrix|`$$\begin{pmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{pmatrix}$$`|$$\begin{pmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{pmatrix}$$|
-|Bmatrix|`$$\begin{Bmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{Bmatrix}$$`|$$\begin{Bmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{Bmatrix}$$|
-|Vmatrix|`$$\begin{Vmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{Vmatrix}$$`|$$\begin{Vmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{Vmatrix}$$|
+|matrix|`$$\begin{matrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{matrix}$$`|$$\begin{matrix} 1&0&0\\\\ 0&1&0\\\\ 0&0&1\\\\ \end{matrix}$$|
+|bmatrix|`$$\begin{bmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{bmatrix}$$`|$$\begin{bmatrix} 1&0&0\\\\ 0&1&0\\\\ 0&0&1\\\\ \end{bmatrix}$$|
+|vmatrix|`$$\begin{vmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{vmatrix}$$`|$$\begin{vmatrix} 1&0&0\\\\ 0&1&0\\\\ 0&0&1\\\\ \end{vmatrix}$$|
+|pmatrix|`$$\begin{pmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{pmatrix}$$`|$$\begin{pmatrix} 1&0&0\\\\ 0&1&0\\\\ 0&0&1\\\\ \end{pmatrix}$$|
+|Bmatrix|`$$\begin{Bmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{Bmatrix}$$`|$$\begin{Bmatrix} 1&0&0\\\\ 0&1&0\\\\ 0&0&1\\\\ \end{Bmatrix}$$|
+|Vmatrix|`$$\begin{Vmatrix} 1&0&0\\ 0&1&0\\ 0&0&1\\ \end{Vmatrix}$$`|$$\begin{Vmatrix} 1&0&0\\\\ 0&1&0\\\\ 0&0&1\\\\ \end{Vmatrix}$$|
 
 在矩阵环境中，不同的列用符号`&`分隔，行用`\\`分隔，矩阵中每列元素居中对齐，例如：
 
 ``` tex
-$$\begin{pmatrix} 
- a_{11} & a_{12} & a_{13} \\ 
- 0 & a_{22} & a_{23}      \\ 
- 0 & 0 & a_{33}           \\ 
- \end{pmatrix}$$
+$$\begin{Vmatrix} 
+ A_1 & A_2 & A_3 \\ 
+ B_1 & B_2 & B_3 \\ 
+ C_1 & C_2 & C_3 \\ 
+ \end{Vmatrix}$$
  ```
-![矩阵](/image/latex/latex_note_six_2.png)
+
+$$\begin{Vmatrix}  A_1&A_2&A_3\\\\  B_1&B_2&B_3\\\\  C_1&C_2&C_3\\\\  \end{Vmatrix}$$
+
+
 在矩阵中经常使用各种省略号即`\dots`、`\vdots`、`\ddots`、`\iddots`,amsmath还提供了可以跨多列的省略号`\hdotsfor{<列数>}`，在行公式中，有时需要使用很小的矩阵，这可以由amsmath提供的`smallmatrix`环境得到.
 
 -----
