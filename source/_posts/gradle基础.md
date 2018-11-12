@@ -1,8 +1,7 @@
 ---
 title: gradle基础
-tags: []
-photos:
-  - null
+tags: [gradle,Android]
 date: 2018-11-11 17:21:04
-keywords:
+keywords: gradle基础,Android构建脚本
 ---
+
