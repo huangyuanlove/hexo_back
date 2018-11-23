@@ -76,7 +76,5 @@ task temp{}
 temp.doLast{}
 //第二种方式
 tasks['temp'].doLast{}
-
-
 ```
 

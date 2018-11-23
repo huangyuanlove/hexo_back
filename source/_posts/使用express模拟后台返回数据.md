@@ -55,7 +55,7 @@ app.use('/users', usersRouter);
 
 #### 仿写
 仿造上面两个示例，我们可以写点其他的东西。
-在`routes`文件夹下新建`verson.js`,内如如下：
+在`routes`文件夹下新建`version.js`,内如如下：
 
 ``` javaScript
 var express = require('express');
