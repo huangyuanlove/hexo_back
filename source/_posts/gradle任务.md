@@ -261,3 +261,193 @@ class CustomTask extends DefaultTask{
 
 可以看到，doFirst每次都添加到list的最前面，doLast每次都添加到最后面。最后这个actions list就按照顺序形成了doFirst、doSelf、doLast三部分的Actions。
 
+#### 任务排序
+
+这个并没有真正实现排序功能，而是通过`shouldRunAfter`和`mustRunAfter`这两个方法，他们可以控制一个任务应该或者一定在某个任务之后执行。
+
+`taskB.mustRunAfter(taskA)`表示`taskB`必须在`taskA`执行之后执行，这个规则比较严格
+
+#### 任务的启用和禁用
+
+Task中有个`enable`属性，用于启用和禁用任务，默认是`true`，表示启用，设置为`false`，则禁止该任务执行，输出会提示该任务被跳过。
+
+#### 任务的onlyIf断言
+
+断言就是一个条件表达式，Task有一个`onlyIf`方法，它接受一个闭包作为参数，如果该闭包返回true则执行该任务，否则跳过。
+
+假如我们首发渠道是应用宝，直接build会编译出来所有包，现在我们就采用onlyIf的方式通过属性来控制：
+
+``` groovy
+final String BUILD_APP_ALL = "all";
+final String BUILD_APP_SHOUFA = "shoufa";
+final String BUILD_APP_EXCLUDE_SHOUFA="exclude_shoufa";
+
+task qqRelease <<{
+    println "应用宝"
+}
+
+task baiduRelease <<{
+    println "百度"
+}
+
+task huaweiRelease <<{
+    println "华为"
+}
+
+task miuiRelease <<{
+    println "小米"
+}
+
+task test <<{
+    group BasePlugin.BUILD_GROUP
+    description "打渠道包"
+}
+
+test.dependsOn qqRelease,baiduRelease,huaweiRelease,miuiRelease
+
+qqRelease.onlyIf {
+    def execute = false;
+
+    if(project.hasProperty("build_apps")){
+        Object buildApp = project.property("build_apps")
+        if(BUILD_APP_SHOUFA.equals(buildApp) || BUILD_APP_ALL.equals(buildApp)){
+            execute = true
+        }else{
+            execute = false
+        }
+    }else{
+        execute = true
+    }
+    execute
+}
+
+baiduRelease.onlyIf {
+    def execute = false;
+    
+    if(project.hasProperty("build_apps")){
+
+        String buildApp = project.property("build_apps")
+        if(BUILD_APP_SHOUFA.equals(buildApp) || BUILD_APP_ALL.equals(buildApp)){
+            execute = true
+            
+        }else{
+            execute = false
+            
+        }
+    }else{
+        execute = true
+        
+    }
+    execute
+
+}
+
+huaweiRelease.onlyIf {
+    def execute = false;
+
+    if(project.hasProperty("build_apps")){
+        Object buildApp = project.property("build_apps")
+        if(BUILD_APP_EXCLUDE_SHOUFA.equals(buildApp) || BUILD_APP_ALL.equals(buildApp)){
+            execute = true
+        }else{
+            execute = false
+        }
+    }else{
+        execute = true
+    }
+    execute
+}
+
+miuiRelease.onlyIf {
+    def execute = false;
+
+    if(project.hasProperty("build_apps")){
+        Object buildApp = project.property("build_apps")
+        if(BUILD_APP_EXCLUDE_SHOUFA.equals(buildApp) || BUILD_APP_ALL.equals(buildApp)){
+            execute = true
+        }else{
+            execute = false
+        }
+    }else{
+        execute = true
+    }
+    execute
+}
+```
+
+上面定义了4个渠道，其中百度和应用宝是首发，通过build_apps属性来控制要打哪些渠道包
+
+>//打所有渠道包
+>
+>gradle test
+>
+>gradle -P build_apps=all test
+>
+>//打首发包
+>
+>gradle -P build_apps=shoufa test
+>
+>//打非首发包
+>
+>gradle -P build_apps=exclude_shoufa test
+
+命令行中的-P意思是为Project执行K-V格式属性的键值对
+
+#### 任务规则
+
+我们知道创建的人物都爱TaskContainer里，是由其进行管理的，所以当我们访问任务的时候都是通过TaskContainer进行访问，而TaskContainer又是一个NamedDomainObjectCollection，所以我们说的任务规则其实就是NamedDomainObjectCollection的规则。
+
+NamedDomainObjectCollection是一个具有唯一不变名字的域对象的集合，它里面所有的元素都有一个唯一不变的名字，该名字是String类型，所以我们可以通过名字获取该元素。但是这个唯一的名字可能不存在，具体到任务中就是说你想获取的这个任务不存在，这时候就会调用我们添加的规则来处理这种异常情况。
+
+``` java	
+public T findName(String name){
+    T value = findByNameWithoutRules(name);
+    if(value != null){
+        return value;
+    }
+    applyRules(name);
+    return findByNameWithoutRules(name);
+}
+```
+
+以名字查找的时候，如果没有找到则调用applyRules(name)应用我们添加的规则。
+
+我们可以通过调用addRule来添加我们自定义的规则，它有两个用法:
+
+``` java
+ /**
+     * Adds a rule to this collection. The given rule is invoked when an unknown object is requested by name.
+     *
+     * @param rule The rule to add.
+     * @return The added rule.
+     */
+    Rule addRule(Rule rule);
+
+    /**
+     * Adds a rule to this collection. The given closure is executed when an unknown object is requested by name. The
+     * requested name is passed to the closure as a parameter.
+     *
+     * @param description The description of the rule.
+     * @param ruleAction The closure to execute to apply the rule.
+     * @return The added rule.
+     */
+    Rule addRule(String description, Closure ruleAction);
+```
+
+一个是直接添加一个Rule，另一个是通过闭包配置成一个Rule再添加，两种方式大同小异。
+
+当我们执行、依赖一个不存在的任务时，Gradle会执行失败，失败信息是任务不存在。我们使用规则对其进行改造，不会执行失败，而是打印提示信息：
+
+``` groovy
+tasks.addRule("对该规则的一个描述"){
+    String taskName ->
+        task(taskName) <<{
+            println("该${taskName}任务不存在，请查证后再执行")
+        }
+}
+
+task testA {
+    dependsOn missTask
+}
+```
+
