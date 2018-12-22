@@ -105,7 +105,7 @@ deploy:
   branch: master
 
 # Swiftype Search Key
-swiftype_key: LoCFNsvjbeYQpYd-Wuxs
+#swiftype_key: LoCFNsvjbeYQpYd-Wuxs
 
 index_generator:
   per_page: 10
@@ -117,3 +117,10 @@ archive_generator:
 
 tag_generator:
   per_page: 10
+
+algolia:
+  applicationID: 'LO7AODH922'
+  apiKey: 'eef0d8a75f8bcbfe584416f372bf56e7'
+  indexName: 'blog'
+  chunkSize: 5000
+
