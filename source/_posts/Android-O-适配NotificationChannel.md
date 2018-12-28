@@ -247,3 +247,62 @@ nm.getNotificationChannel(localPackageName, appUid,localForegroundNoti.getChanne
 从Android 8.0系统开始，Google引入了通知渠道这个概念。
 
 什么是通知渠道呢？顾名思义，就是每条通知都要属于一个对应的渠道。每个App都可以自由地创建当前App拥有哪些通知渠道，但是这些通知渠道的控制权都是掌握在用户手上的。用户可以自由地选择这些通知渠道的重要程度，是否响铃、是否振动、或者是否要关闭这个渠道的通知。
+
+Google这次对于8.0系统通知渠道的推广态度还是比较强硬的。
+
+首先，如果你升级了appcompat库，那么所有使用appcompat库来构建通知的地方全部都会进行废弃方法提示，如下所示：
+
+![通知](/image/Android/NotificationChanel/Notification_build.png  "startForeground通知")
+
+##### 创建NotificationChannel
+
+创建NotificationChannel对象(不必每次创建)，并且创建通知渠道的代码只在第一次执行的时候才会创建，以后每次执行创建代码系统会检测到该通知渠道已经存在了，因此不会重复创建，也并不会影响任何效率。
+
+``` java
+if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.O) {
+	String channelId="take_photo";
+	String channelName="拍照选择图片";
+	int importance = NotificationManager.IMPORTANCE_LOW;
+	NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+	NotificationManager notificationManager = (NotificationManager) 		getSystemService(NOTIFICATION_SERVICE);
+	notificationManager.createNotificationChannel(channel);
+    Notification nf =   new Notification.Builder(this,channelId).build();
+    notificationManager.notify(1,nf);
+}
+```
+
+首先要确保的是当前手机的系统版本必须是Android 8.0系统或者更高，因为低版本的手机系统并没有通知渠道这个功能，不做系统版本检查的话会在低版本手机上造成崩溃。创建一个通知渠道至少需要渠道ID、渠道名称以及重要等级这三个参数，其中渠道ID可以随便定义，只要保证全局唯一性就可以。渠道名称是给用户看的，需要能够表达清楚这个渠道的用途。重要等级的不同则会决定通知的不同行为，当然这里只是初始状态下的重要等级，用户可以随时手动更改某个渠道的重要等级，App是无法干预的。
+
+创建通知的代码就不再多做解释了，和传统创建通知的方法没什么两样，只是在NotificationCompat.Builder中需要多传入一个通知渠道ID，那么这里我们传入刚刚创建的渠道ID。
+
+##### 管理通知渠道
+
+通知渠道一旦创建之后就不能再通过代码修改了，如果用户不小心关闭了该渠道，我们可以通知用户手动去修改，就像动态权限申请一样：
+
+``` java
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+	NotificationChannel channel = manager.getNotificationChannel("chat");
+    if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+    	Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+        intent.putExtra(Settings.EXTRA_CHANNEL_ID, channel.getId());
+        startActivity(intent);
+        Toast.makeText(this, "请手动将通知打开", Toast.LENGTH_SHORT).show();
+    }
+}
+```
+
+通过getNotificationChannel()方法获取到了NotificationChannel对象，然后就可以读取该通知渠道下的所有配置了。这里我们判断如果通知渠道的importance等于IMPORTANCE_NONE，就说明用户将该渠道的通知给关闭了，这时会跳转到通知的设置界面提醒用户手动打开。
+
+Android 8.0还赋予了我们删除通知渠道的功能，只需使用如下代码即可删除：
+
+``` java
+NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+manager.deleteNotificationChannel(channelId);
+```
+
+NotificationChannel章节参考 https://mp.weixin.qq.com/s/PG8XxHEHpijL4AMZ4AGP8g
+
+----
+
+以上
