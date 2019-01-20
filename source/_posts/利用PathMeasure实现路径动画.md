@@ -2,7 +2,7 @@
 title: 利用PathMeasure实现路径动画
 tags: [Android,animator]
 photos:
-  - "http://www.baidu.com"
+  - /image/Android/PathMeasure/path_measure.gif
 date: 2019-01-04 21:47:21
 keywords: Android,PathMeasure,动画,路径动画
 ---
@@ -78,6 +78,7 @@ pathMeasure.nextContour()得到的曲线的顺序与添加到Path中的顺序相
 得到：
 ![getSegment](/image/Android/PathMeasure/dst.png  "getSegment")
 如果dst路径不为空
+
 ``` java
 Path dst = new Path();
 dst.lineTo(10,100);
