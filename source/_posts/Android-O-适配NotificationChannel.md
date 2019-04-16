@@ -259,16 +259,34 @@ Google这次对于8.0系统通知渠道的推广态度还是比较强硬的。
 创建NotificationChannel对象(不必每次创建)，并且创建通知渠道的代码只在第一次执行的时候才会创建，以后每次执行创建代码系统会检测到该通知渠道已经存在了，因此不会重复创建，也并不会影响任何效率。
 
 ``` java
-if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.O) {
-	String channelId="take_photo";
-	String channelName="拍照选择图片";
-	int importance = NotificationManager.IMPORTANCE_LOW;
-	NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-	NotificationManager notificationManager = (NotificationManager) 		getSystemService(NOTIFICATION_SERVICE);
-	notificationManager.createNotificationChannel(channel);
-    Notification nf =   new Notification.Builder(this,channelId).build();
-    notificationManager.notify(1,nf);
-}
+ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "take_photo";
+            String channelName = "拍照选择图片";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationManager
+                    notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
+            if (channel == null) {
+                channel = new NotificationChannel(channelId, channelName, importance);
+            }
+            notificationManager.createNotificationChannel(channel);
+            if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, channel.getId());
+                startActivity(intent);
+                Toast.makeText(this, "请手动将通知打开", Toast.LENGTH_SHORT).show();
+            } else {
+                Notification nf = new Notification.Builder(this, channelId)
+                        .setContentText("setContentText")
+                        .setSettingsText("setSettingsText")
+                        .setContentTitle("setContentTitle")
+                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .build();
+                notificationManager.notify(1, nf);
+            }
+        }
+    }
 ```
 
 首先要确保的是当前手机的系统版本必须是Android 8.0系统或者更高，因为低版本的手机系统并没有通知渠道这个功能，不做系统版本检查的话会在低版本手机上造成崩溃。创建一个通知渠道至少需要渠道ID、渠道名称以及重要等级这三个参数，其中渠道ID可以随便定义，只要保证全局唯一性就可以。渠道名称是给用户看的，需要能够表达清楚这个渠道的用途。重要等级的不同则会决定通知的不同行为，当然这里只是初始状态下的重要等级，用户可以随时手动更改某个渠道的重要等级，App是无法干预的。
