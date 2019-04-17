@@ -62,14 +62,6 @@ P版本应用在sd卡根目录保存的应用数据卸载时不会被清除，�
 
 ![卸载app提示](/image/Android/adaptation/uninstall_apk_dialog.png)
 
-
-
-
-
-
-
-
-
 #### 拍照、选择图片(TakePhotoOrChoosePhotoActivity)
 
 在Android6.0动态申请权限，Android7.0严格模式之后，拍照出现了问题，要么是没有权限存储图片，要么是返回的uri是空的，或者抛出如下异常：
