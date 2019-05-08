@@ -22,24 +22,24 @@ keywords: flutter性能,flutter优化
 ```
 flutter run --profile --trace-skia
 ```
-![flutter run --profile --trace-skia](image/flutter/trace_skia.png) 
+![flutter run --profile --trace-skia](/image/flutter/trace_skia.png) 
 
 **可在浏览器中查看** 
 打开上图的中地址
 
-![trace_skia_view](image/flutter/trace_skia_view.png) 
+![trace_skia_view](/image/flutter/trace_skia_view.png) 
 
 **全选一下** 
 
-![trace_skia_timeline.png](image/flutter/trace_skia_timeline.png) 
+![trace_skia_timeline.png](/image/flutter/trace_skia_timeline.png) 
 
 **操作一下应用，然后点击浏览器又上角Refresh** 
 
-![skia_invoke](image/flutter/skia_invoke.png) 
+![skia_invoke](/image/flutter/skia_invoke.png) 
 
 这里可以看到最底层的skia函数调用情况。 
 很多同学问怎么放大函数调用的时间区域(把时间线加长)
-![skia_invoke](image/flutter/trace_skia_tools.png) 
+![skia_invoke](/image/flutter/trace_skia_tools.png) 
 这里有四个选项，
 第一个是选择区域，当你选中这个选项，然后按住鼠标左键在时间线上选择，就可以选中一段时间，和PS中的区域选择工具很像。
 第二个是移动区域，当你选中这个选项，然后按住鼠标左键在下面有颜色的地方拖动，就可以拖动时间线
@@ -57,7 +57,7 @@ flutter run --profile --trace-skia
 flutter screenshot --type=skia --observatory-port=<port>
 ```
 
-![flutter screenshot](image/flutter/flutter_screenshot.png) 
+![flutter screenshot](/image/flutter/flutter_screenshot.png) 
 
 这里会生成一个skp文件，文件可以在https://debugger.skia.org/ 这里进行分析。如果网络不好的话可以在本地起一个服务，需要自己编译一下skia。 
 
@@ -110,7 +110,7 @@ out/Release/skiaserve
 skia编译教程https://skia.org/dev/tools/debugger 
 选择上一步导出的spk文件并上传，
 
-![skp](image/flutter/skia_debugger.png) 
+![skp](/image/flutter/skia_debugger.png) 
 
 可以分析每一步进行了哪些操作，有哪些重复绘制 
 
