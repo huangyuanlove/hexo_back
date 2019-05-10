@@ -100,9 +100,13 @@ feed:
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git
+- type: git
   repository: git@github.com:huangyuanlove/huangyuanlove.github.io.git
   branch: master
+- type: coding
+  repository: git@git.coding.net:huangyuanlove/huangyuanlove.git
+  branch: pages
+
 
 # Swiftype Search Key
 #swiftype_key: LoCFNsvjbeYQpYd-Wuxs
