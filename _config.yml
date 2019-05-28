@@ -103,9 +103,9 @@ deploy:
 - type: git
   repository: git@github.com:huangyuanlove/huangyuanlove.github.io.git
   branch: master
-- type: coding
+- type: git
   repository: git@git.coding.net:huangyuanlove/huangyuanlove.git
-  branch: pages
+  branch: master
 
 
 # Swiftype Search Key

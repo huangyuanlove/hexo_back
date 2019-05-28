@@ -1,5 +1,5 @@
 {% if page.comments %}
-
+{% include '../_custom/google_adsense.swig' %}
   {% if (theme.duoshuo and theme.duoshuo.shortname) or theme.duoshuo_shortname %}
     <div class="comments" id="comments">
       <div class="ds-thread" data-thread-key="{{ page.path }}"
