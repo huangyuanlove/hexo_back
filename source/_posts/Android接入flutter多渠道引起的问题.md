@@ -77,3 +77,4 @@ A/flutter: [FATAL:flutter/shell/common/shell.cc(218)] Check failed: vm. Must be 
 2019-06-19 18:00:22.204 27335-27783/me.chunyu.ChunyuDoctor E/CrashReport: #++++++++++++++++++++++++++++++++++++++++++#
 ```
 
+https://www.jianshu.com/p/273c462896c3
