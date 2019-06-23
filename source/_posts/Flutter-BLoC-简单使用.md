@@ -1,6 +1,6 @@
 ---
 title: Flutter BLoC 简单使用
-tags: [Android,flutter]
+tags: [Android,Flutter]
 date: 2019-05-08 14:34:49
 keywords: 跨平台,Android,flutter
 ---

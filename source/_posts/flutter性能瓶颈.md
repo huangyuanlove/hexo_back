@@ -1,6 +1,6 @@
 ---
 title: flutter性能瓶颈
-tags: [Android,flutter]
+tags: [Android,Flutter]
 date: 2019-04-18 19:34:37
 keywords: flutter性能,flutter优化
 ---

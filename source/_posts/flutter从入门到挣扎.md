@@ -1,6 +1,6 @@
 ---
 title: flutter从入门到挣扎
-tags: [Android,flutter]
+tags: [Android,Flutter]
 photos:
   - /image/flutter/flutter.png
 date: 2019-03-13 19:22:31
