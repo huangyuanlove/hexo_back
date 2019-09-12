@@ -1,14 +1,38 @@
+.site-nav-toggle {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  +tablet() {
+    display: block;
+  }
+}
+
 .site-nav {
   border-top: none;
 
   +tablet() {
-    display: none !important;
+    display: none;
   }
 }
 
-.site-nav-on {
-  +tablet() {
-    display: block !important;
+.menu-item-active a {
+  background: #f9f9f9;
+  border-bottom-color: white;
+  $badges = hexo-config('menu_settings.badges');
+
+  if (!$badges) {
+    &::after {
+      background-color: $grey;
+      border-radius: 50%;
+      content: ' ';
+      height: 6px;
+      margin-top: -3px;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      width: 6px;
+    }
   }
 }
 
@@ -16,52 +40,43 @@
   display: block;
   margin: 0;
 
-  a {
-    position: relative;
+  a, span.exturl {
     box-sizing: border-box;
-    padding: 5px 20px;
-    text-align: left;
     line-height: inherit;
+    padding: 5px 20px;
+    position: relative;
+    text-align: left;
     transition-property: background-color;
     the-transition();
 
     &:hover {
-      background: #f9f9f9;
-      border-bottom-color: white;
+      @extend .menu-item-active a;
     }
+
+    disable-touch-hover();
   }
 
-  br { display: none; }
-}
+  .badge {
+    background-color: $grey-light;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    float: right;
+    font-weight: $font-weight-bolder;
+    line-height: 1;
+    margin: .35em 0 0 0;
+    padding: 2px 5px;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
 
-.menu-item-active a {
-  @extend .menu .menu-item a:hover;
-
-  &:after {
-    content: " ";
-    position: absolute;
-    top: 50%;
-    margin-top: -3px;
-    right: 15px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: $grey;
+  br {
+    display: none;
   }
 }
 
 .btn-bar {
   background-color: white;
-}
-
-.site-nav-toggle {
-  left: 20px;
-  top: 50%;
-
-  -webkit-transform:  translateY(-50%);
-  transform:  translateY(-50%);
-
-  +tablet() {
-    display: block;
-  }
 }

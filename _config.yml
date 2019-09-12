@@ -7,7 +7,7 @@ title: 放码过来
 subtitle: 技术宅 huangyuan@huangyuanlove.com
 description: 锱铢必较间接性奋发图强，睚眦必报持续性混吃等死
 author: HuangYuan_xuan
-language: zh-Hans
+language: zh-CN
 email: huangyuan@huangyuanlove.com
 
 # URL
@@ -82,10 +82,11 @@ theme: next
 exclude_generator:
 # Extensions
 Plugins:
-- hexo-generator-feed
-- hexo-generate-feed
-- hexo-generator-baidu-sitemap
-- hexo-generator-sitemap
+  - hexo-generator-feed
+  - hexo-generate-feed
+  - hexo-generator-baidu-sitemap
+  - hexo-generator-sitemap
+
 #sitemap
 sitemap:
   path: sitemap.xml
@@ -128,3 +129,16 @@ algolia:
   indexName: 'blog'
   chunkSize: 5000
 
+# mermaid chart
+mermaid: ## mermaid url https://github.com/knsv/mermaid
+  enable: true  # default true
+  version: "7.1.2" # default v7.1.2
+  options:  # find more api options from https://github.com/knsv/mermaid/blob/master/src/mermaidAPI.js
+    #startOnload: true  // default true
+
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
+  exclude_codeblock: false

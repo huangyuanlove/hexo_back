@@ -1,17 +1,15 @@
 //
 // Layout
 // Note: Must name this file "outline" instead of "layout"
-//       Or Hexo will use it as template layout.
+// Or Hexo will use it as template layout.
 // =================================================
-
-
-html, body { height: 100%; }
+html, body {
+  height: 100%;
+}
 
 .container {
   position: relative;
-  min-height: 100%;
 }
-
 
 // Header Section
 // --------------------------------------------------
@@ -21,38 +19,57 @@ html, body { height: 100%; }
   width: $content-desktop;
 
   +desktop-large() {
-    .container & { width: $content-desktop-large; }
+    .container & {
+      width: $content-desktop-large;
+    }
+  }
+
+  +desktop-largest() {
+    .container & {
+      width: $content-desktop-largest;
+    }
   }
 }
 
 // Main Section
 // --------------------------------------------------
-.main { padding-bottom: $footer-height + $gap-between-main-and-footer; }
 .main-inner {
   margin: 0 auto;
   width: $content-desktop;
 
   +desktop-large() {
-    .container & { width: $content-desktop-large; }
+    .container & {
+      width: $content-desktop-large;
+    }
+  }
+
+  +desktop-largest() {
+    .container & {
+      width: $content-desktop-largest;
+    }
   }
 }
-
 
 // Footer Section
 // --------------------------------------------------
 .footer {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  min-height: $footer-height;
+  padding: 20px 0;
 }
+
 .footer-inner {
   box-sizing: border-box;
-  margin: 20px auto;
+  margin: 0 auto;
   width: $content-desktop;
 
   +desktop-large() {
-    .container & { width: $content-desktop-large; }
+    .container & {
+      width: $content-desktop-large;
+    }
+  }
+
+  +desktop-largest() {
+    .container & {
+      width: $content-desktop-largest;
+    }
   }
 }
