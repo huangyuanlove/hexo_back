@@ -22,7 +22,7 @@ keywords: [自定义View,贝塞尔曲线,波浪动画,望远镜效果]
 
 3. 三阶贝塞尔曲线
 
-   $B(t)=P_0(1-t)^3+3P_1t(1-t)^2+  3P_2t^2P_2(1-t)+P_3t^3,t\in[0,1]$
+   $B(t)=P_0(1-t)^3+3P_1t(1-t)^2+  3P_2t^2(1-t)+P_3t^3,t\in[0,1]$
 
    ![三阶贝塞曲线](/image/Android/customview/Bézier_curve_3.gif)
 

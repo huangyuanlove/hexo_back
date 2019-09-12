@@ -1,3 +1,5 @@
 db.json
 3973ea517f1b375cceaed9ea05784d47
 themes/.idea/
+.deploy_git/
+public/
