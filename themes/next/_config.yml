@@ -321,7 +321,7 @@ symbols_count_time:
   wpm: 275
 
 # Use icon instead of the symbol # to indicate the tag at the bottom of the post
-tag_icon: false
+tag_icon: true
 
 # Wechat Subscriber
 wechat_subscriber:
@@ -407,8 +407,8 @@ calendar:
 # Set the text alignment in posts / pages.
 text_align:
   # Available values: start | end | left | right | center | justify | justify-all | match-parent
-  desktop: justify
-  mobile: justify
+  desktop: start
+  mobile: start
 
 # Reduce padding / margin indents on devices with narrow width.
 mobile_layout_economy: false
@@ -429,14 +429,14 @@ codeblock:
   # Code Highlight theme
   # Available values: normal | night | night eighties | night blue | night bright
   # See: https://github.com/chriskempson/tomorrow-theme
-  highlight_theme: normal
+  highlight_theme: night
   # Add copy button on codeblock
   copy_button:
-    enable: false
+    enable: true
     # Show text copy result.
-    show_result: false
+    show_result: true
     # Available values: default | flat | mac
-    style:
+    style: mac
 
 back2top:
   enable: true
@@ -447,7 +447,7 @@ back2top:
 
 # Reading progress bar
 reading_progress:
-  enable: false
+  enable: true
   # Available values: top | bottom
   position: top
   color: "#37c6c0"
@@ -488,7 +488,7 @@ font:
   enable: false
 
   # Uri of fonts host, e.g. //fonts.googleapis.com (Default).
-  host:
+  host: 
 
   # Font options:
   # `external: true` will load this font family from `host` above.
@@ -498,14 +498,14 @@ font:
   # Global font settings used for all elements inside <body>.
   global:
     external: true
-    family: Lato
-    size:
+    family: Courier New
+    size: 0.9
 
   # Font settings for site title (.site-title).
   title:
     external: true
-    family:
-    size:
+    family: Times New Roman
+    size: 1.0
 
   # Font settings for headlines (<h1> to <h6>).
   headings:
@@ -516,12 +516,12 @@ font:
   # Font settings for posts (.post-body).
   posts:
     external: true
-    family:
+    family: 
 
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family:
+    family: Trebuchet MS
 
 
 # ---------------------------------------------------------------
