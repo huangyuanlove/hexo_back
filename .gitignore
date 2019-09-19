@@ -3,3 +3,4 @@ db.json
 themes/.idea/
 .deploy_git/
 public/
+node_modules
