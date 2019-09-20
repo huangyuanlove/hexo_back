@@ -203,6 +203,10 @@ FlutterBoost.init(new Platform(){...})
 
 最终调用了这里面的`openContainer`方法，将路由处理交给了原生。
 
+总结：
+
+在flutter中调用 `FlutterBoost.singleton.open` 方法，通过`channel`调用原生，这里的channel的实现类是`BoostChannel`,在其初始化时注册的methodHandler。 调用原生`FlutterBoost.BoostMethodHandler`中的`onMethodCall()`中的`case  'openPage'`,然后`mManager.openContainer`，之后就是 `FlutterBoost.singleton().platform().openContainer(context,url,urlParams,requestCode,exts);`
+
 
 ##### 在flutter中关闭页面
 
