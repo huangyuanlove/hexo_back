@@ -268,12 +268,3 @@ public void closeContainer(IContainerRecord record, Map<String, Object> result, 
 当打开FlutterView的容器(这里是我们自己继承自`BoostFlutterActivity`的类，实现了`finishContainer()`方法)，在`BoostFlutterActivity.onCreate()`中，调用
 ` FlutterBoost.singleton().containerManager().generateSyncer(this);`,将当前的容器放在`FlutterViewContainerManager`中，并且记录上面讲到唯一标示
 当关闭容器的时候，则从里面查找到对应的容器，执行finishContainer()。
-
-
-``` mermaid
-
-graph LR
-	a --- b
-```
-
-
