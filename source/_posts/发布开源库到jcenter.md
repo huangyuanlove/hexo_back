@@ -14,16 +14,57 @@ keywords: [jcenter,开源库到jcenter,jitpack]
 ####  准备
 
 1. 首先注册个账号，打开官网首页，点击白色的`Sign Up Here`而不是那个大绿色的按钮(START YOUR FREE TRIAL)
-2. 填完信息后到邮箱激活一下账号、登录、
-3. 创建一个仓库
-4. 复制自己的api key
-#### 上传到bintray
-1. 在AndroidStudio工程和module中配置
-2. 执行`./gradlew clean build bintrayUpload -PbintrayUser=huangyuanlove -PbintrayKey=apiKey -PdryRun=false`
+2. 填完信息后到邮箱激活一下账号、登录。
+3. 创建一个仓库，仓库名随意，Type选择Maven，Licenses和Description选填。
+4. 复制自己的api key。
+![api key](/image/jcenter/get_jfrog_api_key.png)
+在首页点击"edit"，在新页面左侧`API Key`,输入密码，复制一下
 
+#### 上传到bintray
+
+1. 在AndroidStudio工程和module中配置
+	在工程的build.gradle中添加`classpath 'com.novoda:bintray-release:0.9.1'`
+	在要上传的lib module中添加
+
+	``` groovy
+	apply plugin: 'java-library'
+	apply plugin: 'com.novoda.bintray-release' //添加
+	dependencies {
+	    implementation fileTree(dir: 'libs', include: ['*.jar'])
+	}
+	...
+	...
+	
+	//添加
+	//其他人引用的格式为 groupId:artifactId:publishVersion
+	publish {
+	    userOrg = 'huangyuanlove' //JFrogBintray的用户名
+	    repoName = 'AndroidAnnotation' //上面创建的仓库名
+	    groupId = 'com.huangyuanlove' 
+	    artifactId = 'view-inject-annotation'
+	    publishVersion = '0.0.2'
+	    desc = 'Make flow layouts simpler'
+	    website = 'https://github.com/huangyuanlove/AndroidAnnotation'
+	}
+	```
+	
+	
+	
+2. 执行`./gradlew clean build bintrayUpload -PbintrayUser=username -PbintrayKey=apiKey -PdryRun=false`
+
+3. 等待执行成功，提示successful
 
 #### 发布到jcenter
-1. 在自己的bintray仓库中找到这个包，点击 add to jcenter
-2. 稍等一会就好了
 
-#### 
+![packages in repository](/image/jcenter/package_in_repository.png)
+
+1. 在自己的bintray仓库中找到这个包，进入详情页
+
+   ![packages in repository](/image/jcenter/add_to_jcenter.png)
+
+2. 点击右上角`Actions`菜单，选择`Add to Jcenter`，在弹出框点击`send`
+
+3. 审核结果会以站内信的形式通知你，不通过的话会告诉你原因。自己刚开始发布的版本含有`preview`，审核不通过，建议经过详细测试之后再提交
+
+----
+以上
