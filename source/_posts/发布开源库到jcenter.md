@@ -15,11 +15,15 @@ keywords: [jcenter,开源库到jcenter,jitpack]
 
 1. 首先注册个账号，打开官网首页，点击白色的`Sign Up Here`而不是那个大绿色的按钮(START YOUR FREE TRIAL)
 2. 填完信息后到邮箱激活一下账号、登录、
-
+3. 创建一个仓库
+4. 复制自己的api key
 #### 上传到bintray
-
+1. 在AndroidStudio工程和module中配置
+2. 执行`./gradlew clean build bintrayUpload -PbintrayUser=huangyuanlove -PbintrayKey=apiKey -PdryRun=false`
 
 
 #### 发布到jcenter
+1. 在自己的bintray仓库中找到这个包，点击 add to jcenter
+2. 稍等一会就好了
 
 #### 
