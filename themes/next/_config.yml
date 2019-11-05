@@ -807,7 +807,7 @@ tencent_mta: # <app_id>
 # Algolia Search
 # For more information: https://www.algolia.com
 algolia_search:
-  enable: false
+  enable: true
   hits:
     per_page: 10
   labels:
