@@ -408,3 +408,73 @@ public final class WordDAO_Impl implements WordDAO {
 
 
 
+#### @Database编译后生成的类
+
+我们定义的`WordRoomDatabase`类在编译后生成了`WordRoomDatabase_Impl`类，我们来看一下类的内容
+
+``` java
+public final class WordRoomDatabase_Impl extends WordRoomDatabase {
+  private volatile WordDAO _wordDAO;
+
+  private volatile ManDAO _manDAO;
+
+  @Override
+  protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
+   
+      @Override
+      protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
+        
+    final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
+        .name(configuration.name)
+        .callback(_openCallback)
+        .build();
+    final SupportSQLiteOpenHelper _helper = configuration.sqliteOpenHelperFactory.create(_sqliteConfig);
+    return _helper;
+  }
+
+  @Override
+  protected InvalidationTracker createInvalidationTracker() {
+    final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
+    HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "word_table","man");
+  }
+
+  @Override
+  public void clearAllTables() {
+    
+  }
+
+  @Override
+  public WordDAO wordDAO() {
+    
+  }
+
+  @Override
+  public ManDAO ManDAO() {
+    
+  }
+}
+```
+
+
+
+
+
+#### 怎么调用的
+
+我们的`WordRoomDatabase`继承自`RoomDatabase`,并且在`getDatabase`方法中调用了`Room.databaseBuilder().build()`方法。
+
+而 `public static <T extends RoomDatabase> RoomDatabase.Builder<T> databaseBuilder`这个方法返回的是`RoomDatabase.Builder`类型
+
+接着看`RoomDatabase`类中有定义了一个字段`private static final String DB_IMPL_SUFFIX = "_Impl";`并且在其内部类`public static class Builder<T extends RoomDatabase> `中的`public T build()`方法中也就是上面`Room.databaseBuilder().build()`方法中使用到了；
+
+`public T build()`方法中对数据库实例进行了配置，并且最终返回一个数据库实例
+
+``` java
+T db = Room.getGeneratedImplementation(mDatabaseClass, DB_IMPL_SUFFIX);
+db.init(configuration);
+return db;
+```
+
+怎么生成的数据库实例就在
+
