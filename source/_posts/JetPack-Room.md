@@ -43,7 +43,7 @@ Room 包含 3 个主要组件：
 选择合适的版本
 
 
-``` gralde
+``` groovy
 // Room components
 implementation "androidx.room:room-runtime:2.2.3"
 annotationProcessor "androidx.room:room-compiler:2.2.3"
@@ -410,7 +410,7 @@ public final class WordDAO_Impl implements WordDAO {
 
 #### @Database编译后生成的类
 
-我们定义的`WordRoomDatabase`类在编译后生成了`WordRoomDatabase_Impl`类，我们来看一下类的内容
+我们定义的`WordRoomDatabase`类在编译后生成了`WordRoomDatabase_Impl`类，我们来看一下类的内容,删除了方法的实现，只保留了方法：
 
 ``` java
 public final class WordRoomDatabase_Impl extends WordRoomDatabase {
@@ -444,31 +444,56 @@ public final class WordRoomDatabase_Impl extends WordRoomDatabase {
     
   }
 
-  @Override
+ @Override
   public WordDAO wordDAO() {
-    
+    if (_wordDAO != null) {
+      return _wordDAO;
+    } else {
+      synchronized(this) {
+        if(_wordDAO == null) {
+          _wordDAO = new WordDAO_Impl(this);
+        }
+        return _wordDAO;
+      }
+    }
   }
 
   @Override
   public ManDAO ManDAO() {
-    
+    if (_manDAO != null) {
+      return _manDAO;
+    } else {
+      synchronized(this) {
+        if(_manDAO == null) {
+          _manDAO = new ManDAO_Impl(this);
+        }
+        return _manDAO;
+      }
+    }
   }
 }
 ```
 
+这里面我们发现了获取我们定义的两个`DAO`的方法，返回了`DAO_Impl`的实现类。
+
+`createInvalidationTracker`是在创建RoomDatabase时调用的 ，代码在`RoomDatabase`类中
+
+``` java
+ public RoomDatabase() {
+        mInvalidationTracker = createInvalidationTracker();
+    }
+```
+
+`createOpenHelper`是在我们自己定义的RoomDatabase中调用`Room.databaseBuilder().build()`方法时，这个方法内部调用的。
 
 
 
+#### 调用流程
 
-#### 怎么调用的
+上面简单说明了调用过程中所涉及到的类，下面简单捋一下调用过程：
 
-我们的`WordRoomDatabase`继承自`RoomDatabase`,并且在`getDatabase`方法中调用了`Room.databaseBuilder().build()`方法。
-
-而 `public static <T extends RoomDatabase> RoomDatabase.Builder<T> databaseBuilder`这个方法返回的是`RoomDatabase.Builder`类型
-
-接着看`RoomDatabase`类中有定义了一个字段`private static final String DB_IMPL_SUFFIX = "_Impl";`并且在其内部类`public static class Builder<T extends RoomDatabase> `中的`public T build()`方法中也就是上面`Room.databaseBuilder().build()`方法中使用到了；
-
-`public T build()`方法中对数据库实例进行了配置，并且最终返回一个数据库实例
+1. 我们的`WordRoomDatabase`继承自`RoomDatabase`,并且在`getDatabase`方法中调用了`Room.databaseBuilder().build()`方法。这里的`Room.databaseBuilder()`方法返回的是`RoomDatabase.Builder`类型，这调用`build()`方法
+2. 在`RoomDatabase.Builder.build`方法中，只看最后几行，前面是对数据库进行的配置
 
 ``` java
 T db = Room.getGeneratedImplementation(mDatabaseClass, DB_IMPL_SUFFIX);
@@ -476,5 +501,21 @@ db.init(configuration);
 return db;
 ```
 
-怎么生成的数据库实例就在
+这里的`DB_IMPL_SUFFIX`是一个全局静态变量：
+
+``` java
+private static final String DB_IMPL_SUFFIX = "_Impl";
+```
+
+3. 在返回数据库实例之前，调用了`db.init`方法，在`init`方法中调用了`createOpenHelper`方法，也就是上面
+
+提到的`WordRoomDatabase_Impl`中实现的`createOpenHelper`方法。
+
+至此，我们就可以调用DAO中的方法对数据库进行操作了
+
+---
+
+以上
+
+
 
