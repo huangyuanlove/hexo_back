@@ -6,12 +6,9 @@ keywords: [Android,Jetpakc,Room,ViewModel,LiveData]
 ---
 
 2018年谷歌I/O 发布了一系列辅助android开发者的实用工具，合称Jetpack，以帮助开发者构建出色的 Android 应用。
-
 sunflower with java，A gardening app illustrating Android development best practices with Android Jetpack.
 sunflower的java版本：园艺应用程序，说明了使用Android Jetpack进行Android开发的最佳做法。
-
 源码地址 <https://github.com/huangyuanlove/sunflower_java> 本项目完全来自于kotlin版本的**代码翻译**
-
 kotlin版本 <https://github.com/android/sunflower>
 
 <!--more-->

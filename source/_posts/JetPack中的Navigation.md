@@ -6,9 +6,7 @@ keywords: Android,Jetpack,LiveData,LifeCycle,ViewModel,Navigation
 ---
 
 2018年谷歌I/O 发布了一系列辅助android开发者的实用工具，合称Jetpack，以帮助开发者构建出色的 Android 应用。
-
 这次发布的 Android Jetpack 组件覆盖以下 4 个方面：Architecture、Foundation、Behavior 以及 UI。
-
 该系列博客介绍一下Jetpack中常用组件，本篇介绍LiveData、ViewModel、LifeCycle。最后借助于https://github.com/android/sunflower 来写一个完整的应用
 
 <!--more-->
