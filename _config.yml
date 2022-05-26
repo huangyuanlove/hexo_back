@@ -12,7 +12,7 @@ email: huangyuan@huangyuanlove.com
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.huangyuanlove.com
+url: https://blog.huangyuanlove.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -78,7 +78,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: nexT
+theme: fluid
 exclude_generator:
 # Extensions
 Plugins:
