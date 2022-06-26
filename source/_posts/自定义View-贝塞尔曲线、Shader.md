@@ -2,6 +2,7 @@
 title: 自定义View--贝塞尔曲线、Shader
 tags: [Android]
 mathjax: true
+math: true
 date: 2019-01-20 21:56:52
 keywords: [自定义View,贝塞尔曲线,波浪动画,望远镜效果]
 ---

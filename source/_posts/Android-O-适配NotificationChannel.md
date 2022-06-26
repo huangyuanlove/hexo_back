@@ -3,6 +3,7 @@ title: Android O---适配NotificationChannel
 tags: [Android,Android爬坑之旅]
 date: 2018-12-27 19:47:25
 mathjax: true
+math: true
 keywords: [invalid channel for service notification,startForeground,NotificationChannel]
 ---
 

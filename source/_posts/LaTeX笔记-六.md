@@ -3,6 +3,7 @@ title: LaTeX笔记-六(数学公式)
 date: 2018-02-27 16:17:51
 tags: [LaTeX]
 mathjax: true
+math: true
 keywords: LaTeX数学公式
 ---
 TeX有两种数学公式，一种是夹杂在行文段落中的公式，如$\int f(x) \text{d}x=1$,一般称为**行内(inline)**数学公式，或**正文(in-text)**数学公式;另一种就是像下面这样单独占据郑航居中展示出来，称为**显示**数学公式
