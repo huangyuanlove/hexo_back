@@ -66,7 +66,7 @@ OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .build();
 
 Request request = new Request.Builder()
-        .url("https://biztest.chunyutianxia.com/api/v8/user_home_page/")
+        .url(".....")
         .build();
 Call call = okHttpClient.newCall(request);
 call.enqueue(new Callback() {
