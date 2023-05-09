@@ -2,6 +2,8 @@
 title: LaTeX笔记-五(自动化工具)
 date: 2018-02-27 11:09:28
 tags: [LaTeX]
+mathjax: true
+math: true
 keywords: LaTeX
 ---
 记录一下某些自动化的工具，比如添加超链接(hyperref)、索引(makeindex)等

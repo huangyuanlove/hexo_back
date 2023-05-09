@@ -2,6 +2,8 @@
 title: LaTeX笔记(一)(准备工作)
 date: 2018-01-18 21:21:41
 tags: [LaTeX]
+mathjax: true
+math: true
 keywords: LaTeX
 ---
 如果学习不是为了装逼，那一切都将毫无意义。
