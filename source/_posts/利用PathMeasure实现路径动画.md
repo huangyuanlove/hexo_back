@@ -1,6 +1,6 @@
 ---
 title: 利用PathMeasure实现路径动画
-tags: [Android,animator]
+tags: [Android]
 photos:
   - /image/Android/PathMeasure/path_measure.gif
 date: 2019-01-04 21:47:21

@@ -1,7 +1,7 @@
 ---
 title: Java并发多线程同步
 date: 2018-03-20 10:43:39
-tags: [java]
+tags: [Java]
 keywords: 多线程同步类
 ---
 最近遇到了多线程并发同步问题，找到了`java.util.concurrent`包下的`CountDownLatch`、`CyclicBarrier`、`Semaphore`这三个类。

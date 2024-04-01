@@ -1,7 +1,7 @@
 ---
 title: gradle-java插件
 date: 2018-12-19 21:23:58
-tags: [gradle,Android]
+tags: [Gradle,Android]
 keywords: gradle基础,gradle plugin,gradle插件
 ---
 

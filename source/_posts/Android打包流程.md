@@ -1,6 +1,6 @@
 ---
 title: Android打包流程
-tags: [Android,gradle]
+tags: [Android,Gradle]
 date: 2020-11-11 22:12:20
 keywords: [Android打包流程,Android构建]
 ---

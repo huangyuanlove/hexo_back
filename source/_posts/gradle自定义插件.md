@@ -1,7 +1,7 @@
 ---
 title: gradle自定义插件
 date: 2020-11-26 07:06:31
-tags: [gradle,Android]
+tags: [Gradle,Android]
 keywords: gradle基础,gradle plugin,gradle插件
 ---
 [groovy 语法入门](https://blog.huangyuanlove.com/2018/11/09/groovy%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/)

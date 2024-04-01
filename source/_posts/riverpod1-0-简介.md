@@ -1,6 +1,6 @@
 ---
 title: riverpod1.0+简介
-tags: [Android,Flutter]
+tags: [Flutter,riverpod]
 date: 2022-01-04 23:47:43
 keywords:  [状态共享,状态管理,provider,riverpod]
 ---

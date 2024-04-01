@@ -1,6 +1,6 @@
 ---
 title: groovy语法入门
-tags: [gradle]
+tags: [Gradle]
 date: 2018-11-09 12:14:01
 Keywords: groovy,gradle
 ---

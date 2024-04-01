@@ -1,6 +1,6 @@
 ---
 title: gradle任务
-tags: [gradle,Android]
+tags: [Gradle,Android]
 date: 2018-11-19 10:56:26
 keywords: gradle基础,Android构建脚本,gradle任务,gradle task
 ---
