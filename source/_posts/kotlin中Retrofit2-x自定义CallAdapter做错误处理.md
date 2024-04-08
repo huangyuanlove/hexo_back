@@ -1,6 +1,6 @@
 ---
 title: 在kotlin协程中使用自定义CallAdapter处理错误
-tags: [Kotlin,Retrofit]
+tags: [Kotlin,Retrofit,Android]
 date: 2024-03-29 18:14:05
 keywords: Kotlin,Retrofit,suspend,CallAdapter
 ---
