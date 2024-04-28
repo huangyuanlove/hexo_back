@@ -24,19 +24,19 @@ fun String.lastChar(): Char?{
 }
 ```
 上面的方法声明表示：对`String`类型定义一个无参的`lastChar`方法，返回值是`Char?`，使用的时候就像使用 String 类中的方法一样使用就好了：
-``` Kotlin
+``` kotlin
 fun main() {
     val s = "kotlin"
     println(s.lastChar())
 }
 ```
 那么扩展属性怎么使用嘞？和扩展函数差不多：
-``` Kotlin
+``` kotlin
 val String.firstChar:Char?
     get() = if(this.isEmpty()) null else get(0)
 ```
 可以简单的认为上面的声明是这样:对`String`类型顶一个`firstChar`属性，类型是`Char?`,使用时和使用 String 类中的属性一样就好了:
-``` Kotlin
+``` kotlin
 fun main() {
     val s = "kotlin"
     println(s.lastChar())
@@ -140,7 +140,7 @@ public class Example {
 ### 思考：扩展函数如何引用？
 嘿嘿嘿,我们知道函数是可以通过双冒号引用的
 
-``` Kotlin
+``` kotlin
 fun sayHi(name: String) {
     println("hi $name")
 }
