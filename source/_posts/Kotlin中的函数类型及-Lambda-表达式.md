@@ -48,7 +48,7 @@ fun functionA11(name:String):String{
 可以看到在`kotlin`中是用`KFunction0<Unit>`、`KFunction1<String, Unit>`、`KFunction1<String, String>`这种形式来描述一个函数。这里的 KFunction 后面的数字表示这个函数的参数个数，尖括号中的类型表示参数的类型，最后一个类型表示函数的返回值类型。比如`KFunction1<String, Unit>`表示这个函数需要`1`个`String`类型的参数，返回值类型为`Unit`。而`KFunction1<String, String>`表示这个函数需要`1`个`String`类型的参数，返回值为`String`。
 如果函数是挂起函数(被suspend修饰)，则对应的类型为` KSuspendFunction0<Unit>`,以此类推。
 那么如果是高阶函数嘞？
-```
+``` kotlin
 fun functionC(method:()->String):String{
     return method()
 }
