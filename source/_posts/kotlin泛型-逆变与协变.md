@@ -438,24 +438,24 @@ inline fun <reified T> Gson.fromJson(json: String): T{
   * <input type='checkbox' disabled='true' checked>作用域</input>
 
 * 函数类型
-    * <input type='checkbox' disabled='true' checked>带有接收者的函数类型</input>
-    * <input type='checkbox' disabled='true' checked>Lambda表达式</input>
-    * <input type='checkbox' disabled='true' checked>SAM 转换</input>
+  * <input type='checkbox' disabled='true' checked>带有接收者的函数类型</input>
+  * <input type='checkbox' disabled='true' checked>Lambda表达式</input>
+  * <input type='checkbox' disabled='true' checked>SAM 转换</input>
 * 泛型
-   * <input type='checkbox' disabled='true' checked>逆变</input>
-   * <input type='checkbox' disabled='true' checked>协变</input>
-   * <input type='checkbox' disabled='true' checked>类型投影</input>
-   * <input type='checkbox' disabled='true' checked>星投影</input>
-   * <input type='checkbox' disabled='true' checked>泛型约束</input>
+  * <input type='checkbox' disabled='true' checked>逆变</input>
+  * <input type='checkbox' disabled='true' checked>协变</input>
+  * <input type='checkbox' disabled='true' checked>类型投影</input>
+  * <input type='checkbox' disabled='true' checked>星投影</input>
+  * <input type='checkbox' disabled='true' checked>泛型约束</input>
+* 关键字
+  * <input type='checkbox' disabled='true' checked>作用域函数：with、let、run、apply、also</input>
 
 未学习：
 * 关键字
   * object
   * Unit
   * Nothing
-  * with、let、run、apply、also
   * inline,noinline,crossinline
-
 
 * 委托
    * 委托类
