@@ -27,7 +27,7 @@ implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 * Scalars (primitives, boxed, and String): com.squareup.retrofit2:converter-scalars
   
 ### 声明请求接口
-``` Kotlin
+``` kotlin
 interface MainPageApi{
   @GET("app_interface/home_pag/")
   fun getMainPageInfoWithRow():Call<MainPageInfo>
@@ -36,7 +36,7 @@ interface MainPageApi{
 
 ### 创建 Retrofit 对象
 
-``` Kotlin
+``` kotlin
 val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(GsonConverterFactory.create())
@@ -44,7 +44,7 @@ val retrofit = Retrofit.Builder()
 ```
 ### 发送请求
 
-``` Kotlin
+``` kotlin
 val mainPageApi = retrofit.create(MainPageApi::class.java)
 mainPageApi.getMainPageInfoWithCall().enqueue(object:retrofit2.Callback<MainPageInfo>{
     override fun onResponse(
@@ -63,14 +63,14 @@ mainPageApi.getMainPageInfoWithCall().enqueue(object:retrofit2.Callback<MainPage
 
 ### 支持协程
 我们对接口的声明加上`suspend`修饰
-``` Kotlin
+``` kotlin
 @GET("app_interface/home_pag/")
 suspend fun getMainPageInfoWithRow():Call<MainPageInfo>
 ```
 这时候上面直接发送请求的代码会报错：
 ![suspend_retrofit_error](image/Android/kotlin/suspend_retrofit_error.png)
 提示我们需要在协程中调用，这也简单，kotlin 对 activity 有个扩展的`lifecycleScope`成员变量，稍微修改一下：
-``` Kotlin
+``` kotlin
 lifecycleScope.launch(Dispatchers.IO) {
   mainPageApi.getMainPageInfoWithCall().enqueue(.....)
 }
@@ -84,12 +84,12 @@ Change its return type to class com.huangyuanlove.androidtest.kotlin.retrofit.Ma
 ```
 意思是在协程中发起请求已经是异步的了，不需要再返回 Call 对象了，直接返回对应的实体即可。
 简单，修改一下接口声明
-``` Kotlin
+``` kotlin
 @GET("app_interface/home_page/")
 suspend fun getMainPageInfoWithRow():MainPageInfo
 ```
 然后修改一下请求
-``` Kotlin
+``` kotlin
 lifecycleScope.launch(Dispatchers.IO) {
   val mainPageInfo = mainPageApi.getMainPageInfo()
   withContext(Dispatchers.Main) {
@@ -109,7 +109,7 @@ at java.lang.Thread.run(Thread.java:929)
 Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@ffa6ad2, Dispatchers.IO]
 ```
 哦~异常没有处理，粗暴点，直接 try-catch，kotlin 中还有`runCatching`这个语法糖
-``` Kotlin
+``` kotlin
 val mainPageInfoRow = runCatching { mainPageApi.getMainPageInfoWithRow() }
 if (mainPageInfoRow.isFailure) {
     ToastUtils.showToast("请求失败")
@@ -148,7 +148,7 @@ sealed class NetworkResponse<out T : Any, out U : Any> {
 #### 创建自己的Call类
 这里为了简化方便，除了`enqueue`之外必须重写的方法，都是直接调用`delegate`对应的方法
 
-``` Kotlin
+``` kotlin
 internal class NetworkResponseCall<S : Any, E : Any>(
     private val delegate: Call<S>,
     private val errorConverter: Converter<ResponseBody, E>
@@ -183,7 +183,7 @@ internal class NetworkResponseCall<S : Any, E : Any>(
 }
 ```
 下面是关键的`enqueue`方法,在这里面，将所有的请求都用`Response.success`返回，不再走`Response.error`.并且根据不同的 HTTP 状态码，返回的数据等条件转成一开始定义的密闭类。
-``` Kotlin
+``` kotlin
 
 override fun enqueue(callback: Callback<NetworkResponse<S, E>>) {
     return delegate.enqueue(object : Callback<S> {
@@ -240,7 +240,7 @@ override fun enqueue(callback: Callback<NetworkResponse<S, E>>) {
 ```
 
 #### 创建 CallAdapter
-``` Kotlin
+``` kotlin
 class NetworkResponseAdapter<S : Any, E : Any>(
     private val successType: Type,
     private val errorBodyConverter: Converter<ResponseBody, E>
@@ -255,7 +255,7 @@ class NetworkResponseAdapter<S : Any, E : Any>(
 ```
 
 #### 创建CallAdapterFactory
-``` Kotlin
+``` kotlin
 class  NetworkResponseAdapterFactory:CallAdapter.Factory(){
     override fun get(
         returnType: Type,
@@ -292,7 +292,7 @@ class  NetworkResponseAdapterFactory:CallAdapter.Factory(){
 ```
 
 #### 构建 Retrofit 实例时添加该 Factory
-``` Kotlin
+``` kotlin
 val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addCallAdapterFactory(NetworkResponseAdapterFactory())
@@ -302,7 +302,7 @@ val retrofit = Retrofit.Builder()
 
 #### 使用typealias简化返回类型(可选)
 
-``` Kotlin
+``` kotlin
 data class HttpError(val httpCode:Int,val errorMsg:String?,val exception: Throwable?)
 // before
 interface DemoApiService {
@@ -318,7 +318,7 @@ interface ApiService {
 
 #### 使用
 在 Activity 中直接使用lifecycleScope启动协程。
-``` Kotlin
+``` kotlin
 lifecycleScope.launch(Dispatchers.IO) {
     Log.e("KotlinActivity", "lifecycleScope.launch -->>" + Thread.currentThread().name);
     val mainPageInfo = mainPageApi.getMainPageInfo()
@@ -340,7 +340,7 @@ lifecycleScope.launch(Dispatchers.IO) {
 }
 ```
 或者在 ViewModel 中借助 LiveData 将返回值转化为可观察对象
-``` Kotlin
+``` kotlin
 class MainPageInfoViewModel:ViewModel() {
     private val _mainPageInfo  = MutableLiveData<MainPageInfo>()
     val mainPageInfo: LiveData<MainPageInfo> get() = _mainPageInfo
@@ -363,7 +363,7 @@ class MainPageInfoViewModel:ViewModel() {
 }
 ```
 在 Activity 中使用
-``` Kotlin
+``` kotlin
 mainPageInfoModel = ViewModelProvider(this).get(MainPageInfoViewModel::class.java)
 mainPageInfoModel.mainPageInfo.observe(this, Observer {
     if (it != null) {
