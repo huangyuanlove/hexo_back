@@ -1,8 +1,7 @@
 ---
 title: 鸿蒙-canvas-刮刮乐
 tags: [HarmonyOS]
-photos:
-  - null
+
 date: 2024-08-24 21:50:41
 keywords: HarmonyOS,鸿蒙应用开发,鸿蒙手机应用开发,Canvas,贝塞尔曲线
 ---
