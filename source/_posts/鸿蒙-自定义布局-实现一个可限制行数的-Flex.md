@@ -14,3 +14,6 @@ onMeasureSize(selfLayoutInfo: GeometryInfo, children: Array<Measurable>, constra
 onPlaceChildren(selfLayoutInfo: GeometryInfo, children: Array<Layoutable>, constraint: ConstraintSizeOptions) {}
 ```
 > ArkUI框架会在自定义组件确定尺寸时，将该自定义组件的节点信息和尺寸范围通过onMeasureSize传递给该开发者。不允许在onMeasureSize函数中改变状态变量。
+
+### onMeasureSize
+在`build`方法调用之后，就会调用`onMeasureSize`方法。
