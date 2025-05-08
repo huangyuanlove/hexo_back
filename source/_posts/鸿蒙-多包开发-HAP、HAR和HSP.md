@@ -27,3 +27,27 @@ Shared Library：动态共享库，编译后会生成一个已`.hsp`为后缀的
 
 对于 HAR 文件来讲，其中的代码和资源跟随使用方编译，如果有多个使用方，他们的编译产物中会存在多份拷贝。建议开启混淆能力，保护代码资产。除了支持应用内引用，还可以独立打包发布，供其他应用引用。
 对于 HSP 文件来讲，其中的代码和资源可以独立编译，运行时在一个进程中代码也只会存在一份。该文件一般随应用进行打包，当前支持应用内和集成态HSP。应用内HSP只支持应用内引用，集成态HSP支持发布到ohpm私仓和跨应用引用。
+
+### HAP包限制
+* 不支持导出接口和ArkUI组件，给其他模块使用。
+
+* 多HAP场景下，App Pack包中同一设备类型的所有HAP中必须有且只有一个Entry类型的HAP，Feature类型的HAP可以有一个或者多个，也可以没有。
+
+* 多HAP场景下，同一应用中的所有HAP的配置文件中的bundleName、versionCode、versionName、minCompatibleVersionCode、debug、minAPIVersion、targetAPIVersion、apiReleaseType相同，同一设备类型的所有HAP对应的moduleName标签必须唯一。HAP打包生成App Pack包时，会对上述参数配置进行校验。
+
+* 多HAP场景下，同一应用的所有HAP、HSP的签名证书要保持一致。上架应用市场是以App Pack形式上架，应用市场分发时会将所有HAP从App Pack中拆分出来，同时对其中的所有HAP进行重签名，这样保证了所有HAP签名证书的一致性。在调试阶段，开发者通过命令行或DevEco Studio将HAP安装到设备上时，要保证所有HAP签名证书一致，否则会出现安装失败的问题。
+
+### HAR包限制
+* HAR不支持在设备上单独安装/运行，只能作为应用模块的依赖项被引用。
+* HAR不支持在配置文件中声明ExtensionAbility组件，但支持UIAbility组件。
+>说明
+>如果使用startAbility接口拉起HAR中的UIAbility，接口参数中的moduleName取值需要为依赖该HAR的HAP/HSP的moduleName。
+
+* HAR不支持在配置文件中声明pages页面，但是可以包含pages页面，并通过Navigation跳转的方式进行跳转。
+* HAR不支持引用AppScope目录中的资源。在编译构建时，AppScope中的内容不会打包到HAR中，因此会导致HAR资源引用失败。
+* HAR可以依赖其他HAR，但不支持循环依赖，也不支持依赖传递。
+
+### HSP包限制
+* HSP不支持在设备上单独安装/运行，需要与依赖该HSP的HAP一起安装/运行。HSP的版本号必须与HAP版本号一致。
+* HSP不支持在配置文件中声明ExtensionAbility组件，但支持在配置文件中声明UIAbility（除入口ability外）组件。
+* HSP可以依赖其他HAR或HSP，但不支持循环依赖，也不支持依赖传递。
