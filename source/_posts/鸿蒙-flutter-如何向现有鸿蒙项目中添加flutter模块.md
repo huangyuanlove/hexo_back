@@ -1,5 +1,5 @@
 ---
-title: 鸿蒙-如何向现有鸿蒙项目中添加 flutter 模块
+title: 鸿蒙-flutter-如何向现有鸿蒙项目中添加flutter模块
 tags: [HarmonyOS]
 date: 2025-04-29 10:37:47
 keywords: HarmonyOS,鸿蒙应用开发,跨平台,flutter,鸿蒙支持flutter,鸿蒙添加flutter模块
@@ -84,4 +84,4 @@ flutter build har --release
 }
 ```
 
-## 交互
+## 加载
