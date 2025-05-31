@@ -43,6 +43,9 @@ mac上需要配置这些
 ![](image/harmony_flutter/HOS_SDK_HOME.png)。
 然后我们再将`D:\DevEco\DevEco Studio\tools\hvigor\bin`、`D:\DevEco\DevEco Studio\tools\node`、`D:\DevEco\DevEco Studio\tools\ohpm\bin`添加到环境变量。
 
+**注意注意注意**
+如用下载的是flutter分支是`3.22.0-ohos`,则环境变量名字为`DEVECO_SDK_HOME`
+
 ### flutter 环境
 克隆(flutter_flutter)[https://gitcode.com/openharmony-tpc/flutter_flutter/tree/3.22.0-ohos]仓库的`3.22.0-ohos`分支就可以。
 ``` shell
