@@ -84,3 +84,6 @@ flutter create  --platforms android,ios,ohos  -i objc -a java ohflutter_3221
 ![运行结果](image/harmony_flutter/oh_flutter_hello_world.gif)
 
 
+## FlutterPage
+我们可以使用DevEcoStudio打开项目下的ohos文件夹中的项目看一下，其中的`EntryAbility`继承了`FlutterAbility`,在FlutterAbility中，我们可以看到`FlutterManager`，`FlutterView`,以及在`onWindowStageCreate`方法中默认加载的`pages/Index`。
+因此我们如果想要向现有鸿蒙工程中添加flutter模块时，借鉴一下这里面的写法。
