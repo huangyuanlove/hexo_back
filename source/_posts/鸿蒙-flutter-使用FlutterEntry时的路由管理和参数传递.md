@@ -35,7 +35,31 @@ dependencies:
     path: plugins/flutter_router
 ```
 
+
+## 路由策略
+
+1. flutter 页面路由统一调用插件中的方法进行跳转。
+2. 在 flutter 的 main 函数中注册页面路径相关参数
+3. 跳转时判断目标是 flutter 还是 native，如果是 flutter，则使用 Navigator；如果是 native ，则通过 methodChannel 调用
+4. 
+
+
+
+
 ## 打开页面
 
 ### native打开 flutter 页面
-在 native 打开 flutter 页面时，我们需要制定打开的页面路径和对应的参数，这里为了方便和简单以及兼容性，传入的参数类型规定为`Map<String, dynamic>`
+指定路由路径后面添加参数
+
+### flutter打开 native
+指定路由，参数
+
+### flutter打开 flutter
+Navigation.push
+
+## 关闭页面
+
+### native 返回 flutter 页面
+
+### flutter 返回 native 页面
+### flutter 返回 flutter 页面
