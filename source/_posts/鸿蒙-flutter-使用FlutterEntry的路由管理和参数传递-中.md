@@ -178,10 +178,75 @@ export struct FromFlutterPage {
 这里我们判断了path的值和跳转对应的页面。
 
 ### flutter侧调用
-我们调用的方法都写在了`FlutterRouter`中
+我们调用的方法都写在了`FlutterRouter`中,并且也是在这里判断是打开 flutter 页面还是打开native 页面
+我们在`RouterManager`中添加一个判断是否为 flutter 页面的方法
+``` dart
+bool hasRouterWidget(String path) {
+  final String routerName = _getRouterName(path);
+  return _routerMap.containsKey(routerName);
+}
+```
+然后我们在`FlutterRouter`写一下对应的打开页面的方法:
+``` dart
+
+
+import 'package:flutter/material.dart';
+import 'package:flutter_router/router_manager.dart';
+
+import 'flutter_router_platform_interface.dart';
+
+class FlutterRouter {
+  Future<String?> getPlatformVersion() {
+    return FlutterRouterPlatform.instance.getPlatformVersion();
+  }
+  Future<T?> open<T extends Object?>(context, path,
+      {Object? arguments}) async {
+    final bool useFlutterPage = RouterManager.instance.hasRouterWidget(path);
+    if(useFlutterPage){
+      debugPrint("FlutterRouter#open 打开 flutter");
+      Widget target =  RouterManager.instance.getRouterWidget(path,params: arguments);
+      return Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => target,
+      ),);
+      // return Navigator.of(context).pushNamed(path, arguments: arguments);
+    } else {
+      // 打开native页面: path已在native端注册
+      debugPrint("FlutterRouter#open 打开 native");
+      return FlutterRouterPlatform.instance
+          .open<T>(path, arguments: arguments)
+          .then((value) {
+        return value;
+      });
+    }
+  }
+}
+
+```
+之后我们在之前使用的`LoginPage`页面中调用一下这个方法:
+``` dart
+ElevatedButton(
+  onPressed: () {
+    //HMRouterAPage
+    FlutterRouter().open(context, 'pages/flutter/FromFlutterPage',
+        arguments: {
+          'name': 'flutter_harmony',
+          'age': 3
+        });
+  },
+  child: const Text("FromFlutterPage",
+      style: TextStyle(fontSize: 16, color: Color(0xff333333))),
+),
+```
+
+看一下效果
+![](image/harmony_flutter/flutter_to_native.gif)
 
 ## 总结一下
 
+1. flutter打开页面时，调用`FlutterRouter#open`方法，
+2. 在该方法中判断目标页面是 flutter 页面还是 native 页面
+3. 如果是 native 页面，则通过 methodChannel 调用 native 方法
+4. 最终调用的 native 方法由宿主原生工程中设置，由宿主原生工程来打开对应页面
 
 
 
