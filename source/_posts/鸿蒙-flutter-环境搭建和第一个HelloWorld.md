@@ -1,6 +1,6 @@
 ---
 title: 鸿蒙-flutter-环境搭建和第一个HelloWorld
-tags: [HarmonyOS，Flutter]
+tags: [HarmonyOS,Flutter]
 date: 2025-05-27 15:59:28
 keywords: HarmonyOS,鸿蒙应用开发,鸿蒙手机应用开发,flutter
 ---
