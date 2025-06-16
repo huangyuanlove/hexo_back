@@ -1,6 +1,6 @@
 ---
 title: 鸿蒙-flutter-使用FlutterEntry的路由管理和参数传递_下
-tags: [HarmonyOS，Flutter]
+tags: [HarmonyOS,Flutter]
 date: 2025-06-10 11:44:44
 keywords: HarmonyOS,鸿蒙应用开发,跨平台,flutter,鸿蒙支持flutter,鸿蒙添加flutter模块,路由管理,参数传递
 ---
