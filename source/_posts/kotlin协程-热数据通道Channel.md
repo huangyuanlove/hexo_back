@@ -46,3 +46,34 @@ public fun <E> Channel(capacity: Int = RENDEZVOUS): Channel<E> =
         else -> ArrayChannel(capacity)
     }
 ```
+我们构造Cahnnel的时候调用了一个名为Channle的函数，但它不是Channel的构造函数。在Kotlin中，经常定义一个顶级函数来伪装成同名类型的构造器，这本质上是工厂函数。这里有一个Int类型的capacity参数，默认值为RENDEZVOUS。
+这时候如果不调用receive，send就会一直挂起等待。
+
+`UNLIMITED`比较好理解，没有限制，来者不拒。
+`CONFLATED`这个名字可能有迷惑性，字面意思是合并，但实际上这个函数的效果是只保留最后一个元素，也就是说缓冲区只有一个元素大小，每次有新元素到来，都会覆盖掉旧元素。
+`BUFFERED`效果类似于ArrayBlockingQueue，接收一个值作为缓冲区容量大小。
+
+### 迭代Channel
+我们在发送和读取的时候写了一个`while(true)`的死循环，因为需要不断地进行读写操作。这里我们可以直接获取一个Channel的Iterator
+``` kotlin
+    val consumer = GlobalScope.launch {
+        val iter = channel.iterator()
+        while (iter.hasNext()) {
+            val element = iter.next()
+            println(element)
+            delay(1000)
+        }
+    }
+```
+
+其中 iter.hasNext()是挂起函数，在判断是否有下一个元素的时候就需要去Channel中读取元素了。当然也可以`for ... in ..`:
+``` kotlin
+    val consumer = GlobalScope.launch {
+        for(element in channel) {
+            println(element)
+            delay(1000)
+        }
+    }
+```
+### produce和actor
+来看两个便捷的构造生产者和消费这的api，
