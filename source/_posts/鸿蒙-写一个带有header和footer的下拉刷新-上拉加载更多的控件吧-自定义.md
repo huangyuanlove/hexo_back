@@ -7,7 +7,7 @@ keywords: HarmonyOS,下拉刷新,上拉加载更多,pullToRefresh,priorityGestur
 
 ## 前言
 
-上一篇介绍了如何使用自带的 Refresh 来实现下拉刷新和添加一个额外的 ListItem 来实现上拉加载功能。这一篇我们来看下不适用这这两种方式，还能如何实现。
+上一篇介绍了如何使用自带的 Refresh 来实现下拉刷新和添加一个额外的 ListItem 来实现上拉加载功能。这一篇我们来看下不使用这这两种方式，还能如何实现。
 
 ## 大致思路
 

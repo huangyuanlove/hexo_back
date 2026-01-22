@@ -65,7 +65,7 @@ struct ListRefreshPage {
 ```
 
 我们需要在下拉刷新的过程中，提示用户下拉到什么程度松手就可以刷新了。这里我们可以传入`promptText`,在`onStateChange`的回调中判断当前状态，进而更新文案，达到提示用户的目的，效果如下：
-![更新下拉刷新文案](image/HarmonyOS//refresh_component.gif)
+![更新下拉刷新文案](image/HarmonyOS/refresh_component.gif)
 
 ### 自定义刷新头部组件
 
