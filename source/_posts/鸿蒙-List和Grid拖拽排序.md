@@ -1,5 +1,5 @@
 ---
-title: 鸿蒙-List和Grid拖拽排序
+title: 鸿蒙-List和Grid拖拽排序：仿微信小程序删除效果
 tags: [鸿蒙]
 date: 2026-02-20 11:21:57
 keywords: HarmonyOS,JsonToArkTS,拖拽排序,List,Grid
@@ -215,3 +215,9 @@ build() {
 
 这样我们就实现了丐版的微信小程序删除效果。
 如果想要完全复制：比如在拖拽进入`删除组件`时有个震动效果，可以参考[示例16（实现GridItem自定义拖拽）](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-container-grid#示例16实现griditem自定义拖拽)
+
+## 代码
+
+github：[https://github.com/huangyuanlove/HelloArkUI/tree/main/entry/src/main/ets/pages/playground/drag](https://github.com/huangyuanlove/HelloArkUI/tree/main/entry/src/main/ets/pages/playground/drag)
+
+gitcode:[https://gitcode.com/huangyuan_xuan/HelloArkUI/tree/main/entry/src/main/ets/pages/playground/drag](https://gitcode.com/huangyuan_xuan/HelloArkUI/tree/main/entry/src/main/ets/pages/playground/drag)
